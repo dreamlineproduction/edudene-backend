@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\UserAccountActivationMail;
+use App\Models\LoginAttempt;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class UserAuthController extends Controller
@@ -17,18 +21,43 @@ class UserAuthController extends Controller
             'full_name' => 'required|string|max:150',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:5',
-            'timezone' => 'required|string|max:150',           
+            'timezone' => 'required|string|max:150',
         ]);
 
-        $user = User::create($request->toArray());
+        $counter = 1;
+        $baseUserName =  generateSlug($request->full_name);
+        $userName = $baseUserName;
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Ensure it's unique
+        while (User::where('user_name', $userName)->exists()) {
+            $userName = $baseUserName . '_' . $counter++;
+        }
+
+        // Create activation token
+        $activationToken = Str::random(90);
+
+        $request->merge([
+            'user_name' => $userName,
+            'remember_token'=>$activationToken,
+            'password' => Hash::make($request->password),
+            'timezone' => getDefaultTimezone($request->timezone),
+        ]);
+
+        $user = User::create($request->toArray());        
+        $activationLink = url('/user/activate-account?token=' . $activationToken);
+
+        $mailData = [
+            'fullName' => $user->full_name,
+            'activationLink' => $activationLink,
+        ];
+        
+        // Send activation email
+        Mail::to($user->email)->send(new UserAccountActivationMail($mailData));
 
         return response()->json([
             'status' => 200,
-            'message' => 'User registered successfully',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+            'user' => $user,          
+            'message' => 'User registered successfully',         
         ]);
     }
 
@@ -37,34 +66,79 @@ class UserAuthController extends Controller
     // 🔑 Login API
     public function login(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+            'timezone' => 'nullable|string|max:150',
+            'login_datetime' => 'nullable|string|max:150',
         ]);
 
         $user = User::where('email', $request->email)->first();
 
+        // Check if user exists
         if (!$user) {
             return response()->json([
                 'status' => 404,
                 'message' => 'User not found in our database.',
-            ]);          
+            ]);
         }
 
-        if($user->status === 'Inactive'){
+        // Check if user is temporarily inactive due to too many failed login attempts
+        if ($user->temporary_status === 'Inactive') {
+            return response()->json([
+                'status' => 423,
+                'message' => 'Your account is temporarily inactive due to too many failed login attempts.Please try again later or contact support.',
+            ], 423);
+        }
+
+        // Check if user is inactive
+        if ($user->status === 'Inactive') {
             return response()->json([
                 'status' => 403,
-                'message' => 'Your account is inactive. Please active your account.',
-            ],403);
+                'message' => 'Your account is inactive. Please activate your account.',
+            ], 403);
         }
 
-        if(!Hash::check($request->password, $user->password)){
+        // Check password
+        if (!Hash::check($request->password, $user->password)) {
+            $loginAttempt =  LoginAttempt::where('email', $request->email)->first();
+            
+            // If attempts exceed 5, user account temporary status Inactive.
+            if($loginAttempt->attempt_count >= 5){
+
+                $user->temporary_status = 'Inactive';
+                $user->save();
+
+
+                return response()->json([
+                    'status' => 429,
+                    'message' => 'Too many login attempts. Please try again later.',
+                ], 429);
+            } 
+            
+            // Log the failed login attempt
+            $find = ['email' => $request->email];
+            LoginAttempt::updateOrCreate($find,[
+                'user_id' => $user->id,
+                'ip_address' => $request->ip(),
+                'email' => $request->email,   
+                'attempt_count' => $loginAttempt->attempt_count + 1,   
+                'locked_datetime' => $request->login_datetime ?? now(),      
+                'timezone' => getDefaultTimezone($request->timezone),                
+            ]);
+
             return response()->json([
                 'status' => 401,
                 'message' => 'Invalid credentials.',
-            ],401);
+            ], 401);
         }
 
+        // Clear login attempts on successful login
+        LoginAttempt::where('email', $request->email)->delete();
+
+
+
+        // Generate token
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -78,7 +152,17 @@ class UserAuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+        
+         // Check if user exists and has a valid token
+        if (!$user || !$user->currentAccessToken()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid or missing token.',
+            ], 401);
+        }
+
+        $user->currentAccessToken()->delete();
 
         return response()->json([
             'status' => 200,

@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('login_attempts', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('ip_address', 45)->nullable();
+            $table->string('email')->nullable();
+            $table->tinyInteger('attempt_count')->default(false);
+            $table->string('timezone',150)->nullable();
+            $table->dateTime('locked_datetime')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')
+                    ->on('users')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
         });
     }
 
