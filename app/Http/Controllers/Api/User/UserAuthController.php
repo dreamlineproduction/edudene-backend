@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Mail\UserAccountActivationMail;
@@ -17,27 +17,20 @@ class UserAuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'role_id' => 'required|integer',
             'full_name' => 'required|string|max:150',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:5',
             'timezone' => 'required|string|max:150',
         ]);
 
-        $counter = 1;
-        $baseUserName =  generateSlug($request->full_name);
-        $userName = $baseUserName;
-
-        // Ensure it's unique
-        while (User::where('user_name', $userName)->exists()) {
-            $userName = $baseUserName . '_' . $counter++;
-        }
+        
 
         // Create activation token
         $activationToken = Str::random(90);
 
         $request->merge([
-            'user_name' => $userName,
+            'role_id' => 1,
+            'user_name' => generateUniqueSlug($request->full_name,'App\Models\User','user_name'),
             'remember_token'=>$activationToken,
             'password' => Hash::make($request->password),
             'timezone' => getDefaultTimezone($request->timezone),
@@ -73,7 +66,7 @@ class UserAuthController extends Controller
             'login_datetime' => 'nullable|string|max:150',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where(['email'=> $request->email,'role_id'=>1])->first();
 
         // Check if user exists
         if (!$user) {
@@ -101,10 +94,11 @@ class UserAuthController extends Controller
 
         // Check password
         if (!Hash::check($request->password, $user->password)) {
+
             $loginAttempt =  LoginAttempt::where('email', $request->email)->first();
             
             // If attempts exceed 5, user account temporary status Inactive.
-            if($loginAttempt->attempt_count >= 5){
+            if(!empty($loginAttempt) && $loginAttempt->attempt_count >= 5){
 
                 $user->temporary_status = 'Inactive';
                 $user->save();
@@ -122,7 +116,7 @@ class UserAuthController extends Controller
                 'user_id' => $user->id,
                 'ip_address' => $request->ip(),
                 'email' => $request->email,   
-                'attempt_count' => $loginAttempt->attempt_count + 1,   
+                'attempt_count' => notEmpty($loginAttempt) ? $loginAttempt->attempt_count  + 1 : 1,   
                 'locked_datetime' => $request->login_datetime ?? now(),      
                 'timezone' => getDefaultTimezone($request->timezone),                
             ]);
@@ -142,7 +136,7 @@ class UserAuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'status' => true,
+            'status' => 200,
             'message' => 'Login successful.',
             'token' => $token,
             'user' => $user,
@@ -152,9 +146,9 @@ class UserAuthController extends Controller
 
     public function logout(Request $request)
     {
-        $user = $request->user();
-        
-         // Check if user exists and has a valid token
+        $user = auth('sanctum')->user();
+
+        // Check if user exists and has a valid token
         if (!$user || !$user->currentAccessToken()) {
             return response()->json([
                 'status' => false,

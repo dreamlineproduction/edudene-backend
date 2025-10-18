@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AccountActivationController;
+use App\Http\Controllers\Web\AccountActivationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

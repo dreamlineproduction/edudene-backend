@@ -15,7 +15,7 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()) {
+        if (!$user = auth('sanctum')->user()) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Unauthenticated.'
