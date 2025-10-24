@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\User\UserAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\FaqController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
 
@@ -46,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/v1/admin/subsubcategories', [SubSubCategoryController::class, 'store']);
     Route::put('/v1/admin/subsubcategories/{id}', [SubSubCategoryController::class, 'update']);
     Route::delete('/v1/admin/subsubcategories/{id}', [SubSubCategoryController::class, 'destroy']);
+
+    // Faq Routes
+    Route::apiResource('/v1/admin/faqs', FaqController::class);
 
 
     
