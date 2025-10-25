@@ -50,7 +50,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return jsonResponse(true,'Category not found in our database.',$category,404);            
+            return jsonResponse(false,'Category not found in our database.',$category,404);            
         }
 
         $request->validate([
@@ -76,7 +76,7 @@ class CategoryController extends Controller
 
         if (!$category) {
             if (!$category) {
-                return jsonResponse(true,'Category not found in our database.',$category,404);            
+                return jsonResponse(false,'Category not found in our database.',$category,404);            
             }
         }
 

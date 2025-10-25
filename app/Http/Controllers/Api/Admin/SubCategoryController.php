@@ -51,7 +51,7 @@ class SubCategoryController extends Controller
         $data = SubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(true, 'Subcategory not found in our database.', [], 404);               
+            return jsonResponse(false, 'Subcategory not found in our database.', [], 404);               
         }
 
         $request->validate([
@@ -78,7 +78,7 @@ class SubCategoryController extends Controller
         $subCategory = SubCategory::find($id);
 
         if (!$subCategory) {
-            return jsonResponse(true, 'Subcategory not found in our database.', [], 404);               
+            return jsonResponse(false, 'Subcategory not found in our database.', [], 404);               
         }
 
         $subCategory->delete();

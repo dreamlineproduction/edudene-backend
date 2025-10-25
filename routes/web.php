@@ -7,4 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/user/activate-account', [AccountActivationController::class, 'activateUserAccount']);
+Route::get('/user/verify-account', [AccountActivationController::class, 'verifyUserAccount']);

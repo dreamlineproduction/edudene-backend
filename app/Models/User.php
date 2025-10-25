@@ -30,6 +30,12 @@ class User extends Authenticatable
         'timezone',
     ];
 
+
+    public function categories()
+    {
+        return $this->hasMany(UserCategory::class, 'user_id', 'id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

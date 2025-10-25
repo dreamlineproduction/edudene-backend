@@ -58,7 +58,7 @@ class SubSubCategoryController extends Controller
         $data = SubSubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(true, 'Sub Sub Category not found in our database.', [], 404);               
+            return jsonResponse(false, 'Sub Sub Category not found in our database.', [], 404);               
         }
 
         $request->validate([

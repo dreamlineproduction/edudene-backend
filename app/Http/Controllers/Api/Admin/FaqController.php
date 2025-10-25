@@ -45,7 +45,7 @@ class FaqController extends Controller
         //
         $data = Faq::with('section')->where('id',$id)->first();
         if (!$data) {
-            return jsonResponse(true,'Faq not found in our database.',$data,404);            
+            return jsonResponse(false,'Faq not found in our database.',$data,404);            
         }
 
         return jsonResponse(true, 'Faq fetched successfully', $data);
@@ -61,7 +61,7 @@ class FaqController extends Controller
         //
         $data = Faq::where('id',$id)->first();
         if (!$data) {
-            return jsonResponse(true,'Faq not found in our database.',$data,404);   
+            return jsonResponse(false,'Faq not found in our database.',$data,404);   
         }
 
         $validated = $request->validate([
@@ -84,7 +84,7 @@ class FaqController extends Controller
         //
         $data = Faq::where('id',$id)->first();
         if (!$data) {
-            return jsonResponse(true,'Faq not found in our database.',$data,404);   
+            return jsonResponse(false,'Faq not found in our database.',$data,404);   
         }
 
         $data->delete();
