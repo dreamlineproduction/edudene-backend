@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\FaqController;
+use App\Http\Controllers\Api\Admin\PageController;
+use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
 
@@ -30,6 +32,9 @@ Route::post('/v1/user/login', [UserAuthController::class, 'login']);
 
 
 
+// Pages
+Route::get('/v1/pages/', [FrontPageController::class, 'index']);
+Route::get('/v1/pages/{slug}', [FrontPageController::class, 'show']);
 
 
 // Admin Auth Routes
@@ -49,6 +54,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Faq Routes
     Route::apiResource('/v1/admin/faqs', FaqController::class);
+
+    // Pages Routes
+    Route::apiResource('/v1/admin/pages',PageController::class);
 });
 
 // Route::post('/user/change-password', [UserAuthController::class, 'changePassword'])->middleware('auth:sanctum');
