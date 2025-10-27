@@ -6,17 +6,19 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Authenticate
+class RoleMiddleware
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next,$role): Response
     {
-        if (!$user = auth('sanctum')->user()) {
-            return jsonResponse(false, 'Unauthenticated.', null, 401);            
+        $user =  auth('sanctum')->user();
+
+        if (!$user || $user->role_id != $role) {
+            return jsonResponse(false, 'Unauthorized: Access denied.', null, 403);           
         }
 
         return $next($request);
