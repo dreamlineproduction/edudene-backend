@@ -57,7 +57,7 @@ if (!function_exists('jsonResponse')) {
             'message' => $message,
         ];
 
-        if (!is_null($data)) {
+        if (!is_null($data) && !empty($data)) {
             $response['data'] = $data;
         }
         

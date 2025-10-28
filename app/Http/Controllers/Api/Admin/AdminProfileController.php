@@ -9,25 +9,28 @@ use Illuminate\Support\Facades\Hash;
 class AdminProfileController extends Controller
 {
     //
-     public function changePassword(Request $request)
+    public function changePassword(Request $request)
     {
-        // Implement the logic to change user password
         $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required|min:8|confirmed',
+            'current_password' => 'required',
+            'new_password' => 'required',
         ]);
         
         $user = auth('sanctum')->user();
 
-        if (!Hash::check($request->old_password, $user->password)) {
-            return jsonResponse(false, 'Old password is incorrect.', null, 400);
+        if (!Hash::check($request->current_password, $user->password)) {
+            return jsonResponse(false, "We couldn't verify your current password. If you forgot it, use “Forgot password”", null, 400);
         }
 
-         // Update new password
+        if($request->current_password === $request->new_password){
+            return jsonResponse(false, "The new password cannot be the same as the current password.", null, 400);
+        }
+        
+
+        // Update new password
         $user->update([
             'password' => Hash::make($request->new_password),
         ]);
-        return jsonResponse(true, 'Password changed successfully.');
-        
+        return jsonResponse(true, 'Password changed successfully.', null, 200);        
     }
 }

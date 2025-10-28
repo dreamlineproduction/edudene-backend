@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Mail\User\UserEmailVerificationMail;
+use App\Mail\User\UserPasswordResetMail;
 use App\Models\LoginAttempt;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
@@ -120,6 +121,75 @@ class UserAuthController extends Controller
         return jsonResponse(true, 'Login successfully.', $data);
     }
 
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        try{
+            
+            $resetToken = Str::random(90);
+            $user->update([
+                'remember_token' => $resetToken,
+            ]);
+
+            $resetLink = url('/user/reset-password?token=' . $resetToken);
+
+            $mailData = [
+                'fullName' => $user->full_name,
+                'mail' => $user->email,
+                'resetLink' => $resetLink,
+            ];
+
+            // Send password reset email
+            Mail::to($user->email)->send(new UserPasswordResetMail($mailData));
+
+            return jsonResponse(true, 'Password reset link has been sent to your email.');
+        } catch (\Exception $e) {
+            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), [], 500);
+        }        
+    }
+
+    public function checkIsValidToken(Request $request)
+    {
+        if(empty($request->token)){
+            return jsonResponse(false, 'Token is required.', null, 400);
+        }
+
+        $user = User::where('remember_token', $request->token)->first();
+
+        if(empty($user)){
+            return jsonResponse(false, 'Invalid or expired token.', null, 400);
+        }
+
+        $data['email'] = $user->email;
+        return jsonResponse(true, 'Valid token.',$data);        
+    } 
+    
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email'=>'required|string|email|max:255|exists:users,email',
+            'token' => 'required|string|exists:users,remember_token',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where(['remember_token'=>$request->token, 'email'=>$request->email])->first();
+
+        if (!$user) {
+            return jsonResponse(false, 'Invalid token.', null, 400);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+            'remember_token' => '',
+        ]);
+        return jsonResponse(true, 'Password has been updated successfully.');
+    }
 
     public function logout(Request $request)
     {

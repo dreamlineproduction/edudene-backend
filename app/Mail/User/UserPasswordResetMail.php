@@ -3,12 +3,13 @@
 namespace App\Mail\User;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserEmailVerificationMail extends Mailable
+class UserPasswordResetMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +29,7 @@ class UserEmailVerificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Verify Your Email Address',
+            subject: $this->mailData['fullName']. ' Password Reset Mail',
         );
     }
 
@@ -38,7 +39,7 @@ class UserEmailVerificationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.user.verify-email',
+            view: 'emails.user.password-reset',
         );
     }
 

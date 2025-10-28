@@ -16,11 +16,24 @@ use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
 
 // Public API Routes
-Route::post('/v1/user/register', [UserAuthController::class, 'register']);
-Route::post('/v1/user/login', [UserAuthController::class, 'login']);
-Route::post('/v1/admin/login', [AdminAuthController::class, 'login']);
+
+// Common Routes Admin,User Tutor, and School
+Route::post('/v1/forgot-password', [UserAuthController::class, 'forgotPassword']);
+Route::get('v1/check-token',[UserAuthController::class, 'checkIsValidToken']);
+Route::post('/v1/update-password', [UserAuthController::class, 'updatePassword']);
+
+Route::post('/v1/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/v1/pages/', [FrontPageController::class, 'index']);
 Route::get('/v1/pages/{slug}', [FrontPageController::class, 'show']);
+
+//Public User Routes
+Route::post('/v1/user/register', [UserAuthController::class, 'register']);
+Route::post('/v1/user/login', [UserAuthController::class, 'login']);
+
+// Public Admin Routes
+Route::post('/v1/admin/login', [AdminAuthController::class, 'login']);
+
+
 
 
 
@@ -36,10 +49,13 @@ Route::middleware(['auth:sanctum','role:1'])->group(function () {
 
     // Change Password Route
     Route::post('/v1/user/change-password', [UserProfileController::class, 'changePassword']);
+
+    // Forgot Password Route
 });
 
 // Admin Routes admin login required and admin role is 5
 Route::middleware(['auth:sanctum','role:5'])->group(function () {   
+    
     // Change Password Route
     Route::post('/v1/admin/change-password', [AdminProfileController::class, 'changePassword']);
 
@@ -69,6 +85,4 @@ Route::middleware(['auth:sanctum','role:5'])->group(function () {
 // Route::post('/user/reset-password', [UserAuthController::class, 'resetPassword']);
 
 
-
-Route::post('/v1/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
 ?>
