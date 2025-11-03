@@ -8,6 +8,7 @@ use App\Models\CourseOutcome;
 use App\Models\CourseRequirement;
 use App\Models\CourseSeo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class CourseController extends Controller
 {
@@ -130,6 +131,7 @@ class CourseController extends Controller
         $data =  CourseOutcome::where('course_id', $request->course_id)->get();            
         return jsonResponse(true, 'Outcomes created', $data);
     }
+    
 
     public function savePrice(Request $request)
     {
@@ -147,6 +149,54 @@ class CourseController extends Controller
         ]);
 
         return jsonResponse(true, 'Course price updated successfully.', $course);
+    }
+
+    public function saveMedia(Request $request)
+    {
+        
+        $validation = [
+            'course_id' => 'required|integer|exists:courses,id',
+            'type' => 'required|string|in:Youtube,Vimeo,Local',
+        ];
+
+        if($request->type === 'Youtube' || $request->type === 'Vimeo'){
+            $validation['video_url'] = 'required|url';
+        }
+
+        $request->validate($validation); 
+        $videoUrl = $request->video_url;
+        $remoteThumb = null;
+
+        //$find = ['course_id' => $request->course_id];
+
+        if(!isVimeo($videoUrl) && !isYouTube($videoUrl)){
+            return jsonResponse(false,'Only YouTube and Vimeo URLs are supported.',422);
+        }
+
+        if($request->type === 'Youtube'){
+            $videoId = getYouTubeId($videoUrl);
+            if (! $videoId) {
+                return jsonResponse(false,'Invalid YouTube URL/ID',422);                
+            }
+
+            $remoteThumb = getYoutubeVideoPoster($videoId);
+        }
+
+        if($request->type === 'Vimeo'){
+            $remoteThumb =  getViemoVideoPoster($videoUrl);
+        }
+
+        if($request->type === 'Local'){
+
+        }
+
+        if (empty($remoteThumb)) {
+            return jsonResponse(false,'Thumbnail URL not found.',422);            
+        }
+        
+        $response['preview_url'] = $remoteThumb;
+        $response['thumbnail_url'] = $remoteThumb;
+        return jsonResponse(true,'Data retrive',$response);
     }
 
     public function saveSeo(Request $request)
@@ -178,5 +228,56 @@ class CourseController extends Controller
         $course->delete();
         return jsonResponse(true, 'Course deleted successfully', null);
 
+    }
+
+    private function getYoutubeVideoPoster($videoId,$size = 'MAX'){
+        $thumbUrls = [
+            "https://i.ytimg.com/vi/{$videoId}/maxresdefault.jpg",
+            "https://i.ytimg.com/vi/{$videoId}/sddefault.jpg",
+            "https://i.ytimg.com/vi/{$videoId}/hqdefault.jpg",
+        ];
+        if($size === 'SD') {
+            return $thumbUrls[1];
+        } 
+        if($size === 'HQ') {
+            return $thumbUrls[2];
+        }
+
+        return $thumbUrls[0];
+
+    }
+
+    private function getViemoVideoPoster($videoUrl)
+    {
+        $oembedUrl = 'https://vimeo.com/api/oembed.json?url=' . urlencode($videoUrl);
+        $res = Http::get($oembedUrl);
+        if (! $res->successful()) {  
+            return jsonResponse(false,'Unable to get Vimeo oEmbed info. Video may be private or URL invalid.',422);
+        }
+        $data = $res->json();
+        if(notEmpty($data['thumbnail_url'])){
+            return $data['thumbnail_url'];
+        }
+        return;
+    }
+
+
+    // No Need
+    private function firstReachable(array $urls): ?string
+    {
+        foreach ($urls as $u) {
+            $res = Http::head($u);
+            if ($res->successful() && $res->header('Content-Type') && str_contains($res->header('Content-Type'), 'image')) {
+                return $u;
+            }
+            // some hosts don't allow HEAD; attempt GET but only check status
+            if ($res->status() == 405) {
+                $resGet = Http::get($u);
+                if ($resGet->successful() && str_contains($resGet->header('Content-Type') ?? '', 'image')) {
+                    return $u;
+                }
+            }
+        }
+        return null;
     }
 }

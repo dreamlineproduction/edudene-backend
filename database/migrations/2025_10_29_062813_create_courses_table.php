@@ -18,8 +18,6 @@ return new class extends Migration
             $table->foreignId('category_id')->nullable()->constrained('categories')->cascadeOnDelete();
             $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->cascadeOnDelete();
             $table->foreignId('sub_sub_category_id')->nullable()->constrained('sub_sub_categories')->cascadeOnDelete();
-            $table->foreignId('country_id')->nullable()->constrained('countries')->cascadeOnDelete();
-            $table->foreignId('state_id')->nullable()->constrained('states')->cascadeOnDelete();
             $table->string('title', 200)->nullable();
             $table->string('slug',200)->nullable()->unique();
             $table->tinyText('short_description')->nullable();

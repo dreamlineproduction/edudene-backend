@@ -87,4 +87,42 @@ if(!function_exists('generateUniqueSlug')){
         return $slug;
     }
 }
+
+if(!function_exists('getYouTubeId')) {
+    function getYouTubeId(string $url) {
+        if(empty($url)){
+            return;
+        }
+
+        if (preg_match('/(?:youtube\.com\/.*v=|youtube\.com\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/i', $url, $m)) {
+            return $m[1];
+        }
+
+        // fallback: try parse query
+        $parts = parse_url($url);
+        if (!empty($parts['query'])) {
+            parse_str($parts['query'], $qs);
+            return $qs['v'] ?? null;
+        }
+        return;
+    }
+}
+
+if(!function_exists('isVimeo')){
+    function isVimeo($url){
+        if(empty($url)){
+            return;
+        }
+        return (bool) preg_match('/vimeo\.com/i', $url);
+    }
+}
+
+if(!function_exists('isYouTube')){
+    function isYouTube($url){
+        if(empty($url)){
+            return;
+        }
+        return (bool) preg_match('/(youtube\.com|youtu\.be)/i', $url);
+    }
+}
 ?>

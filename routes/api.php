@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\Api\PageController as FrontPageController;
+use App\Http\Controllers\Api\FileController;
 
 use App\Http\Controllers\Api\User\UserAuthController;
 use App\Http\Controllers\Api\User\UserProfileController;
@@ -21,7 +23,7 @@ use App\Http\Controllers\Api\Tutor\TutorAuthController;
 
 // Public API Routes
 
-
+//Route::get('/testing',[CourseController::class, 'saveMedia']);
 
 Route::get('/v1/pages/', [FrontPageController::class, 'index']);
 Route::get('/v1/pages/{slug}', [FrontPageController::class, 'show']);
@@ -41,6 +43,11 @@ Route::post('/v1/tutor/login', [TutorAuthController::class, 'login']);
 Route::post('/v1/forgot-password', [UserAuthController::class, 'forgotPassword']);
 Route::get('v1/check-token',[UserAuthController::class, 'checkIsValidToken']);
 Route::post('/v1/update-password', [UserAuthController::class, 'updatePassword']);
+//Route::post('/v1/upload', [FileController::class, 'upload']);
+Route::post('/v1/file/upload-image', [FileController::class, 'uploadImage']);
+Route::post('/v1/file/upload-video', [FileController::class, 'uploadVideo']);
+Route::post('/v1/testing/{FILE_ID}', [FileController::class, 'imageTesting']);
+
 
 // Common Routes - login required only not role based
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -52,6 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/v1/course/save-requirment', [CourseController::class, 'saveRequirment']);
     Route::post('/v1/course/save-outcome', [CourseController::class, 'saveOutcome']);
     Route::post('/v1/course/save-price', [CourseController::class, 'savePrice']);
+    Route::post('/v1/course/save-media', [CourseController::class, 'saveMedia']);
     Route::post('/v1/course/save-seo', [CourseController::class, 'saveSeo']);
     
     // Course Chapter Routes
