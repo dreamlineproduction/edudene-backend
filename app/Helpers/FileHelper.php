@@ -11,7 +11,6 @@ use App\Models\File;
 
 if(!function_exists('imageUploadS3')){
     function imageUploadS3(Request $request){
-
         try{
             $file = $request->file('file');
             $mime = $file->getMimeType();
@@ -31,12 +30,12 @@ if(!function_exists('imageUploadS3')){
 
             // 3. Process the original image
             $originalImage = $manager->read($file->getRealPath());
-            $path = 'temp/' . $fileName;
+            $path = 'temp/images/' . $fileName;
             Storage::disk('s3')->put($path, $originalImage->encode());
             $url = Storage::disk('s3')->url($path);
 
             $thumbnailUrl = generateImageThumbnail($path);
-            $thumbPath = str_replace('temp/', 'temp/thumbnails/', $path);
+            $thumbPath = str_replace('temp/images/', 'temp/images/thumbnails/', $path);
 
             // 5. Store file record in the database
             $model->name = $fileName;
@@ -59,15 +58,14 @@ if(!function_exists('imageUploadS3')){
                 'thumbnail_url' => $thumbnailUrl,
             ];
         } catch(\Exception $e){
-            echo $e->getMessage();
-            exit;
+           return jsonResponse(false,'Upload failed: ' . $e->getMessage(),null,500);
         }
     }
 }
 
 if(!function_exists('generateImageThumbnail'))
 {
-    function generateImageThumbnail($s3Path,$width = 350,$folderName = 'temp')
+    function generateImageThumbnail($s3Path,$width = 350,$folderName = 'temp/images')
     {
         try {
             $manager = new ImageManager(new Driver());
@@ -80,24 +78,140 @@ if(!function_exists('generateImageThumbnail'))
             $image->scale(width: $width); // Default 350
 
             // Create a unique name for the thumbnail
-                                    // 'temp/'      'temp/'
+                                    // 'temp/images'      'temp/images'
             $thumbPath = str_replace($folderName.'/', $folderName.'/thumbnails/', $s3Path);
 
             // Put the encoded thumbnail data back on S3
             Storage::disk('s3')->put($thumbPath, $image->encode());
 
             return Storage::disk('s3')->url($thumbPath);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit;
+        } catch (\Exception $e) {           
+            return jsonResponse(false,'Exception: ' . $e->getMessage(),null,500);
         }
     }
 }
 
+if(!function_exists('documentUploadS3'))
+{
+    function documentUploadS3(Request $request)
+    {
+        try {
+            $file = $request->file('file');
+            $mime = $file->getMimeType();
+
+            $fileExtension = $file->getClientOriginalExtension();
+
+            $folder = 'temp/document/';
+
+            // Create File Name 
+            $model = new File;
+            $model->save();
+            $fileName = Str::random(20) . '-' . time() . '-document-' . $model->id . '.'.$fileExtension;
+
+            $path = $folder. $fileName;
+
+            Storage::disk('s3')->put($path, file_get_contents($file));
+
+            $url = Storage::disk('s3')->url($path);
+
+            // 5. Store file record in the database
+            $model->name = $fileName;
+            $model->path = $path;
+            $model->url = $url;
+            $model->type = 'document';
+            $model->mime_type = $mime;
+            $model->save();
+
+            return [
+                'file_id'=>$model->id,
+                'path' => $path,
+                'preview_url' => $url,
+                'thumbnail_url' => $url,
+            ];
+
+        } catch (\Exception $e) {
+            return jsonResponse(false,'Upload failed: ' . $e->getMessage(),null,500);           
+        }
+    }
+}
+
+
+if(!function_exists('videoUploadS3'))
+{
+    function videoUploadS3(Request $request)
+    {
+        try {
+            $file = $request->file('file');
+            $mime = $file->getMimeType();
+            $extension = $file->getClientOriginalExtension();
+
+            $model = new File;
+            $model->save();
+
+            $time = time();
+            $strRandom20 = Str::random(20);
+            $fileName = $strRandom20. '-' . $time . '-video-' . $model->id . '.' . $extension;
+            $path = 'temp/videos/' . $fileName;
+
+            // Upload video to S3
+            Storage::disk('s3')->put($path, file_get_contents($file));
+            $url = Storage::disk('s3')->url($path);
+
+            // Generate video thumbnail using FFmpeg (if available)
+            $posterUrl = null;
+            $tempVideoPath = storage_path('app/temp/' . $fileName);
+            $file->move(storage_path('app/temp/'), $fileName);
+
+            $thumbnailPath = storage_path('app/temp/' . pathinfo($fileName, PATHINFO_FILENAME) . '.jpg');
+            $command = "ffmpeg -i {$tempVideoPath} -ss 00:00:02 -vframes 1 {$thumbnailPath}";
+            exec($command);
+
+            if (file_exists($thumbnailPath)) {
+                $thumbContent = file_get_contents($thumbnailPath);
+               // $thumbName = 'thumbnails/' . Str::random(10) . '-' . time() . '.jpg';
+                $posterName = $strRandom20 . '-' . $time . '-video-' . $model->id . '.jpg';
+                $posterPath = 'temp/videos/thumbnails/'.$posterName;
+
+                Storage::disk('s3')->put($posterPath, $thumbContent);
+                $posterUrl = Storage::disk('s3')->url($posterPath);
+            }
+
+            // Save file record
+            $model->name = $fileName;
+            $model->path = $path;
+            $model->url = $url;
+            $model->type = 'video';
+            $model->mime_type = $mime;
+            $model->poster_url = $posterUrl;
+            $model->poster_path = $posterPath;
+            $model->poster_name = $posterName;
+            
+            $model->save();
+
+            // Cleanup
+            @unlink($tempVideoPath);
+            @unlink($thumbnailPath);
+
+            $data = [
+                'file_id' => $model->id,
+                'path' => $path,
+                'video_url' => $url,
+                'poster_path' => $posterPath,
+                'poster_url' => $posterUrl,
+            ];
+            return $data;
+        } catch (\Exception $e) {
+            return jsonResponse(false,'Exception: ' . $e->getMessage(),null,500);
+        }
+    }
+}
+
+
 if(!function_exists('finalizeImage'))
 {
-    function finalizeImage($fileId = 0,$newOriginalPath)
+    function finalizeFile($fileId = 0,$newOriginalPath)
     {
+        $return = [];
         try {
             $file = File::findOrFail($fileId);
             if(!$file)
@@ -105,32 +219,83 @@ if(!function_exists('finalizeImage'))
                 throw new \Exception('File found in our temp table.');
             }
 
+            $newOriginalPosterPath = $newOriginalPath.'/' . basename($file->poster_path);
             $newOriginalPath = $newOriginalPath.'/' . basename($file->path);
 
+
             // Move the original file
-            if (Storage::disk('s3')->exists($file->path)) {
-                Storage::disk('s3')->move($file->path, $newOriginalPath);
+            if($file->type === 'video'){
+                // Video Check exists
+                if (Storage::disk('s3')->exists($file->path) && Storage::disk('s3')->exists($file->poster_path)) {                    
+                    Storage::disk('s3')->move($file->path, $newOriginalPath);
+                    $newVideoUrl = Storage::disk('s3')->url($newOriginalPath);
 
-                // Delete  thumbnails
-                $oldThumbnailPath = str_replace('temp/', 'temp/thumbnails/', $file->path);
-                Storage::disk('s3')->delete($oldThumbnailPath);
-                $file->delete();
+                    Storage::disk('s3')->move($file->poster_path, $newOriginalPosterPath);
+                    $newVideoPosterUrl = Storage::disk('s3')->url($newOriginalPosterPath);
 
-            } else {
-                throw new \Exception('Original file not found on S3.');
+                    // Delete  thumbnails
+                    $oldThumbnailPath = str_replace('temp/', 'temp/thumbnails/', $file->poster_path);
+                    Storage::disk('s3')->delete($oldThumbnailPath);
+                    $file->delete();
+
+                    $return['video_path'] = $newOriginalPath;
+                    $return['video_url'] =  $newVideoUrl;
+                    $return['poster_path'] = $newOriginalPosterPath;
+                    $return['poster_url'] = $newVideoPosterUrl;
+                } else {
+                    throw new \Exception('Original file not found on S3.');
+                }
+            } 
+            
+            if($file->type === 'document' && notEmpty($file->path))
+            {
+                if (Storage::disk('s3')->exists($file->path)) {
+                    Storage::disk('s3')->move($file->path, $newOriginalPath);
+                    $newUrl = Storage::disk('s3')->url($newOriginalPath);
+
+                    $return['path'] = $newOriginalPath;
+                    $return['url'] =  $newUrl;
+                }
+            }
+            
+            if($file->type === 'image' && notEmpty($file->path)){
+                if (Storage::disk('s3')->exists($file->path)) {
+                    Storage::disk('s3')->move($file->path, $newOriginalPath);
+                    $newUrl = Storage::disk('s3')->url($newOriginalPath);
+
+                    // Delete  thumbnails
+                    if (Storage::disk('s3')->exists($file->poster_path)) {
+                        Storage::disk('s3')->delete($file->poster_path);
+                    }
+
+                    $return['path'] = $newOriginalPath;
+                    $return['url'] =  $newUrl;
+                }
             }
 
-
-            return [
-                'path' => $newOriginalPath,
-                'url' => $file->url,
-            ];
+            $file->delete();            
+            
+           
+            return $return;
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit;
+            return jsonResponse(false,'Exception: ' . $e->getMessage(),null,500);
         }
     }
 }
+
+if(!function_exists('deleteS3File')){
+    function deleteS3File(string $path){
+        if(empty($path)){
+            return;
+        }
+
+        if (Storage::disk('s3')->exists($path)) {
+            Storage::disk('s3')->delete($path);
+        }
+    }
+}
+
+
 
 /**
  * Determine the file type based on MIME type.
@@ -188,8 +353,9 @@ if(!function_exists('getViemoVideoPoster'))
 
         $oembedUrl = 'https://vimeo.com/api/oembed.json?url=' . urlencode($videoUrl);
         $res = Http::get($oembedUrl);
-        if (! $res->successful()) {  
-            return jsonResponse(false,'Unable to get Vimeo oEmbed info. Video may be private or URL invalid.',422);
+        if (!$res->successful()) {  
+            //'Unable to get Vimeo oEmbed info. Video may be private or URL invalid.'
+            return;             
         }
         $data = $res->json();
         if(notEmpty($data['thumbnail_url'])){

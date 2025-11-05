@@ -16,8 +16,8 @@ class CourseLesson extends Model
         'video_url',
         'video',
         'image',
+        'image_url',
         'document',
-        'duration',
         'created_at',
         'updated_at',
     ];

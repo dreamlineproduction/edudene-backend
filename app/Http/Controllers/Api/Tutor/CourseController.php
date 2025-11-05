@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api\Tutor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\CourseAsset;
 use App\Models\CourseOutcome;
 use App\Models\CourseRequirement;
 use App\Models\CourseSeo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -33,41 +35,58 @@ class CourseController extends Controller
         return jsonResponse(true, 'Course list', $data);
     }
 
+
+    public function show(string $id){
+        
+        $course = $this->singleCourse($id);
+
+        if(notEmpty($course)) {
+            return jsonResponse(true,'Course data',$course);
+        }   
+
+        return jsonResponse(false,'Course not found in our database',null,404);
+    }
+
     /**
      * Save course basic information
      */
     public function saveBasicInformation(Request $request)
     {
-        //
-        $validation =[
-            'title' => 'required|string|max:190',
-            'short_description' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'level' => 'required|string|in:Beginner,Advanced,Intermediate',
-            'course_type_id' => 'required|integer|exists:course_types,id',
-            'category_id' => 'required|integer|exists:categories,id',
-            'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
-            'sub_sub_category_id' => 'nullable|integer|exists:sub_sub_categories,id',
-        ];
+        try{
+            //
+            $validation =[
+                'title' => 'required|string|max:190',
+                'short_description' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'level' => 'required|string|in:Beginner,Advanced,Intermediate',
+                'course_type_id' => 'required|integer|exists:course_types,id',
+                'category_id' => 'required|integer|exists:categories,id',
+                'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
+                'sub_sub_category_id' => 'nullable|integer|exists:sub_sub_categories,id',
+            ];
 
-        if($request->has('type') && $request->type == 1){
-            $validation['country_id'] = 'required|integer|exists:countries,id';
-            $validation['state_id'] = 'required|integer|exists:states,id';
+            if($request->has('type') && $request->type == 1){
+                $validation['country_id'] = 'required|integer|exists:countries,id';
+                $validation['state_id'] = 'required|integer|exists:states,id';
+            }
+
+            $request->validate($validation);
+
+            $user = auth('sanctum')->user();
+            $request->merge([
+                'user_id' => $user->id,
+                'status' => 'Draft',
+                'slug' => generateUniqueSlug($request->title, 'App\Models\Course'),
+            ]);
+            $find = ['user_id' => $user->id, 'id' => $request->course_id];
+            $course = Course::updateOrCreate($find,$request->toArray());
+            return jsonResponse(true, 'Course created successfully.', $course);
+        } catch(\Exception $e){
+            return jsonResponse(false, $e->getMessage(), null,500);
         }
-
-        $request->validate($validation);
-
-        $user = auth('sanctum')->user();
-        $request->merge([
-            'user_id' => $user->id,
-            'status' => 'Draft',
-            'slug' => generateUniqueSlug($request->title, 'App\Models\Course'),
-        ]);
-
-        $find = ['user_id' => $user->id, 'id' => $request->course_id];
-        $course = Course::updateOrCreate($find,$request->toArray());
         
-        return jsonResponse(true, 'Course created successfully.', $course);
+        
+        
     }
 
     /**
@@ -98,9 +117,9 @@ class CourseController extends Controller
                 'title' => $requirement['title'],
             ]);
         }
-        
-        $data =  CourseRequirement::where('course_id', $request->course_id)->get();            
-        return jsonResponse(true, 'Requirments created', $data);
+                
+        $course = $this->singleCourse($request->course_id);          
+        return jsonResponse(true, 'Course data', $course);
     }
 
     /**
@@ -128,8 +147,8 @@ class CourseController extends Controller
             ]);
         }
         
-        $data =  CourseOutcome::where('course_id', $request->course_id)->get();            
-        return jsonResponse(true, 'Outcomes created', $data);
+        $course = $this->singleCourse($request->course_id);              
+        return jsonResponse(true, 'Course data', $course);
     }
     
 
@@ -148,6 +167,7 @@ class CourseController extends Controller
             'discount_price' => $request->discount_price,
         ]);
 
+        $course = $this->singleCourse($request->course_id); 
         return jsonResponse(true, 'Course price updated successfully.', $course);
     }
 
@@ -161,6 +181,8 @@ class CourseController extends Controller
 
         if($request->type === 'Youtube' || $request->type === 'Vimeo'){
             $validation['video_url'] = 'required|url';
+        }else {
+            $validation['file_id'] = 'required|integer|exists:files,id';
         }
 
         $request->validate($validation); 
@@ -170,33 +192,62 @@ class CourseController extends Controller
         //$find = ['course_id' => $request->course_id];
 
         if(!isVimeo($videoUrl) && !isYouTube($videoUrl)){
-            return jsonResponse(false,'Only YouTube and Vimeo URLs are supported.',422);
+            return jsonResponse(false,'Only YouTube and Vimeo URLs are supported.',null,422);
         }
 
         if($request->type === 'Youtube'){
             $videoId = getYouTubeId($videoUrl);
             if (! $videoId) {
-                return jsonResponse(false,'Invalid YouTube URL/ID',422);                
+                return jsonResponse(false,'Invalid YouTube URL/ID',null,422);                
             }
 
             $remoteThumb = getYoutubeVideoPoster($videoId);
+
+            $insertData['video_url'] = $request->video_url;
         }
 
         if($request->type === 'Vimeo'){
             $remoteThumb =  getViemoVideoPoster($videoUrl);
+            $insertData['video_url'] = $request->video_url;
         }
+        
+        if ($request->type !== 'Local' && empty($remoteThumb)) 
+        {          
+            return jsonResponse(false,'Thumbnail URL not found.',null,422);            
+        }
+
+        $courseAsset = CourseAsset::where('course_id',$request->course_id)->first();
+
+        // Insert array
+        $insertData = [];
+        $insertData['course_id'] = $request->course_id;
+        $insertData['type'] = $request->type;
+        $insertData['video_url'] = $request->video_url;
 
         if($request->type === 'Local'){
 
+            // Check is file already exists.
+            if (notEmpty($courseAsset->video) && notEmpty($courseAsset->poster)) {
+                // Delete old video and video poster
+                deleteS3File($courseAsset->video);
+                deleteS3File($courseAsset->poster);
+            }
+
+            $newPath = 'courses/course-'.$request->course_id;
+
+            $finalizeImage = finalizeFile($request->file_id,$newPath);
+            $insertData['video'] = $finalizeImage['video_path'];
+            $insertData['video_url'] = $finalizeImage['video_url'];
+            $insertData['poster'] = $finalizeImage['poster_path'];
+            $insertData['poster_url'] = $finalizeImage['poster_url'];
         }
 
-        if (empty($remoteThumb)) {
-            return jsonResponse(false,'Thumbnail URL not found.',422);            
-        }
         
-        $response['preview_url'] = $remoteThumb;
-        $response['thumbnail_url'] = $remoteThumb;
-        return jsonResponse(true,'Data retrive',$response);
+        $find = ['course_id' => $request->course_id];
+        CourseAsset::updateOrCreate($find,$insertData);
+        
+        $course = $this->singleCourse($request->course_id);
+        return jsonResponse(true,'Data retrive',$course);
     }
 
     public function saveSeo(Request $request)
@@ -209,8 +260,10 @@ class CourseController extends Controller
         ]);
 
         $find = ['course_id' => $request->course_id];
-        $data = CourseSeo::updateOrCreate($find,$request->toArray());
-        return jsonResponse(true, 'Course SEO information updated successfully.', $data);
+        CourseSeo::updateOrCreate($find,$request->toArray());
+
+        $course = $this->singleCourse($request->course_id);
+        return jsonResponse(true, 'Course SEO information updated successfully.', $course);
     }
 
 
@@ -279,5 +332,15 @@ class CourseController extends Controller
             }
         }
         return null;
+    }
+
+
+    private function singleCourse(string $id){
+         $course =  Course::where('id',$id)
+            ->with(['user','courseType','category','subCategory','subSubCategory',
+            'courseOutcomes','courseRequirements','courseAsset','courseSeo','courseChapters'
+            ])->first(); 
+
+        return $course;
     }
 }

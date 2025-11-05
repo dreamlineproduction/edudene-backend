@@ -46,6 +46,7 @@ Route::post('/v1/update-password', [UserAuthController::class, 'updatePassword']
 //Route::post('/v1/upload', [FileController::class, 'upload']);
 Route::post('/v1/file/upload-image', [FileController::class, 'uploadImage']);
 Route::post('/v1/file/upload-video', [FileController::class, 'uploadVideo']);
+Route::post('/v1/file/upload-document', [FileController::class, 'uploadDocument']);
 Route::post('/v1/testing/{FILE_ID}', [FileController::class, 'imageTesting']);
 
 
@@ -72,6 +73,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Course Lesson Routes
     Route::get('/v1/course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson', [CourseLessonController::class,'index']);
     Route::post('/v1/course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson', [CourseLessonController::class,'store']);
+    Route::put('/v1/course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'update']);
     Route::get('/v1/course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'show']);
 
     Route::delete('/v1/course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'destroy']);

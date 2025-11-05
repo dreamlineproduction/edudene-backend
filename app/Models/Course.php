@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Course extends Model
 {
@@ -30,7 +31,7 @@ class Course extends Model
     
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select('id','role_id','full_name');
     }
     
     public function courseType()
@@ -70,6 +71,10 @@ class Course extends Model
     public function courseChapters()
     {
         return $this->hasMany(CourseChapter::class);
+    }
+
+    public function courseAsset(){
+        return $this->hasOne(CourseAsset::class);
     }
 
     protected $hidden   = [

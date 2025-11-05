@@ -17,16 +17,16 @@ class FileController extends Controller
     public function uploadImage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-           'file' => 'required|file|mimetypes:image/jpeg,image/png,image/webp|max:10240'
-        ]);
+           'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'
+        ]);            
 
         if ($validator->fails()) {
-            return jsonResponse(false,$validator->errors()->first('file'));          
+            return jsonResponse(false,$validator->errors()->first('file'),null,400);          
         }
 
         $responseArray =  imageUploadS3($request);
 
-        return jsonResponse('File uploaded successfully', $responseArray);
+        return jsonResponse(true,'File uploaded successfully', $responseArray);
     }
 
 
@@ -37,77 +37,31 @@ class FileController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return jsonResponse(false,$validator->errors()->first('file'));          
+            return jsonResponse(false,$validator->errors()->first('file'),null,400);          
         }
         
-     
+        $responseArray =  videoUploadS3($request);
+        return jsonResponse(true,'Video uploaded successfully', $responseArray);
+    }
 
-        try {
-            $file = $request->file('file');
-            $mime = $file->getMimeType();
-            $extension = $file->getClientOriginalExtension();
 
-            $model = new File;
-            $model->save();
+    public function uploadDocument(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+           'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:10240', // 10MB max
+        ]);
 
-            $time = time();
-            $fileName = Str::random(20) . '-' . $time . '-video-' . $model->id . '.' . $extension;
-            $path = 'videos/' . $fileName;
-
-            // Upload video to S3
-            Storage::disk('s3')->put($path, file_get_contents($file));
-            $url = Storage::disk('s3')->url($path);
-
-            // Generate video thumbnail using FFmpeg (if available)
-            $posterUrl = null;
-            $tempVideoPath = storage_path('app/temp/' . $fileName);
-            $file->move(storage_path('app/temp/'), $fileName);
-
-            $thumbnailPath = storage_path('app/temp/' . pathinfo($fileName, PATHINFO_FILENAME) . '.jpg');
-            $command = "ffmpeg -i {$tempVideoPath} -ss 00:00:02 -vframes 1 {$thumbnailPath}";
-            exec($command);
-
-            if (file_exists($thumbnailPath)) {
-                $thumbContent = file_get_contents($thumbnailPath);
-               // $thumbName = 'thumbnails/' . Str::random(10) . '-' . time() . '.jpg';
-                $posterName = Str::random(20) . '-' . $time . '-video-' . $model->id . '.jpg';
-                $posterPath = 'thumbnails/'.$posterName;
-
-                Storage::disk('s3')->put($posterPath, $thumbContent);
-                $posterUrl = Storage::disk('s3')->url($posterPath);
-            }
-
-            // Save file record
-            $model->name = $fileName;
-            $model->path = $path;
-            $model->url = $url;
-            $model->type = 'video';
-            $model->mime_type = $mime;
-            $model->poster_url = $posterUrl;
-            $model->poster_path = $posterPath;
-            $model->poster_name = $posterName;
-            
-            $model->save();
-
-            // Cleanup
-            @unlink($tempVideoPath);
-            @unlink($thumbnailPath);
-
-            $data = [
-                'video_id' => $model->id,
-                'path' => $path,
-                'video_url' => $url,
-                'poster_url' => $posterUrl,
-            ];
-            return jsonResponse(true,$data);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        if ($validator->fails()) {
+            return jsonResponse(false,$validator->errors()->first('file'),null,400);          
         }
+
+        $responseArray =  documentUploadS3($request);
+        return jsonResponse(true,'Document uploaded successfully', $responseArray);
     }
 
     public function imageTesting($fileId)
     {
-        $finalizeImage =  finalizeImage($fileId, 'profile');
+        $finalizeImage =  finalizeFile($fileId, 'profile');
 
         $filePath = generateImageThumbnail($finalizeImage['path'], 500, 'profile');
 

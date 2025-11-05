@@ -40,25 +40,55 @@ class CourseLessonController extends Controller
             'type' => 'required|in:Youtube,Vimeo,VideoUrl,Video,Image,Document',
         ];
 
+
+        
         if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
             $validation['video_url'] = 'required|url|max:255';
-        }elseif($request->type == 'Video'){
-            $validation['video'] = 'required|file|mimes:mp4,mov,avi,wmv|max:20480'; //  20MB
-        }elseif($request->type == 'Image'){
-            $validation['image'] = 'required|image|mimes:jpeg,png,jpg,gif|max:5120'; // max 5MB     
-        } elseif($request->type == 'Document'){
-            $validation['document'] = 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:10240'; // max 10MB     
-        }
-
-
+        } 
+        if($request->type == 'Video' || $request->type == 'Document'){
+            $validation['file_id'] = 'required|exists:files,id';
+        } 
 
         $request->validate($validation);
+
+        if($request->type === 'Youtube' && !isYouTube($request->video_url)){
+            return jsonResponse(false,'Enter valid youtube url',null,422);
+        }
+
+        if($request->type === 'Vimeo' && !isVimeo($request->video_url)){
+            return jsonResponse(false,'Enter valid vimeo url',null,422);
+        }
 
         $request->merge([
             'course_chapter_id' => $courseChaper->id,
             'course_id' => $course->id,
         ]);
-        $data = CourseLesson::create($request->toArray());
+
+        $insertData['course_id'] = $courseId;
+        $insertData['course_chapter_id'] = $courseChapterId;
+        $insertData['type'] = $request->type;
+        
+        $newPath = 'courses/course-'.$courseId;
+
+        if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
+            $insertData['video_url'] = $request->video_url;
+        }
+
+        if($request->type == 'Document' || $request->type == 'Image'){
+            $finalize = finalizeFile($request->file_id,$newPath);
+            $insertData['image'] = $finalize['path'];
+            $insertData['image_url'] = $finalize['url'];
+        }
+
+        if($request->type == 'Video'){
+            $finalizeVideo = finalizeFile($request->file_id,$newPath);
+            $insertData['video'] = $finalizeVideo['video_path'];
+            $insertData['video_url'] = $finalizeVideo['video_url'];
+            $insertData['image'] = $finalizeVideo['poster_path'];
+            $insertData['image_url'] = $finalizeVideo['poster_url'];
+        }
+
+        $data = CourseLesson::create($insertData);
 
         return jsonResponse(true, 'Course lesson created successfully.', $data);
     }
@@ -105,15 +135,10 @@ class CourseLessonController extends Controller
 
         if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
             $validation['video_url'] = 'required|url|max:255';
-        }elseif($request->type == 'Video'){
-            $validation['video'] = 'required|file|mimes:mp4,mov,avi,wmv|max:20480'; //  20MB
-        }elseif($request->type == 'Image'){
-            $validation['image'] = 'required|image|mimes:jpeg,png,jpg,gif|max:5120'; // max 5MB     
-        } elseif($request->type == 'Document'){
-            $validation['document'] = 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx|max:10240'; // max 10MB     
-        }
-
-        
+        } 
+        if($request->type == 'Video' || $request->type == 'Document'){
+            $validation['file_id'] = 'required|exists:files,id';
+        } 
 
 
         $request->validate($validation);
@@ -123,19 +148,44 @@ class CourseLessonController extends Controller
             return jsonResponse(false, 'Course lesson not found.', null, 404);
         }
 
-        $request->merge([
-            'course_chapter_id' => $courseChaper->id,
-        ]);
-        $courseLesson->update($request->toArray());
+        $updateData['course_id'] = $courseId;
+        $updateData['course_chapter_id'] = $courseChaper->id;
+        $updateData['type'] = $request->type;
 
-        
-        $request->merge([
-            'course_chapter_id' => $courseChaper->id,
-            'course_id' => $course->id,
-        ]);
-        $data = CourseLesson::create($request->toArray());
+        $newPath = 'courses/course-'.$courseId;
 
-        return jsonResponse(true, 'Course lesson created successfully.', $data);
+        if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
+            $updateData['video_url'] = $request->video_url;
+        }
+
+        if($request->type == 'Document' || $request->type == 'Image'){
+            // Delete Old Document or image
+            if(notEmpty($courseLesson->image)){
+                deleteS3File($courseLesson->image);
+            }
+
+            $finalize = finalizeFile($request->file_id,$newPath);
+            $updateData['image'] = $finalize['path'];
+            $updateData['image_url'] = $finalize['url'];
+        }
+
+         if($request->type == 'Video'){
+
+            // Delete Old Video and poster
+            if(notEmpty($courseLesson->video) && notEmpty($courseLesson->image)){
+                deleteS3File($courseLesson->video);
+                deleteS3File($courseLesson->image);
+            }
+
+            $finalizeVideo = finalizeFile($request->file_id,$newPath);
+            $updateData['video'] = $finalizeVideo['video_path'];
+            $updateData['video_url'] = $finalizeVideo['video_url'];
+            $updateData['image'] = $finalizeVideo['poster_path'];
+            $updateData['image_url'] = $finalizeVideo['poster_url'];
+        }
+
+        $courseLesson = $courseLesson->update($updateData);
+        return jsonResponse(true, 'Course lesson updated successfully.', $updateData);
 
     }
 
@@ -158,6 +208,18 @@ class CourseLessonController extends Controller
         if (!$courseLesson) {
             return jsonResponse(false, 'Course lesson not found.', null, 404);
         }
+
+        // Delete video on s3
+        if(($courseLesson->type === 'Document' || $courseLesson->type === 'Image') && notEmpty($courseLesson->image)){
+            deleteS3File($courseLesson->image);
+        }
+
+        // Delete video on s3
+        if($courseLesson->type === 'Video' && notEmpty($courseLesson->video) && notEmpty($courseLesson->image)){
+            deleteS3File($courseLesson->video);
+            deleteS3File($courseLesson->image);
+        }
+        
 
         $courseLesson->delete();
         return jsonResponse(true, 'Course lesson deleted successfully.',);

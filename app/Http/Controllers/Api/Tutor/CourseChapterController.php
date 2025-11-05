@@ -41,6 +41,7 @@ class CourseChapterController extends Controller
         $request->merge(['course_id' => $courseId]);
         $data = CourseChapter::create($request->toArray());
 
+        
         return jsonResponse(true, 'Course chapter created successfully.', $data);
     }
 
