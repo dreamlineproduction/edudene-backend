@@ -73,7 +73,8 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <img src="{{ asset('images/edudene_purple.svg') }}" alt="{{ config('app.name') }} Logo">
+            {{-- <img src="{{ asset('images/edudene_purple.svg') }}" alt="{{ config('app.name') }} Logo"> --}}
+            <img src="https://edudene.com/public/assets/img/logos/edudene_purple.svg" alt="{{ config('app.name') }} Logo">
             <h1>Password Reset Request</h1>
         </div>
 

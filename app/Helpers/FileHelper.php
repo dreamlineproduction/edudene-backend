@@ -278,7 +278,7 @@ if(!function_exists('finalizeImage'))
            
             return $return;
         } catch (\Exception $e) {
-            return jsonResponse(false,'Exception: ' . $e->getMessage(),null,500);
+           throw $e;
         }
     }
 }

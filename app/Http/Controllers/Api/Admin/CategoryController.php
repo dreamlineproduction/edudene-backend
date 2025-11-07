@@ -14,7 +14,6 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::latest()->get();
-
         return jsonResponse(true, 'Categories fetched successfully', $categories);
     }
 
@@ -38,6 +37,15 @@ class CategoryController extends Controller
         return jsonResponse(true,'Category created successfully',$category);         
     }
 
+
+    public function show(string $id)
+    {
+        $category = Category::find($id);
+        if (!$category) {
+            return jsonResponse(false,'Category not found in our database.',$category,404);            
+        }
+        return jsonResponse(true,'Category details',$category);
+    }
   
   
 

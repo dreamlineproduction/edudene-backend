@@ -11,11 +11,13 @@ use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Admin\AdminProfileController;
 use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\CategoryLevelFourController;
 use App\Http\Controllers\Api\Admin\CouponController;
 use App\Http\Controllers\Api\Admin\FaqController;
 use App\Http\Controllers\Api\Admin\PageController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\Tutor\CourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseController;
 use App\Http\Controllers\Api\Tutor\CourseLessonController;
@@ -27,6 +29,9 @@ use App\Http\Controllers\Api\Tutor\TutorAuthController;
 
 Route::get('/v1/pages/', [FrontPageController::class, 'index']);
 Route::get('/v1/pages/{slug}', [FrontPageController::class, 'show']);
+Route::get('/v1/contact/topics', [ContactController::class, 'topics']);
+Route::post('/v1/contact', [ContactController::class, 'store']);
+
 
 //Public User Routes
 Route::post('/v1/user/register', [UserAuthController::class, 'register']);
@@ -112,15 +117,25 @@ Route::middleware(['auth:sanctum','role:5'])->group(function () {
     // Change Password Route
     Route::post('/v1/admin/change-password', [AdminProfileController::class, 'changePassword']);
 
+    // Category Level 2 Routes
+    Route::apiResource('/v1/admin/categories/level-two', SubCategoryController::class);  
+
+    // Category Level 3 Routes
+    Route::apiResource('/v1/admin/level-three', SubSubCategoryController::class);
+
+    // Category Level 4 Routes
+    Route::apiResource('/v1/admin/categories/level-four', CategoryLevelFourController::class);
+    
+    
+    
+    
     // Category Routes
     Route::apiResource('/v1/admin/categories', CategoryController::class);   
-
-    // Sub Category Routes
-    Route::apiResource('/v1/admin/subcategories', SubCategoryController::class);   
     
 
-    // Sub Sub Category Routes
-    Route::apiResource('/v1/admin/subsubcategories', SubSubCategoryController::class);
+    
+
+   
 
     // Faq Routes
     Route::apiResource('/v1/admin/faqs', FaqController::class);

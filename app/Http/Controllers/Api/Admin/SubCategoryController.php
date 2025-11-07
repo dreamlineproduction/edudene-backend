@@ -15,7 +15,7 @@ class SubCategoryController extends Controller
     {
 
         $data = SubCategory::with('category')->latest()->get();
-        return jsonResponse(true, 'Sub category fetched successfully', $data);        
+        return jsonResponse(true, 'Categories level two fetched successfully', $data);        
     }
 
 
@@ -37,9 +37,20 @@ class SubCategoryController extends Controller
         ]);
 
         $data = SubCategory::create($request->toArray());
-        return jsonResponse(true, 'Subcategory created successfully', $data);   
+        return jsonResponse(true, 'Categories level two created successfully', $data);   
     }
 
+    public function show(string $id)
+    {
+
+        $data = SubCategory::where('id', $id)->with('category')->first();
+
+        if (!$data) {
+            return jsonResponse(false, 'Categories level two not found in our database.', null, 404);
+        }
+        
+        return jsonResponse(true, 'Categories level two details', $data);
+    }
  
 
     /**
@@ -51,7 +62,7 @@ class SubCategoryController extends Controller
         $data = SubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(false, 'Subcategory not found in our database.', [], 404);               
+            return jsonResponse(false, 'Categories level two not found in our database.',null, 404);               
         }
 
         $request->validate([
@@ -67,7 +78,7 @@ class SubCategoryController extends Controller
 
         $data->update($request->toArray());
 
-        return jsonResponse(true, 'SubCategory updated successfully', $data);        
+        return jsonResponse(true, 'Categories level two updated successfully', $data);        
     }
 
     /**
@@ -78,11 +89,11 @@ class SubCategoryController extends Controller
         $subCategory = SubCategory::find($id);
 
         if (!$subCategory) {
-            return jsonResponse(false, 'Subcategory not found in our database.', [], 404);               
+            return jsonResponse(false, 'Categories level two not found in our database.',null, 404);               
         }
 
         $subCategory->delete();
 
-        return jsonResponse(true, 'Subcategory deleted successfully.', [], 200);               
+        return jsonResponse(true, 'Categories level two deleted successfully.',null, 200);               
     }
 }

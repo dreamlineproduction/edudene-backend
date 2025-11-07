@@ -13,8 +13,8 @@ class SubSubCategoryController extends Controller
      */
     public function index()
     {
-        $data = SubSubCategory::with(['category', 'subcategory'])->latest()->get();
-        return jsonResponse(true, 'Sub Sub Categories fetched successfully.', $data);         
+        $data = SubSubCategory::with(['category', 'categoryLevelTwo'])->latest()->get();
+        return jsonResponse(true, 'Category level three fetched successfully.', $data);         
     }
 
    
@@ -36,7 +36,7 @@ class SubSubCategoryController extends Controller
         ]);
 
         $data = SubSubCategory::create($request->toArray());
-        return jsonResponse(true, 'Sub Sub Category created successfully.', $data);
+        return jsonResponse(true, 'Category level three created successfully.', $data);
     }
 
     /**
@@ -45,6 +45,13 @@ class SubSubCategoryController extends Controller
     public function show(string $id)
     {
         //
+        $data = SubSubCategory::where('id',$id)->with(['category', 'categoryLevelTwo'])->first();
+
+        if (!$data) {
+            return jsonResponse(false, 'Category level three not found in our database.', null, 404);
+        }
+        
+        return jsonResponse(true, 'Category level three details.', $data);
     }
 
  
@@ -58,7 +65,7 @@ class SubSubCategoryController extends Controller
         $data = SubSubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(false, 'Sub Sub Category not found in our database.', [], 404);               
+            return jsonResponse(false, 'Category level three not found in our database.', [], 404);               
         }
 
         $request->validate([
@@ -74,7 +81,7 @@ class SubSubCategoryController extends Controller
 
         $data->update($request->toArray());
 
-        return jsonResponse(true, 'Sub Sub Category updated successfully.', $data);
+        return jsonResponse(true, 'Category level three updated successfully.', $data);
     }
 
     /**
@@ -86,10 +93,10 @@ class SubSubCategoryController extends Controller
         $data = SubSubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(true, 'Sub Sub Category not found in our database.', [], 404);               
+            return jsonResponse(true, 'Category level three not found in our database.', null, 404);               
         }
 
         $data->delete();
-        return jsonResponse(true, 'Sub Sub Category deleted successfully.');
+        return jsonResponse(true, 'Category level three deleted successfully.');
     }
 }

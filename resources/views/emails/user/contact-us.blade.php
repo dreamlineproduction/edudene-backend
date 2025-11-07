@@ -21,15 +21,24 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .header {
-            text-align: center;
             padding: 20px 0;
+            padding-bottom: 0px;
+            text-align: center;
         }
         .header img {
-            max-width: 150px;
+            
+            max-width: 250px;
+        }
+        .header h1{
+            font-size: 24px;
+            margin-top: 40px;
+            text-align: left;
         }
         .content {
-            padding: 20px;
-            text-align: center;
+           
+        }
+        .content .button-outer{
+            margin: 25px 0px
         }
         .button {
             display: inline-block;
@@ -66,26 +75,26 @@
         <div class="header">
             {{-- <img src="{{ asset('images/edudene_purple.svg') }}" alt="{{ config('app.name') }} Logo"> --}}
             <img src="https://edudene.com/public/assets/img/logos/edudene_purple.svg" alt="{{ config('app.name') }} Logo">
-            <h1>Welcome to {{ config('app.name') }}!</h1>
+            
+            <h1>Contact Us</h1>
         </div>
 
         <!-- Content -->
         <div class="content">
-            <p>Hello {{ $mailData['mail'] ?? 'User' }},</p>
-            <p>Thank you for registering with {{ config('app.name') }}! Please verify your email by clicking the button below:</p>
-            <p>
-                <a href="{{ $mailData['activationLink'] }}" class="button">Verify Your Email</a>
-            </p>
-            <p>Or copy and paste the following link into your browser:</p>
-            <p>
-                <a href="{{ $mailData['activationLink'] }}">{{ $mailData['activationLink'] }}</a>
-            </p>
-            <p>If you did not create an account, please ignore this email.</p>
+            <p>Hello {{ $mailData['fullName'] ?? 'User' }},</p>
+            <p>Thank you for contacting us, we will get back to you as soon as possible.</p>
+            <p>Regards,</p>
+
+            <br>
+            <p>Support Team</p>
+            <p><a href="{{env('WEBSITE_URL')}}" title="{{env('WEBSITE_URL')}}">{{env('WEBSITE_URL')}}</a></p>
+            <p>Learn Anytime, Anywhere</p>
+            <p>The Whole World is Your Classroom</p>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            <p>&copy; {{ date('Y') }} {{ env('app.name') }}. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
             <p>If you have any questions, contact us at <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.</p>
         </div>
     </div>
