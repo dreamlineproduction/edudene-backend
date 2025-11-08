@@ -63,29 +63,37 @@
         <div class="header">
             {{-- <img src="{{ asset('images/edudene_purple.svg') }}" alt="{{ config('app.name') }} Logo"> --}}
             <img src="https://edudene.com/public/assets/img/logos/edudene_purple.svg" alt="{{ config('app.name') }} Logo">
-            
-            <h1>Contact Us</h1>
+            <h1>New Contact Form Submission</h1>
         </div>
 
         <!-- Content -->
         <div class="content">
-            <p>Hello Admin</p>
-            <p>Someone has contacted you.</p>
-            <p>Name: <strong>{{$mailData['fullName']}}</strong></p>
-            <p>Email: <strong>{{$mailData['email']}}</strong></p>
-            <p>Topic: <strong>{{$mailData['topic']}}</strong></p>
-            <p>Subject: <strong>{{$mailData['subject']}}</strong></p>
-            <p>Message: <strong>{{$mailData['message']}}</strong></p>
+            <p>Hello Admin,</p>
+            <p>You have received a new message via the contact form:</p>
+
+            <p><strong>Name:</strong> {{ $mailData['fullName'] ?? 'N/A' }}</p>
+            <p><strong>Email:</strong> {{ $mailData['email'] ?? 'N/A' }}</p>
+            <p><strong>Topic:</strong> {{ $mailData['topic'] ?? 'N/A' }}</p>
+            <p><strong>Subject:</strong> {{ $mailData['subject'] ?? 'N/A' }}</p>
+            <p><strong>Message:</strong><br> {{ $mailData['message'] ?? 'N/A' }}</p>
+
             <br>
-            <p>Thank You</p>
-            <p><a href="" title="{{env('WEBSITE_URL')}}">{{env('WEBSITE_URL')}}</a> TEAM</p>
+            <p>Thank you,</p>
+            <p>
+                <a href="{{ env('WEBSITE_URL') }}" title="{{ env('WEBSITE_URL') }}">
+                   {{ env('WEBSITE_NAME') }} Team
+                </a>
+            </p>
         </div>
 
         <!-- Footer -->
         <div class="footer">
             <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
-            <p>If you have any questions, contact us at <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.</p>
+            <p>If you have any questions, contact us at 
+                <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.
+            </p>
         </div>
     </div>
+
 </body>
 </html>

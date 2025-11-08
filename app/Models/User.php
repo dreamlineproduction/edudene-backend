@@ -29,13 +29,37 @@ class User extends Authenticatable
         'status',
         'timezone',
     ];
+    public function role()
+    {
+        return $this->belongsTo(Role::class)->select('id','title');
+    }
 
+    public function information()
+    {
+        return $this->hasMany(UserInformation::class);
+    }
+
+    public function qualification()
+    {
+        return $this->hasMany(UserQualification::class);
+    }
+
+    public function billingInformation()
+    {
+        return $this->hasMany(UserBillingInformation::class);
+    }
 
     public function categories()
     {
         return $this->hasMany(UserCategory::class, 'user_id', 'id');
     }
 
+    public function course()
+    {
+        return $this->hasMany(Course::class);
+    }
+   
+    
     /**
      * The attributes that should be hidden for serialization.
      *

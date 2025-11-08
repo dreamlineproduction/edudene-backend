@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email Address</title>
+    <title>Security Verification</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,24 +34,12 @@
             margin-top: 40px;
             text-align: left;
         }
-        .content {
-           
+       
+        p strong{
+            font-weight: 600;
+            color: #777;
         }
-        .content .button-outer{
-            margin: 25px 0px
-        }
-        .button {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
+
         .footer {
             text-align: center;
             padding: 20px;
@@ -75,29 +63,43 @@
         <div class="header">
             {{-- <img src="{{ asset('images/edudene_purple.svg') }}" alt="{{ config('app.name') }} Logo"> --}}
             <img src="https://edudene.com/public/assets/img/logos/edudene_purple.svg" alt="{{ config('app.name') }} Logo">
-            <h1>Password Reset Request</h1>
+            
+            <h1>Security Verification</h1>
         </div>
 
         <!-- Content -->
         <div class="content">
             <p>Hello {{ $mailData['fullName'] ?? 'User' }},</p>
-            <p>We received a request to reset your password for your {{ config('app.name') }} account.</p>
-            <p>Click the button below to reset your password:</p>
-            <div class="button-outer">
-                <a href="{{ $mailData['resetLink'] }}" class="button">Reset Password</a>
-            </div>
-            <p>If the button doesn’t work, you can also copy and paste this link into your browser:</p>
-            <p>
-                <a href="{{ $mailData['resetLink'] }}">{{ $mailData['resetLink'] }}</a>
+            <p>We noticed that you initiated a sensitive account action on 
+                <strong>{{ config('app.name') }}</strong> — such as updating your password, 
+                enabling two-factor authentication, or changing your profile details.
             </p>
-            <p>This link will expire in {{ $mailData['expireTime'] ?? '10 minutes' }}.</p>
-            <p>If you did not request a password reset, please ignore this email. Your account is safe.</p>
+            <p>To confirm that this action was initiated by you, please verify it using the One-Time Password (OTP) below:</p>
+
+            <h2>
+                {{ $mailData['otp'] ?? 'XXXXXX' }}
+            </h2>
+            <p>This OTP will expire in <strong>10 minutes</strong>.</p>            
+            <p>If you did not request this change, please <strong>do not share this code</strong> and contact our support team immediately.</p>
+
+            <br>
+            <p>Thank you</p>
+            <p>
+                <a href="{{ env('WEBSITE_URL') }}" title="{{ env('WEBSITE_URL') }}" style="color: #6c2bd9; text-decoration: none;">
+                    {{ env('WEBSITE_NAME') }} 
+                    Team
+                </a> 
+            </p>
         </div>
 
         <!-- Footer -->
         <div class="footer">
             <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
-            <p>If you have any questions, contact us at <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.</p>
+            <p>Need help? Contact us at 
+                <a href="mailto:{{ env('SUPPORT_EMAIL') }}" style="color: #6c2bd9;">
+                    {{ env('SUPPORT_EMAIL') }}
+                </a>
+            </p>
         </div>
     </div>
 </body>

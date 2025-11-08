@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SentOtpToMail;
 use App\Mail\User\UserEmailVerificationMail;
 use App\Mail\User\UserPasswordResetMail;
 use App\Models\LoginAttempt;
@@ -210,6 +211,57 @@ class UserAuthController extends Controller
             return jsonResponse(true, 'Logout successful.');
         } catch (\Exception $e) {
             return jsonResponse(false, 'An error occurred during logout: ' . $e->getMessage(), [], 500);
+        }
+    }
+
+
+    public function sendOtpToEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        try{
+
+            $otp = mt_rand(10000, 99999);
+            $user->update([
+                'remember_token' => $otp,
+            ]);
+
+            $mailData = [
+                'fullName' => $user->full_name,
+                'mail' => $user->email,
+                'otp' => $otp,
+            ];
+
+            // Send password reset email
+            Mail::to($user->email)->send(new SentOtpToMail($mailData));
+
+            return jsonResponse(true, 'OTP has been sent to your email.');
+        } catch (\Exception $e) {
+            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
+        }
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email',
+            'otp' => 'required|integer|min:5|max:5',
+        ]);
+
+        $user = User::where(['email'=>$request->email,'remember_token' => $request->otp])->first();
+
+        if($user){
+            $user->update([
+                'remember_token' => Null,
+            ]);
+
+            return jsonResponse(true, 'OTP is valid.');
+        } else{
+            return jsonResponse(false, 'OTP is not valid.',null, 400);
         }
     }
 }

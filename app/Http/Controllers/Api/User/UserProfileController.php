@@ -15,7 +15,25 @@ use App\Models\User;
 class UserProfileController extends Controller
 {
     //
-     // Save Basic Information`
+    public function show()
+    {
+        $loggedInUser = auth('sanctum')->user();
+
+        $user = User::with([
+            'role',
+            'information',
+            'qualification',
+            'billingInformation',
+            'categories',
+            'course'
+            ])
+            ->find($loggedInUser->id);
+
+        $user->classes = [];
+        return jsonResponse(true, 'Profile information', $user);
+    }
+
+    // Save Basic Information`
     public function saveBasicInformation(Request $request)
     {
         $request->validate([

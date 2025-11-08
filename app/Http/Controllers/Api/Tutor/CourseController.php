@@ -10,7 +10,6 @@ use App\Models\CourseRequirement;
 use App\Models\CourseSeo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -173,7 +172,6 @@ class CourseController extends Controller
 
     public function saveMedia(Request $request)
     {
-        
         $validation = [
             'course_id' => 'required|integer|exists:courses,id',
             'type' => 'required|string|in:Youtube,Vimeo,Local',
@@ -186,6 +184,7 @@ class CourseController extends Controller
         }
 
         $request->validate($validation); 
+
         $videoUrl = $request->video_url;
         $remoteThumb = null;
 

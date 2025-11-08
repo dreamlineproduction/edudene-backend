@@ -73,30 +73,31 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            {{-- <img src="{{ asset('images/edudene_purple.svg') }}" alt="{{ config('app.name') }} Logo"> --}}
+            <!-- <img src="{{ asset('images/edudene_purple.svg') }}" alt="{{ config('app.name') }} Logo"> -->
             <img src="https://edudene.com/public/assets/img/logos/edudene_purple.svg" alt="{{ config('app.name') }} Logo">
-            
             <h1>Contact Us</h1>
         </div>
 
         <!-- Content -->
         <div class="content">
             <p>Hello {{ $mailData['fullName'] ?? 'User' }},</p>
-            <p>Thank you for contacting us, we will get back to you as soon as possible.</p>
-            <p>Regards,</p>
-
-            <br>
-            <p>Support Team</p>
-            <p><a href="{{env('WEBSITE_URL')}}" title="{{env('WEBSITE_URL')}}">{{env('WEBSITE_URL')}}</a></p>
-            <p>Learn Anytime, Anywhere</p>
-            <p>The Whole World is Your Classroom</p>
+            <p>Thank you for reaching out to us. We have received your message and will get back to you as soon as possible.</p>
+            <p>Best regards,</p>
+            <p>
+                <a href="{{ env('WEBSITE_URL') }}" title="{{ env('WEBSITE_URL') }}">
+                    {{ env('WEBSITE_NAME') }} Team
+                </a>
+            </p>
         </div>
 
         <!-- Footer -->
         <div class="footer">
             <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
-            <p>If you have any questions, contact us at <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.</p>
+            <p>If you have any questions, please contact us at 
+                <a href="mailto:{{ env('SUPPORT_EMAIL') }}">{{ env('SUPPORT_EMAIL') }}</a>.
+            </p>
         </div>
     </div>
+
 </body>
 </html>

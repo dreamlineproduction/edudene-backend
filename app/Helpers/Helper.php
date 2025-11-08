@@ -25,9 +25,9 @@ if (!function_exists('generateSlug')) {
      * @param string $fullName
      * @return string
      */
-    function generateSlug(string $fullName): string
+    function generateSlug(string $string, string $separator = '-'): string
     {
-        return Str::of($fullName)->lower()->replace(' ', '_')->replaceMatches('/[^a-z0-9_]/', '');
+        return Str::of($string)->lower()->replace(' ', $separator)->replaceMatches('/[^a-z0-9_]/', '');
     }
 }
 
@@ -67,6 +67,8 @@ if (!function_exists('jsonResponse')) {
 
 if(!function_exists('generateUniqueSlug')){
     function generateUniqueSlug($title, $model,  $id = null, $field = 'slug'){
+        $separator = '-';
+
         if(!class_exists($model)){
             throw new Exception("Model class $model does not exist.");
         }
@@ -75,8 +77,12 @@ if(!function_exists('generateUniqueSlug')){
            throw new Exception("Title cannot be empty.");
         } 
 
+        if($field !== 'slug'){
+            $separator = '_';
+        }
+
         $counter = 1;
-        $baseSlug = generateSlug($title);
+        $baseSlug = generateSlug($title,$separator);
         $slug = $baseSlug;
 
         // Ensure it's unique

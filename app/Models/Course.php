@@ -31,14 +31,14 @@ class Course extends Model
     
     public function user()
     {
-        return $this->belongsTo(User::class)->select('id','role_id','full_name');
+        return $this->belongsTo(User::class)->select('id','role_id','full_name','user_name');
     }
     
     public function courseType()
     {
         return $this->belongsTo(CourseType::class);
-    }
-    
+    }   
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -48,6 +48,7 @@ class Course extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
+
     public function subSubCategory()
     {
         return $this->belongsTo(SubSubCategory::class);
@@ -73,8 +74,20 @@ class Course extends Model
         return $this->hasMany(CourseChapter::class);
     }
 
-    public function courseAsset(){
+    public function courseAsset()
+    {
         return $this->hasOne(CourseAsset::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(CourseReview::class);
+    }
+
+
+    public function getReviewsAvgRatingAttribute($value)
+    {
+        return $value ? round($value, 1) : 0;
     }
 
     protected $hidden   = [
