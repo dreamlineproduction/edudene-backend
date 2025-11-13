@@ -3,22 +3,20 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Faq;
 use Illuminate\Http\Request;
+use App\Models\FaqSection;
 
-class FaqController extends Controller
+
+class FaqSectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-        $data = Faq::with('section')->latest()->get();
-        return jsonResponse(true, 'Faq fetched successfully', $data);
+        $data = FaqSection::latest()->get();
+        return jsonResponse(true, 'Faq section fetched successfully', $data);
     }
-       
- 
 
     /**
      * Store a newly created resource in storage.
@@ -26,14 +24,12 @@ class FaqController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'faq_section_id' => 'required|exists:faq_sections,id',
             'title'          => 'required|string|max:255',
             'status'         => 'required|in:Active,Inactive',
-            'is_home'        => 'required|in:Yes,No',
         ]);
 
-        $data = Faq::create($request->toArray());
-        return jsonResponse(true, 'Faq created successfully', $data);
+        $data = FaqSection::create($request->toArray());
+        return jsonResponse(true, 'Faq section created successfully', $data);
     }
 
     /**
@@ -41,16 +37,13 @@ class FaqController extends Controller
      */
     public function show(string $id)
     {
-        //
-        $data = Faq::with('section')->where('id',$id)->first();
+        $data = FaqSection::where('id',$id)->first();
         if (!$data) {
-            return jsonResponse(false,'Faq not found in our database.',$data,404);            
+            return jsonResponse(false,'Faq section not found in our database.',$data,404);            
         }
 
-        return jsonResponse(true, 'Faq fetched successfully', $data);
+        return jsonResponse(true, 'Faq section fetched successfully', $data);
     }
-
-    
 
     /**
      * Update the specified resource in storage.
@@ -58,21 +51,19 @@ class FaqController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $data = Faq::where('id',$id)->first();
+        $data = FaqSection::where('id',$id)->first();
         if (!$data) {
-            return jsonResponse(false,'Faq not found in our database.',$data,404);   
+            return jsonResponse(false,'Faq section not found in our database.',$data,404);   
         }
 
         $validated = $request->validate([
-            'faq_section_id' => 'required|exists:faq_sections,id',
             'title'          => 'required|string|max:255',
             'status'         => 'required|in:Active,Inactive',
-            'is_home'        => 'required|in:Yes,No',
         ]);
 
 
         $data->update($request->toArray());
-        return jsonResponse(true, 'Faq updated successfully', $data);
+        return jsonResponse(true, 'Faq section updated successfully', $data);
     }
 
     /**
@@ -81,12 +72,12 @@ class FaqController extends Controller
     public function destroy(string $id)
     {
         //
-        $data = Faq::where('id',$id)->first();
+        $data = FaqSection::where('id',$id)->first();
         if (!$data) {
-            return jsonResponse(false,'Faq not found in our database.',$data,404);   
+            return jsonResponse(false,'Faq section not found in our database.',$data,404);   
         }
 
         $data->delete();
-        return jsonResponse(true, 'Faq deleted successfully');
+        return jsonResponse(true, 'Faq section deleted successfully');
     }
 }

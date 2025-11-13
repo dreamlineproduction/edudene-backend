@@ -5,10 +5,13 @@ use App\Http\Controllers\Api\Admin\AdminProfileController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\CategoryLevelFourController;
 use App\Http\Controllers\Api\Admin\CouponController;
+use App\Http\Controllers\Api\Admin\FaqSectionController;
 use App\Http\Controllers\Api\Admin\FaqController;
 use App\Http\Controllers\Api\Admin\PageController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
+
+
 
 Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {   
     
@@ -27,9 +30,13 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     // Category Routes
     Route::apiResource('admin/categories', CategoryController::class);   
     
+    // Faq Sections Routes
+    Route::apiResource('admin/sections/faqs', FaqSectionController::class);
+
     // Faq Routes
     Route::apiResource('admin/faqs', FaqController::class);
 
+    
     // Pages Routes
     Route::apiResource('admin/pages',PageController::class);
 
