@@ -59,6 +59,18 @@ class User extends Authenticatable
         return $this->hasMany(Course::class);
     }
    
+    // Add the following relationship methods to your User model
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function receivedChats()
+    {
+        // Chats where this user is the receiver_id
+        return $this->hasMany(Chat::class, 'receiver_id');
+    }
+
     
     /**
      * The attributes that should be hidden for serialization.

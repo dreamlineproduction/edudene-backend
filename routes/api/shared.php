@@ -36,9 +36,13 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'destroy']);    
 
 
-    Route::get('chats', [ChatController::class, 'index']);
-    Route::post('chats/start', [ChatController::class, 'startChat']);
-    Route::get('chats/{chatId}/messages', [ChatController::class, 'getMessages']);
-    Route::post('chats/{chatId}/message', [ChatController::class, 'sendMessage']);
+    // Chat Contacts & Initialization
+    Route::get('/chat/contacts', [ChatController::class, 'contacts']);
+    
+    // Starts a chat and returns chat_id
+    Route::post('/chat/start/{otherUserId}', [ChatController::class, 'findOrCreateChat']); 
 
+    // Message Management
+    Route::get('/chat/{chat}', [ChatController::class, 'getMessages']); // Get history for a chat
+    Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage']); // Send a new message
 });
