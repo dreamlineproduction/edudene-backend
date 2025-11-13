@@ -15,7 +15,7 @@ class SubCategoryController extends Controller
     {
 
         $data = SubCategory::with('category')->latest()->get();
-        return jsonResponse(true, 'Categories level two fetched successfully', $data);        
+        return jsonResponse(true, 'Categories level two fetched successfully', ['categories' => $data]);        
     }
 
 
@@ -29,6 +29,7 @@ class SubCategoryController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:200',
+			'slug' => 'required',
             'status' => 'required|in:Active,Inactive',
         ]);
 
@@ -49,7 +50,7 @@ class SubCategoryController extends Controller
             return jsonResponse(false, 'Categories level two not found in our database.', null, 404);
         }
         
-        return jsonResponse(true, 'Categories level two details', $data);
+        return jsonResponse(true, 'Categories level two details', ['subCategory' => $data]);
     }
  
 

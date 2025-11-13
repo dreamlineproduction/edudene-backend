@@ -74,12 +74,12 @@ class UserAuthController extends Controller
 
         // Check if user is temporarily inactive due to too many failed login attempts
         if ($user->temporary_status === 'Inactive') {
-            return jsonResponse(false, 'Your account is temporarily inactive due to too many failed login attempts.Please try again later or contact support.', [], 423);
+            return jsonResponse(false, 'Your account is temporarily inactive due to too many failed login attempts.Please try again later or contact support.', [], 400);
         }
 
         // Check if user is inactive
         if ($user->status === 'Inactive') {
-            return jsonResponse(false, 'Your account is inactive. Please activate your account.', [], 403);
+            return jsonResponse(false, 'Your account is inactive. Please activate your account.', [], 400);
         }
 
         // Check password
@@ -93,7 +93,7 @@ class UserAuthController extends Controller
                 $user->temporary_status = 'Inactive';
                 $user->save();
 
-                return jsonResponse(false, 'Too many login attempts. Please try again later.', [], 429);
+                return jsonResponse(false, 'Too many login attempts. Please try again later.', [], 400);
             }
 
             // Log the failed login attempt
@@ -107,7 +107,7 @@ class UserAuthController extends Controller
                 'timezone' => getDefaultTimezone($request->timezone),
             ]);
 
-            return jsonResponse(true, 'Sorry, your password was incorrect. Please double-check your password.', [], 401);
+            return jsonResponse(true, 'Sorry, your password was incorrect. Please double-check your password.', [], 400);
         }
 
         // Clear login attempts on successful login

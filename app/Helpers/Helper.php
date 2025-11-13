@@ -55,11 +55,12 @@ if (!function_exists('jsonResponse')) {
         $response = [
             'status' => $status,
             'message' => $message,
+            'data' => $data,
         ];
 
-        if (!is_null($data) && !empty($data)) {
-            $response['data'] = $data;
-        }
+        // if (!is_null($data) && !empty($data)) {
+        //     $response['data'] = $data;
+        // }
         
         return response()->json($response, $code);
     }
