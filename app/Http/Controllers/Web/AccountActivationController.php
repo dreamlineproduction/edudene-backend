@@ -11,6 +11,8 @@ class AccountActivationController extends Controller
 
     public function verifyUserAccount(Request $request)
     {
+        $websiteUrl = env('WEBSITE_URL').'user/success';
+
         $token = $request->query('token');
 
         if (!$token) {
@@ -35,6 +37,9 @@ class AccountActivationController extends Controller
         $user->email_verified_at = now();        
         $user->save();
 
-        return jsonResponse(true, 'Great news! Your account is verified and ready to go.');
+        header('Location: ' . $websiteUrl, true, 302);
+        exit();
+
+        //return jsonResponse(true, 'Great news! Your account is verified and ready to go.');
     }
 }

@@ -22,55 +22,97 @@ class UserAuthController extends Controller
             'timezone' => 'required|string|max:150'
         ];
 
-        if ($request->resend === true) {
-            $validation['email'] = 'required|string|email|max:255|exists:users,email';
+
+        $validation['email'] = 'required|string|email|max:200';
+
+        if(empty($request->resend)){
+            $user = User::where('email',$request->email)->exists();
+            if($user){
+                return jsonResponse(false, 'The email has already been taken.');
+            }
+            $responseMessage = 'Registration successfull! Please check your email to verify your account.';
         } else {
-            $validation['email'] = 'required|string|email|max:255|unique:users';
+            $responseMessage = 'A new opt code has been sent to your email. Please verify your account.';
         }
+
+        
 
         $request->validate($validation);
 
+      
+
+
         // Create activation token
-        $activationToken = Str::random(90);
+        //$activationToken = Str::random(90);
+
+        $otpCode =  mt_rand(100000, 999999);
 
         $request->merge([
             'role_id' => 1,
-            'remember_token' => $activationToken,
+            'remember_token' => $otpCode,
+            'status' => 'Active',
             'timezone' => getDefaultTimezone($request->timezone),
         ]);
 
 
         $find = ['email' => $request->email];
         $user = User::updateOrCreate($find, $request->toArray());
-        $activationLink = url('/user/verify-account?token=' . $activationToken);
+        //$activationLink = url('/user/verify-account?token=' . $activationToken);
 
         $mailData = [
             'mail' => $user->email,
-            'activationLink' => $activationLink,
+            'otpCode' => $otpCode,
         ];
 
         // Send activation email
-        Mail::to($user->email)->send(new UserEmailVerificationMail($mailData));
+        //Mail::to($user->email)->send(new UserEmailVerificationMail($mailData));
 
-        return jsonResponse(true, 'Registration successful! Please check your email to verify your account.');
+        return jsonResponse(true, $responseMessage);
     }
+
+
+
 
     // Login API
     public function login(Request $request)
     {
-        $request->validate([
+        $validation = [
+            'login_with'=>'required|in:PASSWORD,OTP',
             'email' => 'required|email',
-            'password' => 'required|string',
             'timezone' => 'nullable|string|max:150',
-            'login_datetime' => 'nullable|string|max:150',
-        ]);
+            'login_datetime' => 'nullable|string|max:150'
+        ];
+
+        // Add validation
+        if($request->login_with === 'PASSWORD')
+        {
+            $validation['password'] = 'required|string';
+        }
+
+        if($request->login_with === 'OTP')
+        {
+            $validation['otp'] = 'required|string|min:6|max:6'; 
+        }
+
+
+        $request->validate($validation);
+
 
         $user = User::where(['email' => $request->email, 'role_id' => 1])->first();
 
         // Check if user exists
         if (!$user) {
-            return jsonResponse(false, 'User not found in our database.', $user, 404);
+            return jsonResponse(false, 'User not found in our database.', null, 404);
         }
+
+        if($request->login_with === 'OTP'){
+            if($user->remember_token !== $request->otp){
+                return jsonResponse(false, 'Invalid opt code.', null, 400); 
+            }          
+        }
+        
+
+      
 
         // Check if user is temporarily inactive due to too many failed login attempts
         if ($user->temporary_status === 'Inactive') {
@@ -83,7 +125,7 @@ class UserAuthController extends Controller
         }
 
         // Check password
-        if (!Hash::check($request->password, $user->password)) {
+        if ($request->login_with === 'PASSWORD' && !Hash::check($request->password, $user->password)) {
 
             $loginAttempt =  LoginAttempt::where('email', $request->email)->first();
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CourseReviewController;
 Route::prefix('v1')->middleware(['auth:sanctum','role:1'])->group(function () {
     Route::get('user/profile', [UserProfileController::class, 'show']);
 
+    Route::post('user/save-password', [UserProfileController::class, 'savePassword']);
     Route::post('user/save-basic-information', [UserProfileController::class, 'saveBasicInformation']);
     Route::post('user/save-education-qualification', [UserProfileController::class, 'saveEducationQualification']);
     Route::post('user/save-social-link', [UserProfileController::class, 'saveSocialLink']);

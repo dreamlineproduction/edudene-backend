@@ -31,18 +31,18 @@
             padding: 20px;
             text-align: center;
         }
-        .opt{
-            background-color: #d7d7d7;
-            font-size:32px;
-            text-align:center;
-            color:#1c1d1f;
-
-            font-weight: 600;
-            line-height: 1;
-            padding: 8px;
-            letter-spacing: 2px;
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
         }
-        
+        .button:hover {
+            background-color: #0056b3;
+        }
         .footer {
             text-align: center;
             padding: 20px;
@@ -71,10 +71,14 @@
 
         <!-- Content -->
         <div class="content">
-            <p>Hi {{ $mailData['mail'] ?? 'User' }},</p>
-            <p>Use the code below to finish your sign up.</p>
-            <p class="opt">
-                {{$mailData['otpCode']}}
+            <p>Hello {{ $mailData['mail'] ?? 'User' }},</p>
+            <p>Thank you for registering with {{ config('app.name') }}! Please verify your email by clicking the button below:</p>
+            <p>
+                <a href="{{ $mailData['activationLink'] }}" class="button">Verify Your Email</a>
+            </p>
+            <p>Or copy and paste the following link into your browser:</p>
+            <p>
+                <a href="{{ $mailData['activationLink'] }}">{{ $mailData['activationLink'] }}</a>
             </p>
             <p>If you did not create an account, please ignore this email.</p>
         </div>

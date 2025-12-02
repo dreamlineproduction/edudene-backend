@@ -28,6 +28,8 @@ class User extends Authenticatable
         'remember_token',
         'status',
         'timezone',
+        'profile_step',
+        'is_profile_complete'
     ];
     public function role()
     {
@@ -36,7 +38,7 @@ class User extends Authenticatable
 
     public function information()
     {
-        return $this->hasMany(UserInformation::class);
+        return $this->hasOne(UserInformation::class);
     }
 
     public function qualification()

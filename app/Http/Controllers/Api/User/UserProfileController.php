@@ -19,25 +19,51 @@ class UserProfileController extends Controller
     {
         $loggedInUser = auth('sanctum')->user();
 
-        $user = User::with([
+        $user = User::find($loggedInUser->id);
+
+        $user->makeHidden([
             'role',
             'information',
             'qualification',
             'billingInformation',
             'categories',
             'course'
-            ])
-            ->find($loggedInUser->id);
+        ]);
 
-        $user->classes = [];
-        return jsonResponse(true, 'Profile information', $user);
+        $data['user']  = $user;
+        $data['role']  = $user->role;
+        $data['information']  = $user->information;
+        $data['qualification']  = $user->qualification;
+        $data['billingInformation']  = $user->billingInformation;
+        $data['categories']  = $user->categories;
+        $data['course']  = $user->course;
+        $data['classes']  = [];        
+
+        
+        return jsonResponse(true, 'Profile information', $data);
+    }
+
+    public function savePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'confirm_password' => 'required|string|same:password',
+        ]);
+
+        $user = auth('sanctum')->user();
+
+        $user->update([
+            'password' => Hash::make($request->password),
+            'profile_step' => 2,
+        ]);
+
+        return jsonResponse(true, 'Password has been updated successfully.');
     }
 
     // Save Basic Information`
     public function saveBasicInformation(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
             'full_name' => 'required|string|max:255',
             'phone_number' => 'required|string|max:15',
             'gender' => 'required|string|in:Male,Female,Other',
@@ -53,6 +79,7 @@ class UserProfileController extends Controller
         $user->update([
             'full_name' => $request->full_name,
             'user_name' => $userName,
+            'profile_step'=>3
         ]);
 
 
@@ -73,7 +100,6 @@ class UserProfileController extends Controller
     {
 
         $request->validate([
-            'email' => 'required|email',
             'qualifications' => 'required|array|min:1',
             // 'qualifications.*.qualification_name' => 'required|string|max:255',
             // 'qualifications.*.institution_name' => 'required|string|max:255',
@@ -82,7 +108,11 @@ class UserProfileController extends Controller
         ]);
 
         $user = auth('sanctum')->user();
-      
+        
+        $user->update([
+            'profile_step'=>4
+        ]);
+
         // Delete existing qualifications
         UserQualification::where('user_id', $user->id)->delete();
 
@@ -109,7 +139,6 @@ class UserProfileController extends Controller
     public function saveSocialLink(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
             'x_url' => 'nullable|url|max:255',
             'linkedin_url' => 'nullable|url|max:255',
             'instagram_url' => 'nullable|url|max:255',
@@ -120,6 +149,10 @@ class UserProfileController extends Controller
         ]);
 
         $user = auth('sanctum')->user();
+
+        $user->update([
+            'profile_step'=>5
+        ]);
 
         $find = ['user_id' => $user->id];
         UserInformation::updateOrCreate($find, $request->toArray());
@@ -132,7 +165,6 @@ class UserProfileController extends Controller
     {
         // Implement the logic to save billing information
         $request->validate([
-            'email' => 'required|email',
             'billing' => 'required|array|min:1',
             'billing.*.address_type' => 'required|string|max:150',
             'billing.*.address_line_1' => 'required|string|max:200',
@@ -145,6 +177,9 @@ class UserProfileController extends Controller
 
         $user = auth('sanctum')->user();
 
+        $user->update([
+            'profile_step'=>6
+        ]);
         // Delete existing qualifications
         UserBillingInformation::where('user_id', $user->id)->delete();
 
@@ -178,16 +213,40 @@ class UserProfileController extends Controller
     public function saveFoundUs(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'found_us' => 'nullable|max:100',          
+            'found_us' => 'nullable|max:100',      
+            'categories' => ['required', 'array', 'min:1'],
+            'categories.*' => ['integer'],       
         ]);
 
         $user = auth('sanctum')->user();
+             
+        $user->update([
+            'profile_step'=>0,
+            'is_profile_complete' => 1
+        ]);
                
         $find = ['user_id' => $user->id];
         UserInformation::updateOrCreate($find, [
             'found_us' => $request->found_us,
         ]);
+
+        // try {
+        //     // Delete existing categories
+        //     UserCategory::where('user_id', $user->id)->delete();
+        //     foreach ($request->categories as $categoryId) {
+
+        //         if(empty($categoryId)){
+        //             continue;
+        //         }
+
+        //         UserCategory::create([
+        //             'user_id' => $user->id,
+        //             'category_id' => $categoryId,
+        //         ]);
+        //     }           
+        // } catch (\Exception $e) {
+        //     return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
+        // } 
 
         return jsonResponse(true, 'Saved successfully.');
     }
@@ -197,7 +256,6 @@ class UserProfileController extends Controller
     public function saveUserCategory(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
             'categories' => ['required', 'array', 'min:1'],
             'categories.*' => ['integer'],   
         ]);
