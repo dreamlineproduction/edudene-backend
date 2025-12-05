@@ -23,7 +23,7 @@ class Faq extends Model
 
     public function section()
     {
-        return $this->belongsTo(FaqSection::class);
+        return $this->belongsTo(FaqSection::class,'faq_section_id');
     }
 }
 

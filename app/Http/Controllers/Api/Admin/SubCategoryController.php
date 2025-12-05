@@ -15,7 +15,7 @@ class SubCategoryController extends Controller
     {
 
         $data = SubCategory::with('category')->latest()->get();
-        return jsonResponse(true, 'Categories level two fetched successfully', ['categories' => $data]);        
+        return jsonResponse(true, 'Field fetched successfully', ['categories' => $data]);        
     }
 
 
@@ -34,11 +34,11 @@ class SubCategoryController extends Controller
         ]);
 
         $request->merge([
-            'slug' => generateUniqueSlug($request->title,'App\Models\SubCategory'),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\SubCategory'),
         ]);
 
         $data = SubCategory::create($request->toArray());
-        return jsonResponse(true, 'Categories level two created successfully', $data);   
+        return jsonResponse(true, 'Field created successfully', $data);   
     }
 
     public function show(string $id)
@@ -47,10 +47,10 @@ class SubCategoryController extends Controller
         $data = SubCategory::where('id', $id)->with('category')->first();
 
         if (!$data) {
-            return jsonResponse(false, 'Categories level two not found in our database.', null, 404);
+            return jsonResponse(false, 'Field not found in our database.', null, 404);
         }
         
-        return jsonResponse(true, 'Categories level two details', ['subCategory' => $data]);
+        return jsonResponse(true, 'Field details', ['subCategory' => $data]);
     }
  
 
@@ -63,7 +63,7 @@ class SubCategoryController extends Controller
         $data = SubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(false, 'Categories level two not found in our database.',null, 404);               
+            return jsonResponse(false, 'Field not found in our database.',null, 404);               
         }
 
         $request->validate([
@@ -74,12 +74,12 @@ class SubCategoryController extends Controller
 
 
         $request->merge([
-            'slug' => generateUniqueSlug($request->title,'App\Models\SubCategory',$data->id),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\SubCategory',$data->id),
         ]);
 
         $data->update($request->toArray());
 
-        return jsonResponse(true, 'Categories level two updated successfully', $data);        
+        return jsonResponse(true, 'Field updated successfully', $data);        
     }
 
     /**
@@ -90,11 +90,29 @@ class SubCategoryController extends Controller
         $subCategory = SubCategory::find($id);
 
         if (!$subCategory) {
-            return jsonResponse(false, 'Categories level two not found in our database.',null, 404);               
+            return jsonResponse(false, 'Field not found in our database.',null, 404);               
         }
 
         $subCategory->delete();
 
-        return jsonResponse(true, 'Categories level two deleted successfully.',null, 200);               
+        return jsonResponse(true, 'Field deleted successfully.',null, 200);               
     }
+
+	// Fetch Sub Categories for a specific category
+	public function getSubCategories($categoryId) {
+
+		if ($categoryId) {
+
+			$subCategories = SubCategory::where("category_id",$categoryId)->get();
+
+			if (!$subCategories) {
+				return jsonResponse(false, 'Sub Categories not found.',null, 404);               
+			}
+
+			return jsonResponse(true, 'Sub Categories fetched successfully.',['subCategories' => $subCategories], 200);   
+		}
+
+		return jsonResponse(false, 'Sub Categories not found.',null, 404);               
+
+	}
 }

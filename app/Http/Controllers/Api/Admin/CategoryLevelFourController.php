@@ -11,11 +11,36 @@ class CategoryLevelFourController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-        $data = CategoryLevelFour::with(['category','categoryLevelTwo','categoryLevelThree'])->get();
-        return jsonResponse(true, 'Category Level Four list.',$data);
+    public function index(Request $request)
+    {       
+
+		$subSubCategories = CategoryLevelFour::query();
+
+		if (!empty($request->search)) {
+			$subSubCategories = $subSubCategories->where('title','like','%'.$request->search.'%');
+		}
+
+		$sortBy = $request->get('sort_by', 'title');
+    	$sortDirection = $request->get('sort_direction', 'asc');
+
+		if (in_array($sortBy, ['id', 'title', 'slug', 'status', 'created_at'])) {
+			$subSubCategories = $subSubCategories->orderBy($sortBy, $sortDirection);
+		} else {
+			$subSubCategories = $subSubCategories->orderBy('title', 'asc');
+		}
+
+		$perPage = (int) $request->get('per_page', 10);
+    	$page = (int) $request->get('page', 1);
+
+		$paginated = $subSubCategories->with(['category', 'categoryLevelTwo','categoryLevelThree'])
+						->paginate($perPage, ['*'], 'page', $page);
+
+		 return jsonResponse(true, 'Program list.', [
+			'subSubSubCategories' => $paginated->items(),
+			'total' => $paginated->total(),
+			'current_page' => $paginated->currentPage(),
+			'per_page' => $paginated->perPage(),
+		]);     
     }
 
     /**
@@ -33,11 +58,11 @@ class CategoryLevelFourController extends Controller
         ]);
 
         $request->merge([
-            'slug' => generateUniqueSlug($request->title,'App\Models\CategoryLevelFour'),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\CategoryLevelFour'),
         ]);
 
         $data = CategoryLevelFour::create($request->toArray());
-        return jsonResponse(true, 'Category Level Four created successfully.', $data);
+        return jsonResponse(true, 'Program created successfully.', $data);
     }
 
     /**
@@ -49,10 +74,10 @@ class CategoryLevelFourController extends Controller
         $data = CategoryLevelFour::where('id',$id)->with(['category','categoryLevelTwo','categoryLevelThree'])->first();
 
         if (!$data) {
-            return jsonResponse(false, 'Category Level Four not found in our database.', null, 404);
+            return jsonResponse(false, 'Program not found in our database.', null, 404);
         }        
 
-        return jsonResponse(true, 'Category Level Four details.', $data);
+        return jsonResponse(true, 'Program details.', ['subCategoryLevelFour' => $data]);
     }
 
     /**
@@ -72,14 +97,14 @@ class CategoryLevelFourController extends Controller
         $data = CategoryLevelFour::find($id);
 
         if (!$data) {
-            return jsonResponse(false, 'Category Level Four not found in our database.', null, 404);
+            return jsonResponse(false, 'Program not found in our database.', null, 404);
         }
 
         $request->merge([
-            'slug' => generateUniqueSlug($request->title,'App\Models\CategoryLevelFour',$id),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\CategoryLevelFour',$id),
         ]);
         $data->update($request->toArray());
-        return jsonResponse(true, 'Category Level Four updated successfully.', $data);
+        return jsonResponse(true, 'Program updated successfully.', $data);
     }
 
     /**
@@ -91,10 +116,10 @@ class CategoryLevelFourController extends Controller
         $data = CategoryLevelFour::find($id);
 
         if (!$data) {
-            return jsonResponse(false, 'Category Level Four not found in our database.', null, 404);
+            return jsonResponse(false, 'Program not found in our database.', null, 404);
         }
 
         $data->delete();
-        return jsonResponse(true, 'Category Level Four deleted successfully.');
+        return jsonResponse(true, 'Program deleted successfully.');
     }
 }

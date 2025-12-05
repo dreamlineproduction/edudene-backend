@@ -22,13 +22,19 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::apiResource('admin/categories/level-two', SubCategoryController::class);  
 
     // Category Level 3 Routes
-    Route::apiResource('admin/level-three', SubSubCategoryController::class);
+    Route::apiResource('admin/categories/level-three', SubSubCategoryController::class);	
 
     // Category Level 4 Routes
     Route::apiResource('admin/categories/level-four', CategoryLevelFourController::class);
         
     // Category Routes
     Route::apiResource('admin/categories', CategoryController::class);   
+
+	// Get Sub Categories of a specific category
+	Route::get('/admin/get-sub-categories/{id}', [SubCategoryController::class, 'getSubCategories']);
+	
+	// Get Sub Sub Categories of a specific category
+	Route::get('/admin/get-sub-sub-categories/{id}', [SubSubCategoryController::class, 'getSubSubCategories']);
     
     // Faq Sections Routes
     Route::apiResource('admin/sections/faqs', FaqSectionController::class);

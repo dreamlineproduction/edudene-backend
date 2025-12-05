@@ -55,7 +55,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'title' => $request->title,
 			'status' => $request->status,
-            'slug' => generateUniqueSlug($request->title,'App\Models\Category'),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\Category'),
         ]);
 
         return jsonResponse(true,'Category created successfully',$category);         
@@ -92,7 +92,7 @@ class CategoryController extends Controller
 
         $category->update([
             'title' => $request->title,
-            'slug' => generateUniqueSlug($request->title,'App\Models\Category',$category->id),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\Category',$category->id),
             'status' => $request->status,
         ]);
 
