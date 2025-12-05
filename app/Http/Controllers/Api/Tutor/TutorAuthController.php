@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\Tutor;
 
 use App\Http\Controllers\Controller;
+use App\Mail\User\UserEmailVerificationMail;
 use Illuminate\Support\Facades\Hash;
 use App\Models\LoginAttempt;
 use App\Models\User;
+use App\Models\Tutor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TutorAuthController extends Controller
 {
@@ -77,7 +80,143 @@ class TutorAuthController extends Controller
         return jsonResponse(true, 'Login successfully.', $data);
     }
 
+   // Register API
+    public function register(Request $request)
+    {
+        $validation = [
+            'timezone' => 'required|string|max:150'
+        ];
 
 
-    
+        $validation['email'] = 'required|string|email|max:200';
+
+        if(empty($request->resend)){
+            $user = User::where('email',$request->email)->exists();
+            if($user){
+                return jsonResponse(false, 'The email has already been taken.');
+            }
+            $responseMessage = 'Registration successfull! Please check your email to verify your account.';
+        } else {
+            $responseMessage = 'A new opt code has been sent to your email. Please verify your account.';
+        }
+
+        $request->validate($validation);
+
+        // Create activation token
+        //$activationToken = Str::random(90);
+
+        $otpCode =  mt_rand(100000, 999999);
+
+        $request->merge([
+            'role_id' => 2,
+            'remember_token' => $otpCode,
+            'status' => 'Active',
+            'timezone' => getDefaultTimezone($request->timezone),
+        ]);
+
+
+        $find = ['email' => $request->email];
+        $user = User::updateOrCreate($find, $request->toArray());
+        //$activationLink = url('/user/verify-account?token=' . $activationToken);
+
+        $mailData = [
+            'mail' => $user->email,
+            'otpCode' => $otpCode,
+        ];
+
+        try{
+            // Send activation email
+            Mail::to($request->email)->send(new UserEmailVerificationMail($mailData));
+        } catch (\Throwable $th) {
+            return jsonResponse(false, $th->getMessage());
+        }
+        
+
+        return jsonResponse(true, $responseMessage);
+    }
+
+    public function saveBasicInfo(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255',
+            'full_name' => 'required|string|max:255',
+            'address_line_1' => 'required|string|max:255',
+            'address_line_2' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:255',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if(empty($user)){
+            return jsonResponse(false, 'User not found.',404);
+        }
+
+        //$user = auth('sanctum')->user();
+        $userName = generateUniqueSlug($request->full_name, 'App\Models\User', $user->id, 'user_name');
+
+        // Update userinformation
+        $user->update([
+            'full_name' => $request->full_name,
+            'user_name' => $userName,
+            'profile_step'=>2
+        ]);
+
+
+        // Update other profile information
+        $request->merge([
+            'user_id' => $user->id,
+        ]);
+
+        $find = ['user_id' => $user->id];
+
+        Tutor::updateOrCreate($find, $request->toArray());
+
+
+        //UserInformation::updateOrCreate($find, $request->toArray());
+
+        // Save other profile information as needed
+        return jsonResponse(true, 'Profile basic information saved successfully.');
+
+    }
+
+    public function setPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
+            'phone_number' => 'required|string|max:12',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if(empty($user)){
+            return jsonResponse(false, 'User not found.',404);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return jsonResponse(true, 'Password has been updated successfully.');
+    }
+
+    public function saveDocument(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:200',
+            'university' => 'required|string|max:200',
+            'highest_qualification' => 'required|string|max:200',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if(empty($user)){
+            return jsonResponse(false, 'User not found.',404);
+        }      
+
+        $find = ['user_id' => $user->id];
+        Tutor::updateOrCreate($find, $request->toArray());
+
+        return jsonResponse(true, 'Document has been updated successfully.');
+    }
 }

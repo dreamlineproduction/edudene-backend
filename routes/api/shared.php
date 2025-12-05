@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\ChatController;
-use App\Http\Controllers\Api\CountryController;
-use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Tutor\CourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseController;
@@ -46,9 +44,5 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
 
     // Message Management
     Route::get('/chat/{chat}', [ChatController::class, 'getMessages']); // Get history for a chat
-    Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage']); // Send a new message
-
-    Route::apiResource('countries', CountryController::class);
-    //Route::apiResource('states', StateController::class);
-    Route::get('states/{COUNTRY_ID}', [StateController::class, 'index']);
+    Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage']); // Send a new message    
 });

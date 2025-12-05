@@ -1,12 +1,15 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Admin\AdminAuthController;
+use App\Http\Controllers\Api\Admin\SettingController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\User\UserAuthController;
 use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
 
 use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\StateController;
 use App\Http\Controllers\Api\Tutor\TutorAuthController;
 
 Route::prefix('v1')->group(function () {
@@ -29,6 +32,10 @@ Route::prefix('v1')->group(function () {
 
 
     Route::post('tutor/login', [TutorAuthController::class, 'login']);
+    Route::post('tutor/register', [TutorAuthController::class, 'register']);
+    Route::post('tutor/save-basic-info', [TutorAuthController::class, 'saveBasicInfo']);
+    Route::post('tutor/save-document', [TutorAuthController::class, 'saveDocument']);
+    Route::post('tutor/set-password', [TutorAuthController::class, 'setPassword']);
 
 
     Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
@@ -39,5 +46,14 @@ Route::prefix('v1')->group(function () {
     Route::post('file/upload-video', [FileController::class, 'uploadVideo']);
     Route::post('file/upload-document', [FileController::class, 'uploadDocument']);
     Route::post('testing/{FILE_ID}', [FileController::class, 'imageTesting']);
+
+
+    Route::apiResource('countries', CountryController::class);
+    //Route::apiResource('states', StateController::class);
+    Route::get('states/{COUNTRY_ID}', [StateController::class, 'index']);
+
+    Route::get('settings', [SettingController::class, 'show']);
+
+    Route::post('admin/setting/website-setting', [SettingController::class, 'saveWebsite']);
 });
 ?>

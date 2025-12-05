@@ -291,7 +291,7 @@ class UserAuthController extends Controller
     {
         $request->validate([
             'email' => 'required|string|email|max:255|exists:users,email',
-            'otp' => 'required|integer|min:5|max:5',
+            'otp' => 'required|integer',
         ]);
 
         $user = User::where(['email'=>$request->email,'remember_token' => $request->otp])->first();
@@ -299,9 +299,12 @@ class UserAuthController extends Controller
         if($user){
             $user->update([
                 'remember_token' => Null,
+                'profile_step'=>1
             ]);
 
-            return jsonResponse(true, 'OTP is valid.');
+            $data['role'] = $user->role_id;
+            $data['full_name'] = $user->full_name;
+            return jsonResponse(true, 'OTP is valid.',['user' => $data]);
         } else{
             return jsonResponse(false, 'OTP is not valid.',null, 400);
         }

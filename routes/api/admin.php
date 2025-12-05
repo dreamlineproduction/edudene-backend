@@ -8,8 +8,12 @@ use App\Http\Controllers\Api\Admin\CouponController;
 use App\Http\Controllers\Api\Admin\FaqSectionController;
 use App\Http\Controllers\Api\Admin\FaqController;
 use App\Http\Controllers\Api\Admin\PageController;
+use App\Http\Controllers\Api\Admin\SettingController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
+
+
+// Settings
 
 
 
@@ -42,4 +46,9 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
 
     // Coupon Routes
     Route::apiResource('admin/coupons', CouponController::class);
+
+
+
+    Route::post('admin/setting/payment-setting', [SettingController::class, 'savePayment']);
+
 });

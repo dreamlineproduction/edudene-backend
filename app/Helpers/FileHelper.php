@@ -207,7 +207,7 @@ if(!function_exists('videoUploadS3'))
 }
 
 
-if(!function_exists('finalizeImage'))
+if(!function_exists('finalizeFile'))
 {
     function finalizeFile($fileId = 0,$newOriginalPath)
     {
