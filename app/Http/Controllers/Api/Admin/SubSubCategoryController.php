@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CategoryLevelFour;
+use App\Models\SubCategory;
 use App\Models\SubSubCategory;
 use Illuminate\Http\Request;
 
@@ -11,10 +13,35 @@ class SubSubCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = SubSubCategory::with(['category', 'categoryLevelTwo'])->latest()->get();
-        return jsonResponse(true, 'Category level three fetched successfully.', $data);         
+		$subSubCategories = SubSubCategory::query();
+
+		if (!empty($request->search)) {
+			$subSubCategories = $subSubCategories->where('title','like','%'.$request->search.'%');
+		}
+
+		$sortBy = $request->get('sort_by', 'title');
+    	$sortDirection = $request->get('sort_direction', 'asc');
+
+		if (in_array($sortBy, ['id', 'title', 'slug', 'status', 'created_at'])) {
+			$subSubCategories = $subSubCategories->orderBy($sortBy, $sortDirection);
+		} else {
+			$subSubCategories = $subSubCategories->orderBy('title', 'asc');
+		}
+
+		$perPage = (int) $request->get('per_page', 10);
+    	$page = (int) $request->get('page', 1);
+
+		$paginated = $subSubCategories->with(['category', 'categoryLevelTwo'])
+						->paginate($perPage, ['*'], 'page', $page);
+
+		 return jsonResponse(true, 'Course fetched successfully.', [
+			'subSubCategories' => $paginated->items(),
+			'total' => $paginated->total(),
+			'current_page' => $paginated->currentPage(),
+			'per_page' => $paginated->perPage(),
+		]);        
     }
 
    
@@ -32,11 +59,11 @@ class SubSubCategoryController extends Controller
         ]);
 
         $request->merge([
-            'slug' => generateUniqueSlug($request->title,'App\Models\SubSubCategory'),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\SubSubCategory'),
         ]);
 
         $data = SubSubCategory::create($request->toArray());
-        return jsonResponse(true, 'Category level three created successfully.', $data);
+        return jsonResponse(true, 'Course created successfully.', $data);
     }
 
     /**
@@ -48,10 +75,10 @@ class SubSubCategoryController extends Controller
         $data = SubSubCategory::where('id',$id)->with(['category', 'categoryLevelTwo'])->first();
 
         if (!$data) {
-            return jsonResponse(false, 'Category level three not found in our database.', null, 404);
+            return jsonResponse(false, 'Course not found in our database.', null, 404);
         }
         
-        return jsonResponse(true, 'Category level three details.', $data);
+        return jsonResponse(true, 'Course details.', ['subSubCategory' => $data]);
     }
 
  
@@ -65,7 +92,7 @@ class SubSubCategoryController extends Controller
         $data = SubSubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(false, 'Category level three not found in our database.', [], 404);               
+            return jsonResponse(false, 'Course not found in our database.', [], 404);               
         }
 
         $request->validate([
@@ -76,12 +103,12 @@ class SubSubCategoryController extends Controller
         ]);
 
         $request->merge([
-            'slug' => generateUniqueSlug($request->title,'App\Models\SubSubCategory',$data->id),
+            'slug' => generateUniqueSlug($request->slug,'App\Models\SubSubCategory',$data->id),
         ]);
 
         $data->update($request->toArray());
 
-        return jsonResponse(true, 'Category level three updated successfully.', $data);
+        return jsonResponse(true, 'Course updated successfully.', $data);
     }
 
     /**
@@ -93,10 +120,29 @@ class SubSubCategoryController extends Controller
         $data = SubSubCategory::find($id);
 
         if (!$data) {
-            return jsonResponse(true, 'Category level three not found in our database.', null, 404);               
+            return jsonResponse(true, 'Course not found in our database.', null, 404);               
         }
 
         $data->delete();
-        return jsonResponse(true, 'Category level three deleted successfully.');
+        return jsonResponse(true, 'Course deleted successfully.');
     }
+
+	// Fetch Sub Sub Categories for a specific category
+	public function getSubSubCategories($categoryId) {
+
+		if ($categoryId) {
+
+			$subSubCategories = SubSubCategory::where("sub_category_id",$categoryId)
+									->get();
+
+			if (!$subSubCategories) {
+				return jsonResponse(false, 'Sub Sub Categories not found.',null, 404);               
+			}
+
+			return jsonResponse(true, 'Sub Sub Categories fetched successfully.',['subSubCategories' => $subSubCategories], 200);   
+		}
+
+		return jsonResponse(false, 'Sub Sub Categories not found.',null, 404);               
+
+	}
 }

@@ -23,12 +23,12 @@ class CategoryLevelFour extends Model
 
     public function categoryLevelTwo()
     {
-        return $this->belongsTo(SubCategory::class);
+        return $this->belongsTo(SubCategory::class,"sub_category_id");
     }
 
     public function categoryLevelThree()
     {
-        return $this->belongsTo(SubSubCategory::class);
+        return $this->belongsTo(SubSubCategory::class,"sub_sub_category_id");
     }
 
     protected $hidden = [

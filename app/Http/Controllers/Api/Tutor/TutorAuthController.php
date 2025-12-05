@@ -65,7 +65,7 @@ class TutorAuthController extends Controller
                 'timezone' => getDefaultTimezone($request->timezone),
             ]);
 
-            return jsonResponse(true, 'Sorry, your password was incorrect. Please double-check your password.', [], 401);
+            return jsonResponse(true, 'Sorry, your password was incorrect. Please double-check your password.', [], 400);
         }
 
         // Clear login attempts on successful login

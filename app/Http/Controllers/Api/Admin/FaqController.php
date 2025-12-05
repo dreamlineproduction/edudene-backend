@@ -11,11 +11,34 @@ class FaqController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $data = Faq::with('section')->latest()->get();
-        return jsonResponse(true, 'Faq fetched successfully', $data);
+        $faqs = Faq::query();
+
+		if (!empty($request->search)) {
+			$faqs = $faqs->where('title','like','%'.$request->search.'%');
+		}
+
+		$sortBy = $request->get('sort_by', 'title');
+    	$sortDirection = $request->get('sort_direction', 'asc');
+
+		if (in_array($sortBy, ['id', 'title', 'status', 'created_at'])) {
+			$faqs = $faqs->orderBy($sortBy, $sortDirection);
+		} else {
+			$faqs = $faqs->orderBy('title', 'asc');
+		}
+
+		$perPage = (int) $request->get('per_page', 10);
+    	$page = (int) $request->get('page', 1);
+
+		$paginated = $faqs->with('section')->paginate($perPage, ['*'], 'page', $page);
+
+		 return jsonResponse(true, 'Faqs fetched successfully', [
+			'faqs' => $paginated->items(),
+			'total' => $paginated->total(),
+			'current_page' => $paginated->currentPage(),
+			'per_page' => $paginated->perPage(),
+		]);
     }
        
  
@@ -47,7 +70,7 @@ class FaqController extends Controller
             return jsonResponse(false,'Faq not found in our database.',$data,404);            
         }
 
-        return jsonResponse(true, 'Faq fetched successfully', $data);
+        return jsonResponse(true, 'Faq fetched successfully', ['faq' => $data]);
     }
 
     
@@ -69,7 +92,6 @@ class FaqController extends Controller
             'status'         => 'required|in:Active,Inactive',
             'is_home'        => 'required|in:Yes,No',
         ]);
-
 
         $data->update($request->toArray());
         return jsonResponse(true, 'Faq updated successfully', $data);

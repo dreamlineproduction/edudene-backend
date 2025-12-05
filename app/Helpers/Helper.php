@@ -27,7 +27,7 @@ if (!function_exists('generateSlug')) {
      */
     function generateSlug(string $string, string $separator = '-'): string
     {
-        return Str::of($string)->lower()->replace(' ', $separator)->replaceMatches('/[^a-z0-9_]/', '');
+        return Str::of($string)->lower()->replace(' ', $separator);
     }
 }
 
@@ -88,7 +88,7 @@ if(!function_exists('generateUniqueSlug')){
 
         // Ensure it's unique
         while ($model::where($field, $slug)->where('id','!=',$id)->exists()) {
-            $slug = $baseSlug . '_' . $counter++;
+            $slug = $baseSlug . $separator . $counter++;
         }
 
         return $slug;
