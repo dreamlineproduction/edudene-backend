@@ -1,0 +1,4330 @@
+{
+  "info": {
+    "_postman_id": "e905e39c-7a70-4ca3-a880-1b1e50e26ecb",
+    "name": "Edudene-API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Login",
+          "id": "ae6cb0c8-fe3a-4b61-93d7-be04034964af",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"admin@admin.com\",\r\n    \"password\":\"admin@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/login",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "id": "2940ed16-80f8-4baa-bc04-317041d40273",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "26|edudene_token_CmB5WfozJMW2Hrm5NlvLxgUedJLywK8QYWxSgpu1cabc5a73",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"current_password\":\"\",\r\n    \"new_password\":\"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/change-password",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "change-password"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category List",
+          "id": "208a6a0a-8e30-4706-91ed-08dfd0d780e6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "58|edudene_token_W5ZLjv3VUvwX8d4tOuYNVtDn1Tgi9KhB2BBL4WEK888b2164",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"channel_name\": \"private-chat.1\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Create",
+          "id": "1a37b66d-b96c-4e3d-9df6-cc0e43ee589d",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Main Category 4\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Show",
+          "id": "2491fe03-53ab-4756-9452-d22d2f6faa34",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/4",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "4"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Update",
+          "id": "6cb7430c-ac33-43f2-b8e6-ba8c1ce21730",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Main Category 4\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/6",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "6"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Delete",
+          "id": "d8d01a00-0a8a-4ccb-9bbb-b990c3b883aa",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/7",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "7"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 2 List",
+          "id": "2b6d18c5-b25b-4767-b12f-993d4477eaaf",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-two",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-two"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 2 Create",
+          "id": "8a244ac9-50cd-4ac3-b0f8-022adde2d173",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"category_id\": 6,\r\n  \"title\": \"Smartphones\",\r\n  \"status\": \"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-two",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-two"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 2 Show",
+          "id": "73d8d31a-d7a1-412e-ae64-8dcc725eac8a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"category_id\": 6,\r\n  \"title\": \"Smartphones New\",\r\n  \"status\": \"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-two/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-two",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 2 Update",
+          "id": "2c626d51-70ea-44ef-9b44-80c7871e2e2d",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"category_id\": 6,\r\n  \"title\": \"Smartphones New\",\r\n  \"status\": \"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-two/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-two",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 2 Delete",
+          "id": "51ee4c3f-2cd5-48c6-a5a4-66648442000e",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"category_id\": 6,\r\n  \"title\": \"Smartphones\",\r\n  \"status\": \"Inactive\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-two/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-two",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 3 List",
+          "id": "db788970-4ed7-412a-b72c-82675895d638",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/level-three",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "level-three"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 3 Create",
+          "id": "2ec98f6f-367a-42e3-adbe-32f8e5a4f10c",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/level-three",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "level-three"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 3 Show",
+          "id": "b0628055-1d90-4e4a-b138-cb5585554f08",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "23|edudene_token_DlR7YXEtqbs7EVUa2rGISYxKhvC6rgyjLfBpoJYu02fc7472",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Inactive\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/level-three/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "level-three",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 3 Update",
+          "id": "0d0388ad-a4d7-454f-bda1-e501f4f9a974",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "23|edudene_token_DlR7YXEtqbs7EVUa2rGISYxKhvC6rgyjLfBpoJYu02fc7472",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Inactive\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/level-three/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "level-three",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 3 Delete",
+          "id": "64f39b10-1d4b-4264-87c9-2224a0b56600",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "23|edudene_token_DlR7YXEtqbs7EVUa2rGISYxKhvC6rgyjLfBpoJYu02fc7472",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/level-three/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "level-three",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 4 List",
+          "id": "35ae64ee-7575-4bda-ae8a-027cc162dbf6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-four",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-four"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 4 Create",
+          "id": "56571ae5-2259-4a37-a3f0-c41b2e30d37e",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"sub_sub_category_id\":5,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-four",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-four"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 4 Show",
+          "id": "ea21154d-3349-4974-a28a-ffb6f08e62bf",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-four/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-four",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 4 Update",
+          "id": "a87a784a-30f2-4e1b-8dc3-bfe340f73a70",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 1,\r\n    \"sub_category_id\":1,\r\n    \"sub_sub_category_id\":1,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-four/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-four",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Category Level 4 Delete",
+          "id": "21614fcd-1e9f-467e-afaf-11758f2bda61",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "3|edudene_token_JsjqAbwXqEwvDX1q1PxkRaPuNgDdjNyOtdJXMqQN85920429",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"category_id\": 6,\r\n    \"sub_category_id\":4,\r\n    \"title\":\"Auto Part\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/categories/level-four/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "categories",
+                "level-four",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Section List",
+          "id": "64e4a13a-29f1-4b15-85a7-70d319a20d4d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "59|edudene_token_V9V3QqV6cw8baCcHV7nyYxKlaGzsMM3J3DH8dkeR2a516b38",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faq_section_id\":\"1\",\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"status\":\"Active\",\r\n    \"is_home\":\"Yes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/sections/faqs",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "sections",
+                "faqs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Section Create",
+          "id": "8d28b441-09f7-453c-9875-9e51539ed8b4",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "59|edudene_token_V9V3QqV6cw8baCcHV7nyYxKlaGzsMM3J3DH8dkeR2a516b38",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/sections/faqs",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "sections",
+                "faqs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Section Show",
+          "id": "6ac01a3b-c027-434a-bd82-8a4efdb078f4",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "59|edudene_token_V9V3QqV6cw8baCcHV7nyYxKlaGzsMM3J3DH8dkeR2a516b38",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faq_section_id\":\"1\",\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"status\":\"Active\",\r\n    \"is_home\":\"Yes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/sections/faqs/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "sections",
+                "faqs",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Section Update",
+          "id": "8e517f61-76ae-4f23-8394-32c767e40621",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "59|edudene_token_V9V3QqV6cw8baCcHV7nyYxKlaGzsMM3J3DH8dkeR2a516b38",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"status\":\"Active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/sections/faqs/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "sections",
+                "faqs",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Section Delete",
+          "id": "6beb0c6c-52fb-409b-a524-daa449d505eb",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "59|edudene_token_V9V3QqV6cw8baCcHV7nyYxKlaGzsMM3J3DH8dkeR2a516b38",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/sections/faqs/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "sections",
+                "faqs",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq List",
+          "id": "01bdaffb-0c57-4e23-bd83-5764ae04f13e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "59|edudene_token_V9V3QqV6cw8baCcHV7nyYxKlaGzsMM3J3DH8dkeR2a516b38",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faq_section_id\":\"1\",\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"status\":\"Active\",\r\n    \"is_home\":\"Yes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/faqs",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "faqs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Create",
+          "id": "7d479e72-a69c-4843-8c74-ef40b1474811",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "23|edudene_token_DlR7YXEtqbs7EVUa2rGISYxKhvC6rgyjLfBpoJYu02fc7472",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faq_section_id\":\"1\",\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"description\":\"Lorem dummy testing\",\r\n    \"status\":\"Active\",\r\n    \"is_home\":\"Yes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/faqs",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "faqs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Update",
+          "id": "c1fae61c-6aad-4953-a0f8-7da729635a85",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "23|edudene_token_DlR7YXEtqbs7EVUa2rGISYxKhvC6rgyjLfBpoJYu02fc7472",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faq_section_id\":\"1\",\r\n    \"title\":\"Dummy Update Testing 3\",\r\n    \"description\":\"Lorem update Summy\",\r\n    \"status\":\"Active\",\r\n    \"is_home\":\"Yes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/faqs/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "faqs",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Faq Delete",
+          "id": "67ee47d3-afdc-48a1-97f5-f55c9d1a9751",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "23|edudene_token_DlR7YXEtqbs7EVUa2rGISYxKhvC6rgyjLfBpoJYu02fc7472",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"faq_section_id\":\"1\",\r\n    \"title\":\"Dummy Update Testing 3\",\r\n    \"description\":\"Lorem Summy\",\r\n    \"status\":\"Active\",\r\n    \"is_home\":\"Yes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/faqs/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "faqs",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Page List",
+          "id": "04448522-9ca0-4f69-ace2-d0a7c7ae4cdf",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/pages",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "pages"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Page Show",
+          "id": "9887cabd-ed94-418f-ac14-3c7e7909398f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/pages/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "pages",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Page Delete",
+          "id": "fd6e4507-37e3-4560-9eab-5ca5ce174289",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/pages/2",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "pages",
+                "2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Page Create",
+          "id": "5df1a667-c91e-4381-a132-f14860ddbe22",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"About Us\",\r\n  \"description\": \"This is the About Us page that contains company background and values.\",\r\n  \"meta_title\": \"About Us - Company Name\",\r\n  \"meta_description\": \"Learn more about our company, mission, and values.\",\r\n  \"meta_keyword\": \"about, company, values, mission\",\r\n  \"is_show\": \"Both\",\r\n  \"status\": \"Active\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/pages",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "pages"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Page Update",
+          "id": "fc327e08-dcae-47b5-a9dc-867994ec566c",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"About Us\",\r\n  \"description\": \"This is the About Us page that contains company background and values.\",\r\n  \"meta_title\": \"About Us - Company Name\",\r\n  \"meta_description\": \"Learn more about our company, mission, and values.\",\r\n  \"meta_keyword\": \"about, company, values, mission\",\r\n  \"is_show\": \"Both\",\r\n  \"status\": \"Active\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/pages/1",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "pages",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Coupon List",
+          "id": "6ca4f6ff-d514-41e7-9d61-45d4fc08eabf",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/coupons",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "coupons"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Coupon Show",
+          "id": "fb6058fe-8e0d-4c45-9b54-2af383511964",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "25|edudene_token_8wfjaT66zd2J8Duy7kpYzTUNB7SETiszdfwIDtXh06821555",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/coupons/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "coupons",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Coupon Create",
+          "id": "699fc803-fe37-45f0-aef6-fc09170dfb08",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"New Year Offer\",\r\n  \"type\": \"Fixed\",\r\n  \"amount\":100,\r\n  \"number_of_coupon\":2,\r\n  \"status\": \"Active\"\r\n}\r\n\r\n// {\r\n//   \"title\": \"New Year Offer\",\r\n//   \"type\": \"Percentage\",\r\n//   \"percentage\":10,\r\n//   \"number_of_coupon\":5,\r\n//   \"status\": \"Active\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/coupons",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "coupons"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Payment Setting",
+          "id": "e2f5c051-fb4c-4b24-8baa-01121c4baeb4",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "78|edudene_token_Xfu0RcVQ0PXWWCYs6XWLYibMbR2gpfrLIcaLykPQc5e89dcd",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{  \r\n  \"course_commission\": 2,\r\n  \"corporate_commission\": 5,\r\n  \"personal_tutor_commission\": 6,\r\n  \"school_course_commission\": 7,\r\n  \"school_class_commission\": 12,\r\n  \"vat_tax_commission\": 10\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/setting/payment-setting",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "setting",
+                "payment-setting"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Website Setting",
+          "id": "e5b302da-e5f5-4f5a-924e-42f840c704d1",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "78|edudene_token_Xfu0RcVQ0PXWWCYs6XWLYibMbR2gpfrLIcaLykPQc5e89dcd",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"dark_logo_id\":49,\r\n    \"light_logo_id\":50,\r\n    \"favicon_logo_id\":51,\r\n  \"title\": \"title\",  \r\n  \"name\": \"name\",\r\n  \"keywords\": \"keywords\",\r\n  \"description\": \"description\",\r\n  \"author\": \"author\",\r\n  \"slogan\": \"slogan\",\r\n  \"system_email\": \"system_email\",\r\n  \"address\": \"address\",\r\n  \"phone_number\": \"1234567890\",\r\n  \"agora_app_id\": \"agora_app_id\",\r\n  \"agora_certificate\": \"agora_certificate\",\r\n  \"ipinfo_token\": \"ipinfo_token\"\r\n}\r\n"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/setting/website-setting",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "setting",
+                "website-setting"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Stripe Setting",
+          "id": "ed41b6d1-3291-4d73-a4a8-ffb46bb83724",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "93|edudene_token_C9bzsqmaToyaV7mdmffAt79afZYhw0URpLsA1IfXe3efba9b",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/setting/stripe-setting",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "setting",
+                "stripe-setting"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "5aa356e5-2ca7-4095-b778-af5d37fefaaa"
+    },
+    {
+      "name": "User/Student",
+      "item": [
+        {
+          "name": "User Register",
+          "id": "9450888a-038e-4d91-a556-e1ef5d0e3b53",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user4@example.com\",\r\n    \"timezone\":\"UTC\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/register",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Resend Email Verification",
+          "id": "bf9e7644-2d34-4253-92c4-f10134ff7829",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\",\r\n    \"timezone\":\"UTC\",\r\n    \"resend\":true\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/register",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Save Password",
+          "id": "ec693335-3f33-48c9-addb-85b9af82e07c",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\":\"user3@example.com\",\r\n    \"confirm_password\":\"UTC\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/password-save",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "password-save"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Save Basic Infomation",
+          "id": "1b7e84be-1500-45b7-b295-077b5c22a96a",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "25|edudene_token_8wfjaT66zd2J8Duy7kpYzTUNB7SETiszdfwIDtXh06821555",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\":\"User Three\",\r\n    \"timezone\":\"UTC\",\r\n    \"phone_number\":\"9450368986\",\r\n    \"about\":\"Lorem Dummy Testing\",\r\n    \"gender\":\"Male\",\r\n    \"date_of_birth\":\"2014-02-22\",\r\n    \"address_line_1\":\"Lorem dummy tesing\",\r\n    \"address_line_2\":\"Lorem dummy tesing 2\",\r\n    \"city\":\"Lucknow\",\r\n    \"state\":\"Uttar Pradesh\",\r\n    \"zip\":\"226003\",\r\n    \"country\":\"India\",\r\n    \"x_url\":\"https://x.com\",\r\n    \"linkedin_url\":\"https://www.linkedin.com/in/lovemegaurav/\",\r\n    \"instagram_url\":\"https://www.instagram.com/lovemegaurav/\",\r\n    \"facebook_url\":\"https://www.facebook.com/pro\",\r\n    \"youtube_url\":\"https://www.youtube.com/\",\r\n    \"github_url\":\"https://github.com/\",\r\n    \"tiktok_url\":\"https://tiktok.com/\",\r\n    \"found_us\":\"Social Media\"\r\n\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/save-basic-information",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "save-basic-information"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Save Education Qualification",
+          "id": "8d347856-0d2a-4a0e-b70d-2e058ecc3ecc",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"qualifications\":[\r\n        {\r\n            \"qualification_name\":\"Qualification Name\",\r\n            \"institution_name\":\"Institution Name\",\r\n            \"completion_year\":\"2016\",\r\n            \"is_show_profile\":true\r\n        },\r\n        {\r\n            \"qualification_name\":\"Qualification Name 2\",\r\n            \"institution_name\":\"Institution Name 2\",\r\n            \"completion_year\":\"2018\",\r\n            \"is_show_profile\":false\r\n        },\r\n        {\r\n            \"qualification_name\":\"Qualification Name 3\",\r\n            \"institution_name\":\"Institution Name 3\",\r\n            \"completion_year\":\"2020\",\r\n            \"is_show_profile\":false\r\n        },\r\n        {\r\n            \"qualification_name\":\"Qualification Name 4\",\r\n            \"institution_name\":\"Institution Name 4\",\r\n            \"completion_year\":\"2025\",\r\n            \"is_show_profile\":false\r\n        }\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/save-education-qualification",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "save-education-qualification"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Save Social Link",
+          "id": "c392dbfd-a193-4bbf-988a-c7e25df43b58",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"x_url\":\"https://x.com/lovemegaur\",\r\n    \"linkedin_url\":\"https://www.linkedin.com/in/lovemegaurav\",\r\n    \"instagram_url\":\"https://www.instagram.com/lovemegaurav\",\r\n    \"facebook_url\":\"https://www.facebook.com/lovemegaurav\",\r\n    \"youtube_url\":\"https://www.youtube.com/@PrakharSingh-b6o\",\r\n    \"github_url\":\"https://github.com/prakhar2018\",\r\n    \"tiktok_url\":\"https://www.tiktok.com/en/prakhar2018\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/save-social-link",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "save-social-link"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Save Billing Information",
+          "id": "1d5f3be7-f743-469c-ad3b-ee86f8e6a2b7",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"billing\":[{\r\n        \"address_type\":\"Home\",\r\n        \"address_line_1\":\"123 Main St\",\r\n        \"address_line_2\":\"Apt 4B\",\r\n        \"city\":\"Springfield\",\r\n        \"state\":\"IL\",\r\n        \"zip\":\"62704\",\r\n        \"country\":\"USA\",\r\n        \"set_default\":true   \r\n    },\r\n    {\r\n        \"address_type\":\"Work\",\r\n        \"address_line_1\":\"456 Corporate Blvd\",\r\n        \"address_line_2\":\"Suite 300\",\r\n        \"city\":\"Springfield\",\r\n        \"state\":\"IL\",\r\n        \"zip\":\"62703\",\r\n        \"country\":\"USA\",\r\n        \"set_default\":false   \r\n    },\r\n    {\r\n        \"address_type\":\"Other\",\r\n        \"address_line_1\":\"789 Elm St\",\r\n        \"address_line_2\":\"\",\r\n        \"city\":\"Springfield\",\r\n        \"state\":\"IL\",\r\n        \"zip\":\"62701\",\r\n        \"country\":\"USA\",\r\n        \"set_default\":false   \r\n    },\r\n    {\r\n        \"address_type\":\"Vacation Home\",\r\n        \"address_line_1\":\"321 Beach Ave\",\r\n        \"address_line_2\":\"\",\r\n        \"city\":\"Miami\",\r\n        \"state\":\"FL\",\r\n        \"zip\":\"33101\",\r\n        \"country\":\"USA\",\r\n        \"set_default\":false   \r\n    }]\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/save-billing-information",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "save-billing-information"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Save Found Us",
+          "id": "219265e3-7897-4319-85c2-181c372cfed9",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"found_us\":\"Others\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/save-found-us",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "save-found-us"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Save Category",
+          "id": "0fb36d00-13f1-44fc-aab4-8e866ab02eb5",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\",\r\n    \"categories\" : [6,7,8]\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/save-category",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "save-category"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Login",
+          "id": "f43988a8-e77f-4ab3-b6dd-107a7cf73461",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user4@example.com\",\r\n    \"login_with\":\"OTP\",\r\n    \"otp\":\"123456\",\r\n    \"login_datetime\":\"\",\r\n    \"timezone\":\"\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/login",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "id": "d778d0c0-1df8-449d-9299-4632785abccd",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user@example.com\",\r\n    \"password\":\"admin@123\",\r\n    \"login_datetime\":\"\",\r\n    \"timezone\":\"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/login",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Profile",
+          "id": "51acd7b8-8cfe-4110-b386-d124cd1f8acf",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "81|edudene_token_Fdlso67EvVoG9boOlbrlNx8OWDxFMucks7Hm6okd6663687c",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user4@example.com\",\r\n    \"timezone\":\"UTC\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/profile",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "profile"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "fdeda60a-c159-4156-9c77-dd8e6fb9ae3d"
+    },
+    {
+      "name": "Tutor",
+      "item": [
+        {
+          "name": "Login",
+          "id": "29102adb-ed02-466b-83a8-59d9956e2370",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"password\":\"admin@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}tutor/login",
+              "host": [
+                "{{BASE_URL}}tutor"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "id": "ae8e8ac6-61f4-4709-8814-72ed4104e9fe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"timezone\":\"UTC\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}tutor/register",
+              "host": [
+                "{{BASE_URL}}tutor"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "8b2ac66a-7501-4e4a-97c8-472c671876e8"
+    },
+    {
+      "name": "Course",
+      "item": [
+        {
+          "name": "Course List",
+          "id": "80a09213-2817-44cb-b58d-2cd86ce8408e",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "26|edudene_token_CmB5WfozJMW2Hrm5NlvLxgUedJLywK8QYWxSgpu1cabc5a73",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}course",
+              "host": [
+                "{{BASE_URL}}course"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Save Basic Info..",
+          "id": "c4d9de3e-319f-49d7-928c-854e87618e09",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "2|edudene_token_tpHfxDlknYMlNnvAnVJ5lkoOEVuVjga2A5JM5wa3dcfb03a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Building RESTful APIs with Laravel 12\",\r\n  \"slug\": \"building-restful-apis-with-laravel-12\",\r\n  \"short_description\": \"Master the art of building secure, scalable REST APIs using Laravel 12.\",\r\n  \"description\": \"In this course, you'll learn how to design, build, and deploy robust RESTful APIs using Laravel 12. You’ll cover routing, authentication with Sanctum, data validation, API resource transformation, versioning, and best practices for performance and security.\",\r\n  \"level\": \"Intermediate\",\r\n  \"course_type_id\": 1,\r\n  \"category_id\": 6,\r\n  \"sub_category_id\": 4,\r\n  \"sub_sub_category_id\": 5,\r\n  \"country_id\": null,\r\n  \"state_id\": null,\r\n  \"created_at\": \"2025-11-08\",\r\n  \"timezone\": \"UTC\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-basic-information",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-basic-information"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Save Requirment",
+          "id": "8f95ce90-3392-4ca9-b32d-a34aad60133e",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "2|edudene_token_tpHfxDlknYMlNnvAnVJ5lkoOEVuVjga2A5JM5wa3dcfb03a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 5,\r\n  \"requirments\": [\r\n    {\r\n      \"title\": \"Laptop with good specs\"\r\n    },\r\n    {\r\n      \"title\": \"Basic PHP knowledge\"\r\n    }\r\n  ]\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-requirment",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-requirment"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Save Outcome",
+          "id": "2b5ef638-f9e1-4124-a520-c799976fc7f7",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "2|edudene_token_tpHfxDlknYMlNnvAnVJ5lkoOEVuVjga2A5JM5wa3dcfb03a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 6,\r\n  \"outcomes\": [\r\n    {\r\n      \"title\": \"Create secure and scalable RESTful APIs using Laravel 12\"\r\n    },\r\n    {\r\n      \"title\": \"Develop dynamic frontends with React and modern hooks\"\r\n    },\r\n    {\r\n      \"title\": \"Implement JWT and Sanctum authentication systems\"\r\n    },\r\n    {\r\n      \"title\": \"Deploy full-stack Laravel and React applications to production\"\r\n    }\r\n  ]\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-outcome",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-outcome"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Save Price",
+          "id": "2a34c593-1fb6-45bf-8f26-023eccfe2dd8",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "2|edudene_token_tpHfxDlknYMlNnvAnVJ5lkoOEVuVjga2A5JM5wa3dcfb03a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 6,\r\n  \"price\": 5000,\r\n  \"discount_price\": 4000\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-price",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-price"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Save Media",
+          "id": "3ca41e66-8175-4a71-aba7-79ac55a4229c",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 5,\r\n  \"type\":\"Vimeo\",\r\n  \"video_url\":\"https://vimeo.com/347119375\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-media",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-media"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Save Seo",
+          "id": "97a3e0ad-21cc-4e71-9fff-08881dd49448",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 6,\r\n  \"meta_title\": \"Build RESTful APIs with Laravel 12 – From Beginner to Pro\",\r\n  \"meta_description\": \"Master API development using Laravel 12. Learn routing, controllers, validation, authentication with Sanctum, and best practices for deploying secure RESTful APIs.\",\r\n  \"meta_keyword\": \"Laravel 12, REST API, PHP, Backend Development, Sanctum, Web Development\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-seo",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-seo"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Chapter List",
+          "id": "29cbb7e8-ae7d-46e0-ac38-d3bfdb969806",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Chapter Create",
+          "id": "e7d24f8d-dc2f-477d-83ec-905342fc53e0",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Lorem chapter 1\",\r\n    \"price\":150,\r\n    \"discount_price\":10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Chapter Show",
+          "id": "1aa426ca-ab57-4852-a9e7-e1e5dbd9e984",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 1,\r\n  \"meta_title\":\"Title\",\r\n  \"meta_description\":\"Hello\",\r\n  \"meta_keyword\":\"Lorem\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/1",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Chapter Update",
+          "id": "d5af9d37-4fe1-4769-a3e7-61f939fd95ef",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Lorem chapter 2\",\r\n    \"price\":500,\r\n    \"discount_price\":10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/2",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Chapter Delete",
+          "id": "ae17e17c-426f-4e1a-8909-216a11d5b2e2",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/2",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Lesson List",
+          "id": "9f2c39a8-be91-4449-bbfe-7ae83e70e789",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 1,\r\n  \"meta_title\":\"Title\",\r\n  \"meta_description\":\"Hello\",\r\n  \"meta_keyword\":\"Lorem\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/1/lesson",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "1",
+                "lesson"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Lesson Create",
+          "id": "2e2635df-ec24-4e95-9cf7-9cf5a613a6f2",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"type\":\"VideoUrl\",\r\n    \"video_url\":\"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/1/lesson",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "1",
+                "lesson"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Lesson Show",
+          "id": "2139451b-bc13-49dd-974a-5873a3891be9",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course_id\": 1,\r\n  \"meta_title\":\"Title\",\r\n  \"meta_description\":\"Hello\",\r\n  \"meta_keyword\":\"Lorem\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/1/lesson/10",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "1",
+                "lesson",
+                "10"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Lesson Update",
+          "id": "ad752ab9-7732-4318-a6fb-f9ea3477985c",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"type\":\"VideoUrl\",\r\n    \"video_url\":\"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/1/lesson/3",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "1",
+                "lesson",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Lesson Delete",
+          "id": "cdf6620c-60ca-4073-bf95-d3daa00269a8",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|edudene_token_32hwvQLzOkV7btxwmqtfSAtMhg3EPCuncHrZL6u4a0245fa9",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/4/chapter/1/lesson/6",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "4",
+                "chapter",
+                "1",
+                "lesson",
+                "6"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "b0c3b1c1-03b8-481d-af04-079027dfc512"
+    },
+    {
+      "name": "Frontend",
+      "item": [
+        {
+          "name": "Courses",
+          "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses?category_id=6",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "6"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Details",
+          "id": "446e6552-d2c6-435c-a9da-c3bccd65f8b6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses/mastering-laravel-12-with-react",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "path": [
+                "mastering-laravel-12-with-react"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Review List",
+          "id": "fd5f76f5-87ae-4c2c-b06c-4497ae3efc29",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses/review/5",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "path": [
+                "review",
+                "5"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Course Review Post",
+          "id": "cb49d5d2-0054-41c8-a2c7-dfd3ce477fae",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses/review/5",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "path": [
+                "review",
+                "5"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Page List",
+          "id": "4c5f9400-4582-4585-9923-010d7cc3975c",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}pages",
+              "host": [
+                "{{BASE_URL}}pages"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Page  Show",
+          "id": "38ebad07-e424-4a00-9f6c-af4cbbae915d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}pages/about_us",
+              "host": [
+                "{{BASE_URL}}pages"
+              ],
+              "path": [
+                "about_us"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Topics List",
+          "id": "de6a1ea2-6ea0-4e4e-8241-cbb26cd741cc",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}contact/topics",
+              "host": [
+                "{{BASE_URL}}contact"
+              ],
+              "path": [
+                "topics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Contact Us Query",
+          "id": "1b94e776-60fc-4597-bcfb-0a4d62edc5cf",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Gaurav\",\r\n    \"email\":\"gaurav@gmail.com\",\r\n    \"topic\":5,\r\n    \"subject\":\"Testing Subject\",\r\n    \"file_id\":48,\r\n    \"message\":\"Lorem dummy testing message\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}contact",
+              "host": [
+                "{{BASE_URL}}contact"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "id": "8643368b-082b-4230-8c0e-1e036bfd2ddf",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}forgot-password",
+              "host": [
+                "{{BASE_URL}}forgot-password"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check valid token",
+          "id": "a2593c36-771a-42ce-99a3-863cd5055ee8",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            },
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}check-token?token=0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL",
+              "host": [
+                "{{BASE_URL}}check-token"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Password Update",
+          "id": "46de9cfa-a529-43f3-9c23-c2420a2440d6",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\",\r\n    \"token\":\"0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL\",\r\n    \"password\":\"admin@123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}update-password",
+              "host": [
+                "{{BASE_URL}}update-password"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "b12b39d2-2f67-47d1-8349-eac19b21800b"
+    },
+    {
+      "name": "Shared",
+      "item": [
+        {
+          "name": "User Logout",
+          "id": "e768009a-089a-41b5-b665-a08e2192d223",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": {
+              "raw": "{{BASE_URL}}logout",
+              "host": [
+                "{{BASE_URL}}logout"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Image Upload",
+          "id": "28e16235-752c-4039-8945-5e2c5b1bea10",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/user/OneDrive/Desktop/dummy-image-video/2880X1620px-1_0.jpg"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}file/upload-image",
+              "host": [
+                "{{BASE_URL}}file"
+              ],
+              "path": [
+                "upload-image"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Document Upload",
+          "id": "72d87257-dad3-4bee-9fd6-191a0a2f5e3c",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/C:/Users/user/OneDrive/Desktop/dummy-image-video/dummypdf.pdf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}file/upload-document",
+              "host": [
+                "{{BASE_URL}}file"
+              ],
+              "path": [
+                "upload-document"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Video Upload",
+          "id": "a013a3b6-aa8d-4c38-88ec-846586b2deb5",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/C:/Users/user/OneDrive/Desktop/dummy-image-video/Dummy Video For Website.mp4"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}file/upload-video",
+              "host": [
+                "{{BASE_URL}}file"
+              ],
+              "path": [
+                "upload-video"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Send Otp Email (All User)",
+          "id": "e48e66f9-fd9d-4327-ac50-06fdbd8b0c34",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"admin@admin.com\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}sent-otp-to-email",
+              "host": [
+                "{{BASE_URL}}sent-otp-to-email"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Otp Email (All User)",
+          "id": "2db9df1b-ab09-4e5f-8979-8e614a9eb880",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"admin@admin.com\",\r\n    \"otp\":\"69576\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}verify-otp",
+              "host": [
+                "{{BASE_URL}}verify-otp"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Country List",
+          "id": "aae7eff4-cb92-4933-9543-a65845a0fde1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "78|edudene_token_Xfu0RcVQ0PXWWCYs6XWLYibMbR2gpfrLIcaLykPQc5e89dcd",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"admin@admin.com\",\r\n    \"otp\":\"69576\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}countries",
+              "host": [
+                "{{BASE_URL}}countries"
+              ]
+            }
+          }
+        },
+        {
+          "name": "State List",
+          "id": "5f81e300-6c56-448e-9b69-7698903f5f0c",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "78|edudene_token_Xfu0RcVQ0PXWWCYs6XWLYibMbR2gpfrLIcaLykPQc5e89dcd",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"admin@admin.com\",\r\n    \"otp\":\"69576\"\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}states/101",
+              "host": [
+                "{{BASE_URL}}states"
+              ],
+              "path": [
+                "101"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Setting",
+          "id": "465b3336-e3ef-4c67-a4ce-9896e9d2960c",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "78|edudene_token_Xfu0RcVQ0PXWWCYs6XWLYibMbR2gpfrLIcaLykPQc5e89dcd",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}settings",
+              "host": [
+                "{{BASE_URL}}settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "New Request",
+          "id": "9e95f888-cd3d-4128-9139-fa74f3686434",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "51|edudene_token_hReUV9RYWTyou4q9wXBJqoMtNr55q7toV1nW3eXn8124c7a7",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": {
+              "raw": "http://127.0.0.1:8000/broadcasting/auth",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "broadcasting",
+                "auth"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "c7b54de4-b1aa-4ee6-b03a-b77158c38f88"
+    },
+    {
+      "name": "Testing API For Image",
+      "id": "0a3c59cc-9211-4821-bd8a-db500eafe1c0",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/C:/Users/user/OneDrive/Desktop/dummy-image-video/filter.jpg"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/testing",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "testing"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "0890c005-adc5-4ac1-816c-f6729044de43",
+      "key": "BASE_URL",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

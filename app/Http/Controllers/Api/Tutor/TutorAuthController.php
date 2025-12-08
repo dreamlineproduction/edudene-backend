@@ -135,17 +135,19 @@ class TutorAuthController extends Controller
         return jsonResponse(true, $responseMessage);
     }
 
-    public function saveBasicInfo(Request $request)
+    public function save(Request $request)
     {
         $request->validate([
             'email' => 'required|string|email|max:255',
+            'password' => 'required|string|max:50',
+            'phone_number' => 'required|string|min:10|max:15|unique:tutors,phone_number',
             'full_name' => 'required|string|max:255',
             'address_line_1' => 'required|string|max:255',
             'address_line_2' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
-            'zip_code' => 'required|string|max:255',
+            'zip' => 'required|string|max:255',
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -160,7 +162,9 @@ class TutorAuthController extends Controller
         $user->update([
             'full_name' => $request->full_name,
             'user_name' => $userName,
-            'profile_step'=>2
+            'password' => Hash::make($request->password),
+            'profile_step'=>0,
+            'is_profile_complete'=>1 
         ]);
 
 
@@ -169,54 +173,54 @@ class TutorAuthController extends Controller
             'user_id' => $user->id,
         ]);
 
-        $find = ['user_id' => $user->id];
 
+        $newPath = 'tutors';
+
+
+        if (notEmpty($request->police_certificate)) {
+            
+            $document = finalizeFile($request->police_certificate,$newPath);
+
+            $request->merge([
+                'police_certificate' => $document['path'],
+                'police_certificate_url' => $document['url']
+            ]);
+        }
+
+        // Save qualification certificate
+        if (notEmpty($request->qualification_certificate)) {
+            
+            $document = finalizeFile($request->qualification_certificate,$newPath);
+
+            $request->merge([
+                'qualification_certificate' => $document['path'],
+                'qualification_certificate_url' => $document['url']
+            ]);
+        }
+
+        // Save experience certificate
+        if (notEmpty($request->experience_certificate)) {
+            
+            $document = finalizeFile($request->experience_certificate,$newPath);
+
+            $request->merge([
+                'experience_letter' => $document['path'],
+                'experience_letter_url' => $document['url']
+            ]);
+        }
+
+
+        $find = ['user_id' => $user->id];
         Tutor::updateOrCreate($find, $request->toArray());
 
 
         //UserInformation::updateOrCreate($find, $request->toArray());
 
         // Save other profile information as needed
-        return jsonResponse(true, 'Profile basic information saved successfully.');
+        return jsonResponse(true, 'Account has been created successfully.');
 
     }
 
-    public function setPassword(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:8',
-            'phone_number' => 'required|string|max:12',
-        ]);
 
-        $user = User::where('email', $request->email)->first();
-        if(empty($user)){
-            return jsonResponse(false, 'User not found.',404);
-        }
-
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
-
-        return jsonResponse(true, 'Password has been updated successfully.');
-    }
-
-    public function saveDocument(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|string|email|max:200',
-            'university' => 'required|string|max:200',
-            'highest_qualification' => 'required|string|max:200',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-        if(empty($user)){
-            return jsonResponse(false, 'User not found.',404);
-        }      
-
-        $find = ['user_id' => $user->id];
-        Tutor::updateOrCreate($find, $request->toArray());
-
-        return jsonResponse(true, 'Document has been updated successfully.');
-    }
+  
 }

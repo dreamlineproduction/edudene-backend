@@ -8,6 +8,4 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:2'])->group(function () {
 
     // Tutor Profile Routes
     Route::post('tutor/change-password', [TutorAuthController::class, 'changePassword']);
-
-    
 });

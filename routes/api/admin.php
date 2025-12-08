@@ -53,8 +53,8 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     // Coupon Routes
     Route::apiResource('admin/coupons', CouponController::class);
 
-
-
+    Route::post('admin/setting/website-setting', [SettingController::class, 'saveWebsite']);
+    Route::post('admin/setting/stripe-setting', [SettingController::class, 'saveStripe']);
     Route::post('admin/setting/payment-setting', [SettingController::class, 'savePayment']);
 
 });

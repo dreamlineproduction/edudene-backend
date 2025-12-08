@@ -27,6 +27,8 @@ class WebsiteSetting extends Model
         'agora_app_id',
         'agora_certificate',
         'ipinfo_token',
+        'footer_text',
+        'footer_link',
         'created_at',
         'updated_at',            
     ];

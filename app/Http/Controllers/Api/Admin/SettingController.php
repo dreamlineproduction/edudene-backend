@@ -94,6 +94,25 @@ class SettingController extends Controller
 
     public function savePayment(Request $request){
         $request->validate([
+            'vat_tax_commission' => 'required|string',
+        ]);
+
+
+        $data = PaymentSetting::updateOrCreate(['id' => 1], $request->toArray());
+
+
+        $response['course_commission'] = $data->course_commission;
+        $response['corporate_commission'] = $data->corporate_commission;
+        $response['personal_tutor_commission'] = $data->personal_tutor_commission;
+        $response['school_course_commission'] = $data->school_course_commission;
+        $response['school_class_commission'] = $data->school_class_commission;
+        $response['vat_tax_commission'] = $data->vat_tax_commission;
+        return jsonResponse(true, 'Setting has been updated successfully.',$data);
+    }
+
+    public function saveStripe(Request $request) {
+
+        $request->validate([
             'stripe_status' => 'required|in:Active,Inactive',
             'stripe_use' => 'required|in:Test,Live',
             'stripe_secret_key' => 'required|string',
@@ -104,33 +123,39 @@ class SettingController extends Controller
 
 
         $data = PaymentSetting::updateOrCreate(['id' => 1], $request->toArray());
-        return jsonResponse(true, 'Setting has been updated successfully.',$data);
+
+
+        $response['stripe_status'] = $data->stripe_status;
+        $response['stripe_use'] = $data->stripe_use;
+        $response['stripe_secret_key'] = $data->stripe_secret_key;
+        $response['stripe_public_key'] = $data->stripe_public_key;
+        $response['test_stripe_secret_key'] = $data->test_stripe_secret_key;
+        $response['test_stripe_public_key'] = $data->test_stripe_public_key;
+        
+        return jsonResponse(true, 'Stripe Setting has been updated successfully.',$response);
     }
+
 
     public function show(Request $request, $id = 1){
         $setting = WebsiteSetting::find($id);
         $data['website_setting'] = notEmpty($setting) ? $setting : [];
 
-        $setting = PaymentSetting::find($id);
+        $setting = PaymentSetting::select('course_commission',
+        'corporate_commission',
+        'personal_tutor_commission',
+        'school_course_commission',
+        'school_class_commission',
+        'vat_tax_commission')->find($id);
         $data['payment_setting'] = notEmpty($setting) ? $setting: [];
+
+
+        $setting = PaymentSetting::select('stripe_status','stripe_use','stripe_secret_key','stripe_public_key','test_stripe_secret_key','test_stripe_public_key')
+        ->find($id);
+        $data['stripe_setting'] = notEmpty($setting) ? $setting: [];
         return jsonResponse(true, 'Setting has been updated successfully.', $data);
     }
 
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+   
 }

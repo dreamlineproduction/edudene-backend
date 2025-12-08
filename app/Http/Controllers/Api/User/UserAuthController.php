@@ -71,8 +71,6 @@ class UserAuthController extends Controller
     }
 
 
-
-
     // Login API
     public function login(Request $request)
     {

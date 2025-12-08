@@ -31,11 +31,9 @@ Route::prefix('v1')->group(function () {
     Route::post('admin/login', [AdminAuthController::class, 'login']);
 
 
+    Route::post('tutor', [TutorAuthController::class, 'save']);
     Route::post('tutor/login', [TutorAuthController::class, 'login']);
     Route::post('tutor/register', [TutorAuthController::class, 'register']);
-    Route::post('tutor/save-basic-info', [TutorAuthController::class, 'saveBasicInfo']);
-    Route::post('tutor/save-document', [TutorAuthController::class, 'saveDocument']);
-    Route::post('tutor/set-password', [TutorAuthController::class, 'setPassword']);
 
 
     Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
@@ -53,7 +51,5 @@ Route::prefix('v1')->group(function () {
     Route::get('states/{COUNTRY_ID}', [StateController::class, 'index']);
 
     Route::get('settings', [SettingController::class, 'show']);
-
-    Route::post('admin/setting/website-setting', [SettingController::class, 'saveWebsite']);
 });
 ?>
