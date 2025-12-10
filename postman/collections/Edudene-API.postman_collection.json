@@ -1909,7 +1909,7 @@
                 },
                 {
                   "key": "type",
-                  "value": "Percentage",
+                  "value": "Fixed",
                   "type": "text"
                 },
                 {
@@ -1918,7 +1918,7 @@
                   "type": "text"
                 },
                 {
-                  "key": "percentage",
+                  "key": "amount",
                   "value": "25",
                   "type": "text"
                 },

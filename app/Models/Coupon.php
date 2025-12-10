@@ -18,6 +18,8 @@ class Coupon extends Model
         'code',
         'is_redeem',
         'status',
+        'created_at',
+        'updated_at',
     ];
 
     protected $hidden = [

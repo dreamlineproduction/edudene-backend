@@ -56,7 +56,6 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $validation = [
             'title' => 'required|string|max:255',
             'type' => 'required|in:Fixed,Percentage',
@@ -69,29 +68,28 @@ class CouponController extends Controller
 
         $request->validate($validation);
 
-        if ($request->filled('number_of_coupons') && $request->number_of_coupons > 0) {
-
-            $batchNumber = 'BADGE-' . rand(100000, 999999);
-
-            for ($i = 0; $i < $request->number_of_coupons; $i++) {
-                do {
-                    $code = strtoupper(Str::random(8));
-                } while (Coupon::where('code', $code)->exists());
-
-                Coupon::create([
-                    'title'        => $request->title,
-                    'type'         => $request->type,
-                    'amount'       => $request->amount,
-                    'batch_number' => $batchNumber,
-                    'code'         => $code,
-                    'status'       => $request->status
-                ]);
-            }
-
-            return jsonResponse(true, 'Coupons created successfully');
-        } else {
+        if (empty($request->number_of_coupon) || $request->number_of_coupon < 1) {
             return jsonResponse(false, 'Number of coupon must be at least 1', null, 400);
         }
+
+
+        $batchNumber = 'BADGE-' . time();
+        for ($i = 0; $i < $request->number_of_coupon; $i++) {
+            do {
+                $code = strtoupper(Str::random(8));
+            } while (Coupon::where('code', $code)->exists());
+
+            Coupon::create([
+                'title'        => $request->title,
+                'type'         => $request->type,
+                'amount'       => $request->amount,
+                'batch_number' => $batchNumber,
+                'code'         => $code,
+                'status'       => $request->status
+            ]);
+        }
+
+        return jsonResponse(true, 'Coupons created successfully');
     }
 
     /**

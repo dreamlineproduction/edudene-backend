@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('coupons', function (Blueprint $table) {
             //
-            $table->integer('code')->after('id')->nullable();
+            $table->string('code')->after('id')->nullable();
         });
     }
 

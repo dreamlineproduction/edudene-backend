@@ -19,6 +19,8 @@ use App\Http\Controllers\Api\Admin\SubSubCategoryController;
 
 Route::prefix('v1')->group(function () {   
     Route::post('admin/login', [AdminAuthController::class, 'login']);
+        Route::apiResource('admin/coupons', CouponController::class);
+
 });
 
 
@@ -56,7 +58,6 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::apiResource('admin/pages',PageController::class);
 
     // Coupon Routes
-    Route::apiResource('admin/coupons', CouponController::class);
 
     Route::post('admin/setting/website-setting', [SettingController::class, 'saveWebsite']);
     Route::post('admin/setting/stripe-setting', [SettingController::class, 'saveStripe']);
