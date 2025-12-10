@@ -43,7 +43,8 @@
                 "login"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Change Password",
@@ -90,7 +91,8 @@
                 "change-password"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category List",
@@ -110,6 +112,7 @@
               ]
             },
             "method": "GET",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n  \"channel_name\": \"private-chat.1\"\r\n}",
@@ -128,7 +131,8 @@
                 "categories"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Create",
@@ -175,7 +179,8 @@
                 "categories"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Show",
@@ -226,7 +231,8 @@
                 "4"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Update",
@@ -274,7 +280,8 @@
                 "6"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Delete",
@@ -291,6 +298,7 @@
               ]
             },
             "method": "DELETE",
+            "header": [],
             "url": {
               "raw": "{{BASE_URL}}admin/categories/7",
               "host": [
@@ -301,7 +309,8 @@
                 "7"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 2 List",
@@ -352,7 +361,8 @@
                 "level-two"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 2 Create",
@@ -400,7 +410,8 @@
                 "level-two"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 2 Show",
@@ -452,7 +463,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 2 Update",
@@ -501,7 +513,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 2 Delete",
@@ -550,7 +563,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 3 List",
@@ -600,7 +614,8 @@
                 "level-three"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 3 Create",
@@ -647,7 +662,8 @@
                 "level-three"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 3 Show",
@@ -698,7 +714,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 3 Update",
@@ -746,7 +763,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 3 Delete",
@@ -794,7 +812,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 4 List",
@@ -845,7 +864,8 @@
                 "level-four"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 4 Create",
@@ -893,7 +913,8 @@
                 "level-four"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 4 Show",
@@ -945,7 +966,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 4 Update",
@@ -994,7 +1016,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Category Level 4 Delete",
@@ -1043,7 +1066,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Section List",
@@ -1094,7 +1118,8 @@
                 "faqs"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Section Create",
@@ -1142,7 +1167,8 @@
                 "faqs"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Section Show",
@@ -1194,7 +1220,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Section Update",
@@ -1243,7 +1270,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Section Delete",
@@ -1292,7 +1320,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq List",
@@ -1342,7 +1371,8 @@
                 "faqs"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Create",
@@ -1389,7 +1419,8 @@
                 "faqs"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Update",
@@ -1437,7 +1468,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Faq Delete",
@@ -1485,7 +1517,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Page List",
@@ -1535,7 +1568,8 @@
                 "pages"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Page Show",
@@ -1586,7 +1620,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Page Delete",
@@ -1634,7 +1669,8 @@
                 "2"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Page Create",
@@ -1681,7 +1717,8 @@
                 "pages"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Page Update",
@@ -1729,7 +1766,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Coupon List",
@@ -1779,7 +1817,8 @@
                 "coupons"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Coupon Show",
@@ -1821,16 +1860,17 @@
               }
             },
             "url": {
-              "raw": "{{BASE_URL}}admin/coupons/3",
+              "raw": "{{BASE_URL}}admin/coupons/BATCH-20251210-094652",
               "host": [
                 "{{BASE_URL}}admin"
               ],
               "path": [
                 "coupons",
-                "3"
+                "BATCH-20251210-094652"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Coupon Create",
@@ -1860,13 +1900,34 @@
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"title\": \"New Year Offer\",\r\n  \"type\": \"Fixed\",\r\n  \"amount\":100,\r\n  \"number_of_coupon\":2,\r\n  \"status\": \"Active\"\r\n}\r\n\r\n// {\r\n//   \"title\": \"New Year Offer\",\r\n//   \"type\": \"Percentage\",\r\n//   \"percentage\":10,\r\n//   \"number_of_coupon\":5,\r\n//   \"status\": \"Active\"\r\n// }",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "New Year Offer",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "Percentage",
+                  "type": "text"
+                },
+                {
+                  "key": "number_of_coupon",
+                  "value": "10",
+                  "type": "text"
+                },
+                {
+                  "key": "percentage",
+                  "value": "25",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "Active",
+                  "type": "text"
                 }
-              }
+              ]
             },
             "url": {
               "raw": "{{BASE_URL}}admin/coupons",
@@ -1877,7 +1938,8 @@
                 "coupons"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Payment Setting",
@@ -1925,7 +1987,8 @@
                 "payment-setting"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Website Setting",
@@ -1968,7 +2031,8 @@
                 "website-setting"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Stripe Setting",
@@ -1994,7 +2058,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "",
+              "raw": "{\r\n    \"stripe_status\":\"Active\",\r\n    \"stripe_use\":\"Test\",\r\n    \"stripe_secret_key\":\"sasasa\",\r\n    \"stripe_public_key\":\"sdaasasasas\",\r\n    \"test_stripe_secret_key\":\"sasasasqwqwqw\",\r\n    \"test_stripe_public_key\":\"wqqwqw121212\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2011,7 +2075,8 @@
                 "stripe-setting"
               ]
             }
-          }
+          },
+          "response": []
         }
       ],
       "id": "5aa356e5-2ca7-4095-b778-af5d37fefaaa"
@@ -2052,7 +2117,8 @@
                 "register"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Resend Email Verification",
@@ -2087,7 +2153,8 @@
                 "register"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Save Password",
@@ -2122,7 +2189,8 @@
                 "password-save"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Save Basic Infomation",
@@ -2164,7 +2232,8 @@
                 "save-basic-information"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Save Education Qualification",
@@ -2199,7 +2268,8 @@
                 "save-education-qualification"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Save Social Link",
@@ -2234,7 +2304,8 @@
                 "save-social-link"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Save Billing Information",
@@ -2269,7 +2340,8 @@
                 "save-billing-information"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Save Found Us",
@@ -2304,7 +2376,8 @@
                 "save-found-us"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Save Category",
@@ -2339,7 +2412,8 @@
                 "save-category"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Login",
@@ -2384,7 +2458,8 @@
                 "login"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Change Password",
@@ -2429,7 +2504,8 @@
                 "login"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "User Profile",
@@ -2474,7 +2550,8 @@
                 "profile"
               ]
             }
-          }
+          },
+          "response": []
         }
       ],
       "id": "fdeda60a-c159-4156-9c77-dd8e6fb9ae3d"
@@ -2487,6 +2564,7 @@
           "id": "29102adb-ed02-466b-83a8-59d9956e2370",
           "request": {
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"password\":\"admin@123\"\r\n}",
@@ -2505,7 +2583,8 @@
                 "login"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Register",
@@ -2542,7 +2621,8 @@
                 "register"
               ]
             }
-          }
+          },
+          "response": []
         }
       ],
       "id": "8b2ac66a-7501-4e4a-97c8-472c671876e8"
@@ -2565,13 +2645,15 @@
               ]
             },
             "method": "GET",
+            "header": [],
             "url": {
               "raw": "{{BASE_URL}}course",
               "host": [
                 "{{BASE_URL}}course"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Save Basic Info..",
@@ -2618,7 +2700,8 @@
                 "save-basic-information"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Save Requirment",
@@ -2665,7 +2748,8 @@
                 "save-requirment"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Save Outcome",
@@ -2712,7 +2796,8 @@
                 "save-outcome"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Save Price",
@@ -2759,7 +2844,8 @@
                 "save-price"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Save Media",
@@ -2801,7 +2887,8 @@
                 "save-media"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Save Seo",
@@ -2848,7 +2935,8 @@
                 "save-seo"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Chapter List",
@@ -2899,7 +2987,8 @@
                 "chapter"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Chapter Create",
@@ -2947,7 +3036,8 @@
                 "chapter"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Chapter Show",
@@ -2999,7 +3089,8 @@
                 "1"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Chapter Update",
@@ -3048,7 +3139,8 @@
                 "2"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Chapter Delete",
@@ -3097,7 +3189,8 @@
                 "2"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Lesson List",
@@ -3150,7 +3243,8 @@
                 "lesson"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Lesson Create",
@@ -3200,7 +3294,8 @@
                 "lesson"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Lesson Show",
@@ -3254,7 +3349,8 @@
                 "10"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Lesson Update",
@@ -3305,7 +3401,8 @@
                 "3"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Lesson Delete",
@@ -3356,7 +3453,8 @@
                 "6"
               ]
             }
-          }
+          },
+          "response": []
         }
       ],
       "id": "b0c3b1c1-03b8-481d-af04-079027dfc512"
@@ -3415,7 +3513,8 @@
                 }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Details",
@@ -3465,7 +3564,8 @@
                 "mastering-laravel-12-with-react"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Review List",
@@ -3516,7 +3616,8 @@
                 "5"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Course Review Post",
@@ -3564,7 +3665,8 @@
                 "5"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Page List",
@@ -3611,7 +3713,8 @@
                 "{{BASE_URL}}pages"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Page  Show",
@@ -3661,7 +3764,8 @@
                 "about_us"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Topics List",
@@ -3711,7 +3815,8 @@
                 "topics"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Contact Us Query",
@@ -3755,7 +3860,8 @@
                 "{{BASE_URL}}contact"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Forgot Password",
@@ -3797,7 +3903,8 @@
                 "{{BASE_URL}}forgot-password"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Check valid token",
@@ -3846,7 +3953,8 @@
                 }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Password Update",
@@ -3888,7 +3996,8 @@
                 "{{BASE_URL}}update-password"
               ]
             }
-          }
+          },
+          "response": []
         }
       ],
       "id": "b12b39d2-2f67-47d1-8349-eac19b21800b"
@@ -3911,13 +4020,15 @@
               ]
             },
             "method": "POST",
+            "header": [],
             "url": {
               "raw": "{{BASE_URL}}logout",
               "host": [
                 "{{BASE_URL}}logout"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Image Upload",
@@ -3934,6 +4045,7 @@
               ]
             },
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -3955,7 +4067,8 @@
                 "upload-image"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Document Upload",
@@ -3972,6 +4085,7 @@
               ]
             },
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -3991,7 +4105,8 @@
                 "upload-document"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Video Upload",
@@ -4008,6 +4123,7 @@
               ]
             },
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -4027,7 +4143,8 @@
                 "upload-video"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Send Otp Email (All User)",
@@ -4066,7 +4183,8 @@
                 "{{BASE_URL}}sent-otp-to-email"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Verify Otp Email (All User)",
@@ -4105,7 +4223,8 @@
                 "{{BASE_URL}}verify-otp"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Country List",
@@ -4147,7 +4266,8 @@
                 "{{BASE_URL}}countries"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "State List",
@@ -4192,7 +4312,8 @@
                 "101"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Setting",
@@ -4239,7 +4360,8 @@
                 "{{BASE_URL}}settings"
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "New Request",
@@ -4256,6 +4378,7 @@
               ]
             },
             "method": "POST",
+            "header": [],
             "url": {
               "raw": "http://127.0.0.1:8000/broadcasting/auth",
               "protocol": "http",
@@ -4271,7 +4394,8 @@
                 "auth"
               ]
             }
-          }
+          },
+          "response": []
         }
       ],
       "id": "c7b54de4-b1aa-4ee6-b03a-b77158c38f88"
@@ -4294,6 +4418,7 @@
           ]
         },
         "method": "GET",
+        "header": [],
         "body": {
           "mode": "formdata",
           "formdata": [
@@ -4316,7 +4441,8 @@
             "testing"
           ]
         }
-      }
+      },
+      "response": []
     }
   ],
   "variable": [

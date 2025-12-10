@@ -1,8 +1,12 @@
 <?php
-
-use App\Http\Controllers\Api\Tutor\TutorAuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Tutor\TutorAuthController;
 
+
+Route::prefix('v1')->group(function () {   
+    Route::post('tutor', [TutorAuthController::class, 'save']);
+    Route::post('tutor/register', [TutorAuthController::class, 'register']);
+});
 
 Route::prefix('v1')->middleware(['auth:sanctum','role:2'])->group(function () {
 

@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Api\Admin\AdminAuthController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Admin\AdminProfileController;
@@ -15,6 +17,9 @@ use App\Http\Controllers\Api\Admin\SubSubCategoryController;
 
 // Settings
 
+Route::prefix('v1')->group(function () {   
+    Route::post('admin/login', [AdminAuthController::class, 'login']);
+});
 
 
 Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {   

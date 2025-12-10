@@ -166,19 +166,33 @@ class UserAuthController extends Controller
     public function forgotPassword(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email|max:255|exists:users,email',
+            'email_or_username' => 'required|string|max:255',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        if(filter_var($request->email_or_username, FILTER_VALIDATE_EMAIL)){
+            $where = ['email' => $request->email_or_username];  
+        } else {
+            $where = ['user_name' => $request->email_or_username];
+        }
 
+
+
+        $user = User::where($where)->first();
+        if(empty($user)){
+            return jsonResponse(false, 'User not found in our database.', null, 404);
+        }
+        
         try{
             
             $resetToken = Str::random(90);
+
             $user->update([
                 'remember_token' => $resetToken,
             ]);
 
-            $resetLink = url('/user/reset-password?token=' . $resetToken);
+            //$resetLink = url('/user/reset-password?token=' . $resetToken);
+            $resetLink = env('WEBSITE_URL');
+            $resetLink .= 'user/reset-password?token=' . $resetToken;
 
             $mailData = [
                 'fullName' => $user->full_name,
@@ -205,17 +219,22 @@ class UserAuthController extends Controller
 
         if(empty($user)){
             return jsonResponse(false, 'Invalid or expired token.', null, 400);
-        }
+        }        
 
-        $data['email'] = $user->email;
-        return jsonResponse(true, 'Valid token.',$data);        
+        // $user->update([
+        //     'remember_token' => NULL,
+        // ]);
+
+        $response['email'] = $user->email;
+        $response['full_name'] = $user->full_name;
+        return jsonResponse(true, 'Valid token.',['user' => $response]);        
     } 
     
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'email'=>'required|string|email|max:255|exists:users,email',
-            'token' => 'required|string|exists:users,remember_token',
+            'email'=>'required|string|email|max:255',
+            'token' => 'required|string',
             'password' => 'required|string',
         ]);
 
@@ -227,7 +246,7 @@ class UserAuthController extends Controller
 
         $user->update([
             'password' => Hash::make($request->password),
-            'remember_token' => '',
+            'remember_token' => NUll,
         ]);
         return jsonResponse(true, 'Password has been updated successfully.');
     }

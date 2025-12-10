@@ -9,6 +9,8 @@ class UserQualification extends Model
     //
     protected $table = 'user_qualifications';
 
+
+
     protected $fillable = [
         'user_id',
         'qualification_name',
@@ -21,4 +23,6 @@ class UserQualification extends Model
         'created_at',
         'updated_at',
     ];
+
+
 }

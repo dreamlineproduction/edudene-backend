@@ -25,17 +25,8 @@ class Coupon extends Model
         'updated_at',
     ];
 
-
-
-    protected static function boot()
+    public function createdBy()
     {
-        parent::boot();
-
-        static::created(function ($coupon) {
-            if (empty($coupon->batch_number)) {
-                $coupon->batch_number = 'BATCH-' . date('Ymd') . '-' . $coupon->id. strtoupper(Str::random(5));
-                $coupon->save();
-            }
-        });
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

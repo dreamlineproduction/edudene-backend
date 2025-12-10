@@ -13,17 +13,41 @@ class CouponController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Coupon::query();
-        
-        if ($request->has('type')) {
-            $data->where('type', $request->type);
-        }
+        $perPage = $request->get('per_page', 20);
 
-        if ($request->has('redeem')) {
-            $data->where('is_redeem', $request->redeem);
-        }
+        $batchQuery = Coupon::select('*')
+            ->when($request->filled('type'), function ($q) use ($request) {
+                $q->where('type', $request->type);
+            })
+            ->when($request->filled('redeem'), function ($q) use ($request) {
+                $q->where('is_redeem', $request->redeem);
+            })
+            ->when($request->filled('title'), function ($q) use ($request) {
+                $q->where('title', $request->redeem);
+            })
+        ->distinct()
+        ->orderBy('batch_number', 'desc');
+            
+        $paginatedBatches = $batchQuery->paginate($perPage);
 
-        $data = $data->latest()->get();
+        $batchDetails = $paginatedBatches->getCollection()->map(function ($batch) {
+            $items = Coupon::where('batch_number', $batch->batch_number)->get();
+            $first = $items->first();
+
+            return [
+                'batch_number'   => $batch->batch_number,
+                'title'          => $first->title,
+                'type'           => $first->type,
+                'amount'         => $first->amount,
+                'percentage'     => $first->percentage,
+                'created_by'     => $first->createdBy?->name ?? 'Admin',
+                'total_coupons'  => $items->count(),
+                'total_redeemed' => $items->where('is_redeem', 1)->count(),
+            ];
+        });
+        $paginatedBatches->setCollection($batchDetails);
+
+        $data = $paginatedBatches;
         return jsonResponse(true, 'Coupon list', $data);
     }
 
@@ -49,10 +73,22 @@ class CouponController extends Controller
         $request->validate($validation);
 
         if($request->has('number_of_coupon') > 0){
+            
+            $batchNumber = 'BATCH-' . now()->format('Ymd-His');
+            $batchNumberExists = Coupon::where('batch_number', $batchNumber)->exists(); 
+            
+            if($batchNumberExists){
+                $batchNumber = 'BATCH-' . date('Ymd') . '-' . uniqid();
+            }
+
+
+            $request->merge(['batch_number' => $batchNumber]);
+            Coupon::where('batch_number', $request->batch_number)->delete(); 
+
             for($i=0; $i < $request->number_of_coupon; $i++){
                 Coupon::create($request->all());
             }
-            return jsonResponse(true, 'Coupons created successfully',null);           
+            return jsonResponse(true, 'Coupons created successfully');           
         } else {
             return jsonResponse(false, 'Number of coupon must be at least 1', null, 400);
         }
@@ -61,12 +97,17 @@ class CouponController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $batchNumber)
     {
-        $data = Coupon::find($id);
-        if (!$data) {
+        $data = Coupon::where('batch_number', $batchNumber)->get();
+        if ($data->isEmpty()) {
             return jsonResponse(false, 'Coupon not found', null, 404);
         }
+
+        $data->map(function ($item) {            
+            $item->created_by = 'Admin';
+            $item->redeem_by = null;
+        });
 
         return jsonResponse(true, 'Coupon details', $data);        
     }

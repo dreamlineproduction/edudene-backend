@@ -1,12 +1,31 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\SettingController;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Tutor\CourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseController;
 use App\Http\Controllers\Api\Tutor\CourseLessonController;
 use App\Http\Controllers\Api\User\UserAuthController;
 
+Route::prefix('v1')->group(function () {   
+    Route::post('sent-otp-to-email', [UserAuthController::class, 'sendOtpToEmail']);
+    Route::post('verify-otp', [UserAuthController::class, 'verifyOtp']);
+    
+    Route::post('file/upload-image', [FileController::class, 'uploadImage']);
+    Route::post('file/upload-video', [FileController::class, 'uploadVideo']);
+    Route::post('file/upload-document', [FileController::class, 'uploadDocument']);
+    Route::post('testing/{FILE_ID}', [FileController::class, 'imageTesting']);
+
+
+    Route::apiResource('countries', CountryController::class);
+    Route::get('states/{COUNTRY_ID}', [StateController::class, 'index']);
+
+    Route::get('settings', [SettingController::class, 'show']);
+});
 
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [UserAuthController::class, 'logout']);
