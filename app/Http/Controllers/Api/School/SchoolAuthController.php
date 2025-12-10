@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\School;
 
 use App\Http\Controllers\Controller;
 use App\Mail\User\UserEmailVerificationMail;
+use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class SchoolAuthController extends Controller
@@ -71,7 +73,69 @@ class SchoolAuthController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'profile_step' => 'required|numeric',
+            'school_name' => 'required|string|max:200',
+            'phone_number' => 'required|string|max:15',
+            'address_line_1' => 'required|string|max:200',
+            'city' => 'required|string|max:200',
+            'country' => 'required|string|max:200',
+            'state' => 'required|string|max:200',
+            'zip' => 'required|string|max:200',
+            'password' => 'required|string|max:200',
+            'owner_name' => 'required|string|max:200',
+            'tax_details' => 'required|string|max:200',
+            'registration_number' => 'required|string|max:200',
+            'year_of_registration' => 'required|integer|max:200',
+            'website' => 'required|string|max:200',
+            'social_media' => 'required|string|max:200',
+            'license_type' => 'required|string|max:200',
+            'school_document' => 'required|integer',
+        ]);
+
+
+        $user = User::where('email', $request->email)->first();
+        if(empty($user)){
+            return jsonResponse(false, 'User not found.',404);
+        }
+
+        //$user = auth('sanctum')->user();
+        $userName = generateUniqueSlug($request->owner_name, 'App\Models\User', $user->id, 'user_name');
+
+        // Update userinformation
+        $user->update([
+            'full_name' => $request->owner_name,
+            'user_name' => $userName,
+            'password' => Hash::make($request->password),
+            'profile_step'=>0,
+            'is_profile_complete'=>1
+        ]);
+
+        //$user = auth('sanctum')->user();
+        $schoolSlug = generateUniqueSlug($request->school_name, 'App\Models\School', $user->id, 'school_slug');
+
+        // Update other profile information
+        $request->merge([
+            'user_id' => $user->id,
+            'school_slug' => $schoolSlug
+        ]);
+
+        $newPath = 'schools';
+        // Save qualification certificate
+        if (notEmpty($request->school_document)) {
+            
+            $document = finalizeFile($request->school_document,$newPath);
+
+            $request->merge([
+                'school_document' => $document['path'],
+                'school_document_url' => $document['url']
+            ]);
+        }
+
+        $school = School::updateOrCreate(['user_id' => $user->id], $request->toArray());
+
+        return jsonResponse(true, 'School profile created successfully');
+
     }
 
     /**

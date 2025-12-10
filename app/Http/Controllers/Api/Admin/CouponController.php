@@ -39,7 +39,6 @@ class CouponController extends Controller
                 'title'          => $first->title,
                 'type'           => $first->type,
                 'amount'         => $first->amount,
-                'percentage'     => $first->percentage,
                 'created_by'     => $first->createdBy?->name ?? 'Admin',
                 'total_coupons'  => $items->count(),
                 'total_redeemed' => $items->where('is_redeem', 1)->count(),
@@ -62,19 +61,16 @@ class CouponController extends Controller
             'type' => 'required|in:Fixed,Percentage',
             'number_of_coupon' => 'required|integer|min:1',
             'status' => 'in:Active,Inactive',
+            'amount' => 'required|numeric|min:1',
         ];
         
-        if($request->type == 'Percentage'){
-            $validation['percentage'] = 'required|numeric|min:1|max:100';
-        } else {
-            $validation['amount'] = 'required|numeric|min:1';
-        }
+       
 
         $request->validate($validation);
 
         if($request->has('number_of_coupon') > 0){
             
-            $batchNumber = 'BATCH-' . now()->format('Ymd-His');
+            $batchNumber = 'BATCH-' . now()->format('Ymd');
             $batchNumberExists = Coupon::where('batch_number', $batchNumber)->exists(); 
             
             if($batchNumberExists){
