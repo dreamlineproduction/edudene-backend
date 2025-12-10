@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CouponController extends Controller
 {
@@ -25,9 +26,9 @@ class CouponController extends Controller
             ->when($request->filled('title'), function ($q) use ($request) {
                 $q->where('title', $request->redeem);
             })
-        ->distinct()
-        ->orderBy('batch_number', 'desc');
-            
+            ->distinct()
+            ->orderBy('batch_number', 'desc');
+
         $paginatedBatches = $batchQuery->paginate($perPage);
 
         $batchDetails = $paginatedBatches->getCollection()->map(function ($batch) {
@@ -63,28 +64,31 @@ class CouponController extends Controller
             'status' => 'in:Active,Inactive',
             'amount' => 'required|numeric|min:1',
         ];
-        
-       
+
+
 
         $request->validate($validation);
 
-        if($request->has('number_of_coupon') > 0){
-            
-            $batchNumber = 'BATCH-' . now()->format('Ymd');
-            $batchNumberExists = Coupon::where('batch_number', $batchNumber)->exists(); 
-            
-            if($batchNumberExists){
-                $batchNumber = 'BATCH-' . date('Ymd') . '-' . uniqid();
+        if ($request->filled('number_of_coupons') && $request->number_of_coupons > 0) {
+
+            $batchNumber = 'BADGE-' . rand(100000, 999999);
+
+            for ($i = 0; $i < $request->number_of_coupons; $i++) {
+                do {
+                    $code = strtoupper(Str::random(8));
+                } while (Coupon::where('code', $code)->exists());
+
+                Coupon::create([
+                    'title'        => $request->title,
+                    'type'         => $request->type,
+                    'amount'       => $request->amount,
+                    'batch_number' => $batchNumber,
+                    'code'         => $code,
+                    'status'       => $request->status
+                ]);
             }
 
-
-            $request->merge(['batch_number' => $batchNumber]);
-            Coupon::where('batch_number', $request->batch_number)->delete(); 
-
-            for($i=0; $i < $request->number_of_coupon; $i++){
-                Coupon::create($request->all());
-            }
-            return jsonResponse(true, 'Coupons created successfully');           
+            return jsonResponse(true, 'Coupons created successfully');
         } else {
             return jsonResponse(false, 'Number of coupon must be at least 1', null, 400);
         }
@@ -100,12 +104,12 @@ class CouponController extends Controller
             return jsonResponse(false, 'Coupon not found', null, 404);
         }
 
-        $data->map(function ($item) {            
+        $data->map(function ($item) {
             $item->created_by = 'Admin';
             $item->redeem_by = null;
         });
 
-        return jsonResponse(true, 'Coupon details', $data);        
+        return jsonResponse(true, 'Coupon details', $data);
     }
 
     /**
@@ -119,13 +123,13 @@ class CouponController extends Controller
             return response()->json(['status' => false, 'message' => 'Coupon not found'], 404);
         }
 
-         $validation = [
+        $validation = [
             'title' => 'required|string|max:255',
             'type' => 'required|in:Fixed,Percentage',
             'status' => 'in:Active,Inactive',
         ];
-        
-        if($request->type == 'percentage'){
+
+        if ($request->type == 'percentage') {
             $validation['percentage'] = 'required|numeric|min:1|max:100';
         } else {
             $validation['amount'] = 'required|numeric|min:1';
@@ -136,7 +140,6 @@ class CouponController extends Controller
         $data->update($request->all());
 
         return jsonResponse(true, 'Coupon updated successfully', $data);
-
     }
 
     /**

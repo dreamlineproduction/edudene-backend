@@ -13,9 +13,9 @@ class Coupon extends Model
         'title',
         'type',
         'amount',
-        'percentage',
         'validity',
         'batch_number',
+        'code',
         'is_redeem',
         'status',
     ];
