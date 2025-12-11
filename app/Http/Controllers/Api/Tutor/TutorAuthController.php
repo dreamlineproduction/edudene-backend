@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Tutor;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Tutor\ConfirmationTutorRegistration;
 use App\Mail\User\UserEmailVerificationMail;
 use Illuminate\Support\Facades\Hash;
 use App\Models\LoginAttempt;
@@ -213,8 +214,16 @@ class TutorAuthController extends Controller
         $find = ['user_id' => $user->id];
         Tutor::updateOrCreate($find, $request->toArray());
 
+        $mailData = [
+            'fullName' => $user->full_name,
+            'loginLink' => env('WEBSITE_URL') . '/tutor/login',
+        ];
 
-        //UserInformation::updateOrCreate($find, $request->toArray());
+        try{
+            Mail::to($user->email)->send(new ConfirmationTutorRegistration($mailData));
+        } catch (\Exception $e) {
+            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
+        }
 
         // Save other profile information as needed
         return jsonResponse(true, 'Account has been created successfully.');

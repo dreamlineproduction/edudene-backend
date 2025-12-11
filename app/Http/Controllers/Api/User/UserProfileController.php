@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ConfirmationUserRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,6 +12,7 @@ use App\Models\UserCategory;
 use App\Models\UserInformation;
 use App\Models\UserQualification;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class UserProfileController extends Controller
 {
@@ -229,6 +231,17 @@ class UserProfileController extends Controller
         UserInformation::updateOrCreate($find, [
             'found_us' => $request->found_us,
         ]);
+
+        $mailData = [
+            'fullName' => $user->full_name,
+            'loginUrl' => env('WEBSITE_URL').'/login',
+        ];
+
+        try{
+            Mail::to($user->email)->send(new ConfirmationUserRegistration($mailData));
+        } catch (\Exception $e) {
+            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
+        }
 
         // try {
         //     // Delete existing categories

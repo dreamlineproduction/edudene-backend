@@ -65,7 +65,13 @@ class UserAuthController extends Controller
         ];
 
         // Send activation email
-        //Mail::to($user->email)->send(new UserEmailVerificationMail($mailData));
+        
+        try{
+            Mail::to($user->email)->send(new UserEmailVerificationMail($mailData));
+        } catch (\Exception $e) {
+            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
+        }
+
 
         return jsonResponse(true, $responseMessage);
     }
@@ -192,7 +198,7 @@ class UserAuthController extends Controller
 
             //$resetLink = url('/user/reset-password?token=' . $resetToken);
             $resetLink = env('WEBSITE_URL');
-            $resetLink .= 'user/reset-password?token=' . $resetToken;
+            $resetLink .= '/user/reset-password?token=' . $resetToken;
 
             $mailData = [
                 'fullName' => $user->full_name,
@@ -205,7 +211,7 @@ class UserAuthController extends Controller
 
             return jsonResponse(true, 'Password reset link has been sent to your email.');
         } catch (\Exception $e) {
-            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), [], 500);
+            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
         }        
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\School;
 
 use App\Http\Controllers\Controller;
+use App\Mail\School\ConfirmationSchoolRegistration;
 use App\Mail\User\UserEmailVerificationMail;
 use App\Models\School;
 use App\Models\User;
@@ -86,7 +87,7 @@ class SchoolAuthController extends Controller
             'owner_name' => 'required|string|max:200',
             'tax_details' => 'required|string|max:200',
             'registration_number' => 'required|string|max:200',
-            'year_of_registration' => 'required|integer|max:200',
+            'year_of_registration' => 'required|digits:4|integer',
             'website' => 'required|string|max:200',
             'social_media' => 'required|string|max:200',
             'license_type' => 'required|string|max:200',
@@ -126,6 +127,7 @@ class SchoolAuthController extends Controller
             
             $document = finalizeFile($request->school_document,$newPath);
 
+
             $request->merge([
                 'school_document' => $document['path'],
                 'school_document_url' => $document['url']
@@ -134,8 +136,20 @@ class SchoolAuthController extends Controller
 
         $school = School::updateOrCreate(['user_id' => $user->id], $request->toArray());
 
-        return jsonResponse(true, 'School profile created successfully');
+        $mailData = [
+            "fullName" => $user->full_name,
+            "schoolName" => $school->school_name,
+            "loginLink" => env('WEBSITE_URL').'/'.$school->school_slug.'/login',
+        ];
 
+        try{
+            // Send activation email
+            Mail::to($user->email)->send(new ConfirmationSchoolRegistration($mailData));
+        } catch (\Exception $e) {
+            return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
+        }
+
+        return jsonResponse(true, 'School profile created successfully');
     }
 
     /**

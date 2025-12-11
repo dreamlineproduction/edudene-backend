@@ -11,7 +11,7 @@ class AccountActivationController extends Controller
 
     public function verifyUserAccount(Request $request)
     {
-        $websiteUrl = env('WEBSITE_URL').'user/success';
+        $websiteUrl = env('WEBSITE_URL').'/user/success';
 
         $token = $request->query('token');
 
