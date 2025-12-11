@@ -60,6 +60,7 @@
         }
         p{
             word-wrap: break-word;
+            line-height: 1.4;
         }
         @media only screen and (max-width: 600px) {
             .container {

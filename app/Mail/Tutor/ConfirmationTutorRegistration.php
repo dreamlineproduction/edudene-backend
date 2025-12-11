@@ -13,7 +13,7 @@ class ConfirmationTutorRegistration extends Mailable
 {   
     use Queueable, SerializesModels;
 
-    private $mailData;
+    public $mailData;
 
     /**
      * Create a new message instance.

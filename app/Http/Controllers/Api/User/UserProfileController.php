@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ConfirmationUserRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\User\ConfirmationUserRegistration;
 
 use App\Models\UserBillingInformation;
 use App\Models\UserCategory;
@@ -234,7 +234,7 @@ class UserProfileController extends Controller
 
         $mailData = [
             'fullName' => $user->full_name,
-            'loginUrl' => env('WEBSITE_URL').'/login',
+            'loginLink' => env('WEBSITE_URL').'/login',
         ];
 
         try{

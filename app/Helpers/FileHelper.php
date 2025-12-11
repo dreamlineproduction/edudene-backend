@@ -209,7 +209,7 @@ if(!function_exists('videoUploadS3'))
 
 if(!function_exists('finalizeFile'))
 {
-    function finalizeFile($fileId = 0,$newOriginalPath)
+    function finalizeFile($fileId = 0,$newOriginalPath = '')
     {
         $return = [];
         try {
