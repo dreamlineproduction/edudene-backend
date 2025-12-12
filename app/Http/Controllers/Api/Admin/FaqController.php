@@ -33,7 +33,7 @@ class FaqController extends Controller
 
 		$paginated = $faqs->with('section')->paginate($perPage, ['*'], 'page', $page);
 
-		 return jsonResponse(true, 'Faqs fetched successfully', [
+		return jsonResponse(true, 'Faqs fetched successfully', [
 			'faqs' => $paginated->items(),
 			'total' => $paginated->total(),
 			'current_page' => $paginated->currentPage(),

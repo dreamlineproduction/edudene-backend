@@ -1130,7 +1130,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "59|edudene_token_V9V3QqV6cw8baCcHV7nyYxKlaGzsMM3J3DH8dkeR2a516b38",
+                  "value": "96|edudene_token_QlvSqzFQVHfdvqEvAZl1Kqp20mNYkPVJGWjNzCWwae6a5de3",
                   "type": "string"
                 }
               ]
@@ -1150,7 +1150,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"status\":\"Active\"\r\n}",
+              "raw": "{\r\n    \"title\":\"Dummy Testing 5\",\r\n    \"status\":\"Active\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1383,7 +1383,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "23|edudene_token_DlR7YXEtqbs7EVUa2rGISYxKhvC6rgyjLfBpoJYu02fc7472",
+                  "value": "96|edudene_token_QlvSqzFQVHfdvqEvAZl1Kqp20mNYkPVJGWjNzCWwae6a5de3",
                   "type": "string"
                 }
               ]
@@ -1403,7 +1403,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"faq_section_id\":\"1\",\r\n    \"title\":\"Dummy Testing 3\",\r\n    \"description\":\"Lorem dummy testing\",\r\n    \"status\":\"Active\",\r\n    \"is_home\":\"Yes\"\r\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3994,6 +3994,31 @@
               "raw": "{{BASE_URL}}update-password",
               "host": [
                 "{{BASE_URL}}update-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Faqs List",
+          "id": "57235b20-06c0-40cf-a805-7536835ea717",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "96|edudene_token_QlvSqzFQVHfdvqEvAZl1Kqp20mNYkPVJGWjNzCWwae6a5de3",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}faqs",
+              "host": [
+                "{{BASE_URL}}faqs"
               ]
             }
           },

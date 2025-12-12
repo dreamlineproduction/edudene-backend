@@ -10,8 +10,10 @@ use App\Models\LoginAttempt;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Google\Client as GoogleClient;
 
 class UserAuthController extends Controller
 {
@@ -169,6 +171,173 @@ class UserAuthController extends Controller
     }
 
 
+    public function googleLogin(Request $request)
+    {
+        if(empty($request->id_token)){
+            return jsonResponse(false, 'Token is required.', null, 400);
+        }
+
+        $client = new GoogleClient();
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+
+        //$client = new GoogleClient(['client_id' => env('GOOGLE_CLIENT_ID')]);
+
+        $payload = $client->verifyIdToken($request->id_token);
+
+        if (!$payload) {
+            return jsonResponse(false, 'Invalid Google token.', null, 400);
+        }
+
+        $user = User::where('email', $payload['email'])->first();
+
+
+        if (empty($user)) {
+            $user = User::create([
+                'status' => 'Active',
+                'role_id'=> 1,
+                'email' => $payload['email'],
+                'full_name' => $payload['name'],
+                'password' => bcrypt('google-oauth') 
+            ]);
+
+            $userName = generateUniqueSlug($payload['name'], 'App\Models\User', $user->id, 'user_name');
+
+            $user->update([
+                'user_name' => $userName
+            ]);
+        }
+
+        // Generate token
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        $data['user'] = $user;
+        $data['token'] = $token;
+        return jsonResponse(true, 'Login successfully.', $data);
+
+    }
+
+    public function linkedinLogin(Request $request)
+    {
+        $request->validate([
+            'code' => 'required'
+        ]);
+        $code = $request->code;
+
+        // 1. Exchange code → access token
+        $tokenResponse = Http::asForm()->post('https://www.linkedin.com/oauth/v2/accessToken', [
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'redirect_uri' => env('LINKEDIN_REDIRECT_URI'),
+            'client_id' => env('LINKEDIN_CLIENT_ID'),
+            'client_secret' => env('LINKEDIN_CLIENT_SECRET')
+        ]);
+
+        if (!$tokenResponse->ok()) {
+            return jsonResponse(false, 'LinkedIn token request failed.', null, 400);
+        }
+
+        $access_token = $tokenResponse->json()['access_token'];
+
+        // 2. Fetch LinkedIn user profile
+        $profile = Http::withToken($access_token)->get('https://api.linkedin.com/v2/userinfo');
+
+        if (!$profile->ok()) {
+            return jsonResponse(false, 'Failed to fetch LinkedIn profile.', null, 400);
+        }
+
+        $data = $profile->json();
+
+        $user = User::where('email', $data['email'])->first();
+
+
+        if (empty($user)) {
+            $user = User::create([
+                'status' => 'Active',
+                'role_id'=> 1,
+                'email' => $data['email'],
+                'full_name' => $data['name'],
+                'password' => bcrypt('linkedin-oauth') 
+            ]);
+
+            $userName = generateUniqueSlug($data['name'], 'App\Models\User', $user->id, 'user_name');
+
+            $user->update([
+                'user_name' => $userName
+            ]);
+        }
+
+        // Generate token
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        $data['user'] = $user;
+        $data['token'] = $token;
+        return jsonResponse(true, 'Login successfully.', $data);
+    }
+
+    public function faceookLogin(Request $request)
+    {
+        $request->validate([
+            'code' => 'required'
+        ]);
+
+         $code = $request->code;
+
+        // 1. Exchange code → access_token
+        $tokenResponse = Http::asForm()->post('https://graph.facebook.com/v18.0/oauth/access_token', [
+            'client_id' => env('FACEBOOK_CLIENT_ID'),
+            'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+            'redirect_uri' => env('FACEBOOK_REDIRECT_URI'),
+            'code' => $code
+        ]);
+
+        if (!$tokenResponse->ok()) {
+            return jsonResponse(false, 'Facebook token request failed.', null, 400);
+        }
+
+        $access_token = $tokenResponse->json()['access_token'];
+        // 2. Fetch Profile (email, name)
+        $profile = Http::get('https://graph.facebook.com/me', [
+            'fields' => 'id,name,email',
+            'access_token' => $access_token
+        ]);
+
+        if (!$profile->ok()) {
+            return jsonResponse(false, 'Failed to fetch Facebook profile.', null, 400);
+        }
+
+        $data = $profile->json();
+
+        if (empty($data['email'])) {
+            return jsonResponse(false, "Facebook did not return email.", null, 400);
+        }
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (empty($user)) {
+            $user = User::create([
+                'status' => 'Active',
+                'role_id'=> 1,
+                'email' => $data['email'],
+                'full_name' => $data['name'],
+                'password' => bcrypt('linkedin-oauth') 
+            ]);
+
+            $userName = generateUniqueSlug($data['name'], 'App\Models\User', $user->id, 'user_name');
+
+            $user->update([
+                'user_name' => $userName
+            ]);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+        
+         return jsonResponse(true, 'Login successful.', [
+            'user' => $user,
+            'token' => $token
+        ]);
+
+
+    }
     public function forgotPassword(Request $request)
     {
         $request->validate([

@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\User\UserAuthController;
 use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
+use App\Http\Controllers\Api\FaqController as FrontFaqController;
+
 
 Route::prefix('v1')->group(function () {
         
@@ -20,11 +22,18 @@ Route::prefix('v1')->group(function () {
     Route::post('user/register', [UserAuthController::class, 'register']);
     Route::post('user/login', [UserAuthController::class, 'login']);
 
+    Route::post('google-login', [UserAuthController::class, 'googleLogin']);
+    Route::post('linkedin-login', [UserAuthController::class, 'linkedinLogin']);
+    Route::post('facebook-login', [UserAuthController::class, 'faceookLogin']);
+
 
     Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
     Route::post('check-token',[UserAuthController::class, 'checkIsValidToken']);
     Route::post('update-password', [UserAuthController::class, 'updatePassword']);
     //Route::post('upload', [FileController::class, 'upload']);
     
+
+    // 
+    Route::get('faqs', [FrontFaqController::class, 'index']);
 });
 ?>

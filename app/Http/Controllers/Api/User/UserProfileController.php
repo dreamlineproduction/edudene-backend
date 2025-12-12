@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Mail;
 
 class UserProfileController extends Controller
 {
-    //
+    //104|edudene_token_K9jgUqsdlWZktaUFa50an4HiNsYITcq1Vwp7hbLB47fd17a9
+
+    
     public function show()
     {
         $loggedInUser = auth('sanctum')->user();
