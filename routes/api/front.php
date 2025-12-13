@@ -1,10 +1,12 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\User\UserAuthController;
 use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
 use App\Http\Controllers\Api\FaqController as FrontFaqController;
+use App\Http\Controllers\Api\User\ChangeEmailRequestController as FrontChangeEmailRequestController;
 
 
 Route::prefix('v1')->group(function () {
@@ -35,5 +37,10 @@ Route::prefix('v1')->group(function () {
 
     // 
     Route::get('faqs', [FrontFaqController::class, 'index']);
+
+
+    // 
+    Route::get('user/email-change', [FrontChangeEmailRequestController::class, 'index']);
+    Route::post('user/email-change', [FrontChangeEmailRequestController::class, 'store']);
 });
 ?>

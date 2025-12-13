@@ -266,7 +266,6 @@ class UserProfileController extends Controller
         return jsonResponse(true, 'Saved successfully.');
     }
 
-
     // Save 
     public function saveUserCategory(Request $request)
     {
@@ -297,7 +296,6 @@ class UserProfileController extends Controller
             return jsonResponse(false, 'An error occurred: ' . $e->getMessage(), null, 500);
         }        
     }
-
 
     public function changePassword(Request $request)
     {

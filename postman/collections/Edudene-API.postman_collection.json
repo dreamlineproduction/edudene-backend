@@ -2552,6 +2552,93 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Email Change Request",
+          "id": "00ac8fdd-7982-476e-8ec3-da06957b0607",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "116|edudene_token_bJmnKffsD5XheWOoIvdOchENogCDZyX4S6EREXsdaca7cdd6",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"jutid@mailinator.com\",\r\n    \"new_email\":\"hosuqijuga12@mailinator.com\",\r\n    \"password\":\"Prakhar7&7\",\r\n    \"reason\":\"sasas\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/email-change",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "email-change"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Email Change Request",
+          "id": "2f94e498-b67c-4066-84f3-331cb1885918",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "116|edudene_token_bJmnKffsD5XheWOoIvdOchENogCDZyX4S6EREXsdaca7cdd6",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}user/email-change",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "email-change"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "fdeda60a-c159-4156-9c77-dd8e6fb9ae3d"
