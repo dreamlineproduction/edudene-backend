@@ -2639,6 +2639,54 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "User ID Verification",
+          "id": "235dfb72-bd33-4083-a996-3093b70438f8",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "117|edudene_token_BrrmxoqKuIykMe9zb75jBurKsZVtZDOrce71BnlE4eaceb1d",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id_type\":\"Face\",\r\n    \"front_side_document\":\"12\",\r\n    \"back_side_document\":15\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}user/kyc",
+              "host": [
+                "{{BASE_URL}}user"
+              ],
+              "path": [
+                "kyc"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "fdeda60a-c159-4156-9c77-dd8e6fb9ae3d"

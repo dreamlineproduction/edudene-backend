@@ -12,6 +12,7 @@ use App\Models\UserCategory;
 use App\Models\UserInformation;
 use App\Models\UserQualification;
 use App\Models\User;
+use Google\Service\BigQueryDataTransfer\UserInfo;
 use Illuminate\Support\Facades\Mail;
 
 class UserProfileController extends Controller
@@ -31,7 +32,10 @@ class UserProfileController extends Controller
             'qualification',
             'billingInformation',
             'categories',
-            'course'
+            'course',
+            'lastEmailChangeRequest',
+            'lastIdProof',
+            'lastFaceProof',
         ]);
 
         $data['user']  = $user;
@@ -41,6 +45,9 @@ class UserProfileController extends Controller
         $data['billingInformation']  = $user->billingInformation;
         $data['categories']  = $user->categories;
         $data['course']  = $user->course;
+        $data['last_email_change_request']  = $user->lastEmailChangeRequest;
+        $data['last_id_proof']  = $user->lastIdProof;
+        $data['last_face_proof']  = $user->lastFaceProof;
         $data['classes']  = [];        
 
         
@@ -322,4 +329,12 @@ class UserProfileController extends Controller
         
         return jsonResponse(true, 'Password changed successfully.', null, 200);          
     }
+
+    // public function kyc(Request $request)
+    // {
+              
+    // }
+
+
+
 }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\Api\CourseReviewController;
+use App\Http\Controllers\Api\User\UserVerificationController;
 
 Route::prefix('v1')->middleware(['auth:sanctum','role:1'])->group(function () {
     Route::get('user/profile', [UserProfileController::class, 'show']);
@@ -14,6 +15,9 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:1'])->group(function () {
     Route::post('user/save-billing-information', [UserProfileController::class, 'bilingInformation']);
     Route::post('user/save-found-us', [UserProfileController::class, 'saveFoundUs']);
     Route::post('user/save-category', [UserProfileController::class, 'saveUserCategory']);
+
+
+    Route::post('user/kyc', [UserVerificationController::class, 'kyc']);
 
     // Change Password Route
     Route::post('user/change-password', [UserProfileController::class, 'changePassword']);

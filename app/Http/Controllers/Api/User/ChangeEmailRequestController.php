@@ -13,12 +13,11 @@ class ChangeEmailRequestController extends Controller
     public function index()
     {
         $user = auth('sanctum')->user();
-        $lastRequest = EmailChangeRequest::where(['user_id'=> $user->id])->first();
+        $lastRequest = EmailChangeRequest::where(['user_id'=> $user->id])->latest()->first();
 
         return jsonResponse(true, 'Request list', [
             'last_request' => $lastRequest
         ]);
-
     }
 
     public function store(Request $request)
@@ -42,13 +41,15 @@ class ChangeEmailRequestController extends Controller
         
         $count = EmailChangeRequest::where(['user_id' => $user->id, 'status' => 'Pending'])->count();
         if ($count > 0) {
-            return jsonResponse(false, 'Error your request already pending.', null, 203);                
+            return jsonResponse(false, 'Error your request already pending.', null, 400);                
         }
 
         $request['user_id'] = $user->id;
+
         $lastRequest = EmailChangeRequest::create($request->toArray());
-        return jsonResponse(true,'',[
-            'last_request' => $lastRequest
+
+        return jsonResponse(true,'Request has been send successfully.',[
+            'last_request' => EmailChangeRequest::find($lastRequest->id)
         ]);
             
     }

@@ -31,9 +31,15 @@ class User extends Authenticatable
         'profile_step',
         'is_profile_complete'
     ];
+
     public function role()
     {
         return $this->belongsTo(Role::class)->select('id','title');
+    }
+
+    public function verify()
+    {
+        return !is_null($this->email_verified_at);
     }
 
     public function information()
@@ -72,7 +78,21 @@ class User extends Authenticatable
         // Chats where this user is the receiver_id
         return $this->hasMany(Chat::class, 'receiver_id');
     }
+    
+    public function lastEmailChangeRequest()
+    {
+        return $this->hasOne(EmailChangeRequest::class)->latest();
+    }
 
+    public function lastIdProof()
+    {
+        return $this->hasOne(UserVerification::class)->where('type','IDProof')->latest();
+    }
+
+    public function lastFaceProof()
+    {
+        return $this->hasOne(UserVerification::class)->where('type','Face')->latest();
+    }
     
     /**
      * The attributes that should be hidden for serialization.

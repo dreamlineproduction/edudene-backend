@@ -212,74 +212,74 @@ if(!function_exists('finalizeFile'))
     function finalizeFile($fileId = 0,$newOriginalPath = '')
     {
         $return = [];
-        try {
-            $file = File::findOrFail($fileId);
-            if(!$file)
-            {
-                throw new \Exception('File found in our temp table.');
-            }
+        $file = File::find($fileId);
 
-            $newOriginalPosterPath = $newOriginalPath.'/' . basename($file->poster_path);
-            $newOriginalPath = $newOriginalPath.'/' . basename($file->path);
-
-
-            // Move the original file
-            if($file->type === 'video'){
-                // Video Check exists
-                if (Storage::disk('s3')->exists($file->path) && Storage::disk('s3')->exists($file->poster_path)) {                    
-                    Storage::disk('s3')->move($file->path, $newOriginalPath);
-                    $newVideoUrl = Storage::disk('s3')->url($newOriginalPath);
-
-                    Storage::disk('s3')->move($file->poster_path, $newOriginalPosterPath);
-                    $newVideoPosterUrl = Storage::disk('s3')->url($newOriginalPosterPath);
-
-                    // Delete  thumbnails
-                    $oldThumbnailPath = str_replace('temp/', 'temp/thumbnails/', $file->poster_path);
-                    Storage::disk('s3')->delete($oldThumbnailPath);
-                    $file->delete();
-
-                    $return['video_path'] = $newOriginalPath;
-                    $return['video_url'] =  $newVideoUrl;
-                    $return['poster_path'] = $newOriginalPosterPath;
-                    $return['poster_url'] = $newVideoPosterUrl;
-                } else {
-                    throw new \Exception('Original file not found on S3.');
-                }
-            } 
-            
-            if($file->type === 'document' && notEmpty($file->path))
-            {
-                if (Storage::disk('s3')->exists($file->path)) {
-                    Storage::disk('s3')->move($file->path, $newOriginalPath);
-                    $newUrl = Storage::disk('s3')->url($newOriginalPath);
-
-                    $return['path'] = $newOriginalPath;
-                    $return['url'] =  $newUrl;
-                }
-            }
-            
-            if($file->type === 'image' && notEmpty($file->path)){
-                if (Storage::disk('s3')->exists($file->path)) {
-                    Storage::disk('s3')->move($file->path, $newOriginalPath);
-                    $newUrl = Storage::disk('s3')->url($newOriginalPath);
-
-                    // Delete  thumbnails
-                    if (Storage::disk('s3')->exists($file->poster_path)) {
-                        Storage::disk('s3')->delete($file->poster_path);
-                    }
-
-                    $return['path'] = $newOriginalPath;
-                    $return['url'] =  $newUrl;
-                }
-            }
-
-            $file->delete();            
-            
-           
-            return $return;
-        } catch (\Exception $e) {
-           throw $e;
+        if(empty($file))
+        {
+            return [
+                'path' => null,
+                'url' => null
+            ];
         }
+
+        $newOriginalPosterPath = $newOriginalPath.'/' . basename($file->poster_path);
+        $newOriginalPath = $newOriginalPath.'/' . basename($file->path);
+
+
+        // Move the original file
+        if($file->type === 'video'){
+            // Video Check exists
+            if (Storage::disk('s3')->exists($file->path) && Storage::disk('s3')->exists($file->poster_path)) {                    
+                Storage::disk('s3')->move($file->path, $newOriginalPath);
+                $newVideoUrl = Storage::disk('s3')->url($newOriginalPath);
+
+                Storage::disk('s3')->move($file->poster_path, $newOriginalPosterPath);
+                $newVideoPosterUrl = Storage::disk('s3')->url($newOriginalPosterPath);
+
+                // Delete  thumbnails
+                $oldThumbnailPath = str_replace('temp/', 'temp/thumbnails/', $file->poster_path);
+                Storage::disk('s3')->delete($oldThumbnailPath);
+                $file->delete();
+
+                $return['video_path'] = $newOriginalPath;
+                $return['video_url'] =  $newVideoUrl;
+                $return['poster_path'] = $newOriginalPosterPath;
+                $return['poster_url'] = $newVideoPosterUrl;
+            } else {
+                throw new \Exception('Original file not found on S3.');
+            }
+        } 
+        
+        if($file->type === 'document' && notEmpty($file->path))
+        {
+            if (Storage::disk('s3')->exists($file->path)) {
+                Storage::disk('s3')->move($file->path, $newOriginalPath);
+                $newUrl = Storage::disk('s3')->url($newOriginalPath);
+
+                $return['path'] = $newOriginalPath;
+                $return['url'] =  $newUrl;
+            }
+        }
+        
+        if($file->type === 'image' && notEmpty($file->path)){
+            if (Storage::disk('s3')->exists($file->path)) {
+                Storage::disk('s3')->move($file->path, $newOriginalPath);
+                $newUrl = Storage::disk('s3')->url($newOriginalPath);
+
+                // Delete  thumbnails
+                if (Storage::disk('s3')->exists($file->poster_path)) {
+                    Storage::disk('s3')->delete($file->poster_path);
+                }
+
+                $return['path'] = $newOriginalPath;
+                $return['url'] =  $newUrl;
+            }
+        }
+
+        $file->delete();            
+        
+        
+        return $return;
     }
 }
 
