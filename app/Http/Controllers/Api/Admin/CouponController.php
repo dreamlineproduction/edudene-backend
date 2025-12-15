@@ -16,18 +16,20 @@ class CouponController extends Controller
     {
         $perPage = $request->get('per_page', 20);
 
-        $batchQuery = Coupon::select('*')
-            ->when($request->filled('type'), function ($q) use ($request) {
-                $q->where('type', $request->type);
+        $batchQuery = Coupon::select('batch_number')
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $q->orWhere('title', $request->search);
             })
-            ->when($request->filled('redeem'), function ($q) use ($request) {
-                $q->where('is_redeem', $request->redeem);
+			->when($request->filled('search'), function ($q) use ($request) {
+                $q->orWhere('batch_number', $request->search);
             })
-            ->when($request->filled('title'), function ($q) use ($request) {
-                $q->where('title', $request->redeem);
-            })
-            ->distinct()
-            ->orderBy('batch_number', 'desc');
+            ->groupBy('batch_number');
+
+		if ($request->sort_by && $request->sort_direction) {
+			$batchQuery = $batchQuery->orderBy($request->sort_by, $request->sort_direction);
+		} else {			
+            $batchQuery = $batchQuery->orderBy('batch_number', 'desc');
+		}
 
         $paginatedBatches = $batchQuery->paginate($perPage);
 
@@ -46,10 +48,9 @@ class CouponController extends Controller
             ];
         });
         $paginatedBatches->setCollection($batchDetails);
-
         $data = $paginatedBatches;
-        return jsonResponse(true, 'Coupon list', $data);
-    }
+        return jsonResponse(true, 'Coupon list', ['coupons' => $data]);
+	}
 
     /**
      * Store a newly created resource in storage.

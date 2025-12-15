@@ -94,12 +94,10 @@ class SettingController extends Controller
 
     public function savePayment(Request $request){
         $request->validate([
-            'vat_tax_commission' => 'required|string',
+            'vat_tax_commission' => 'required',
         ]);
 
-
         $data = PaymentSetting::updateOrCreate(['id' => 1], $request->toArray());
-
 
         $response['course_commission'] = $data->course_commission;
         $response['corporate_commission'] = $data->corporate_commission;
@@ -121,9 +119,7 @@ class SettingController extends Controller
             'test_stripe_public_key' => 'required|string',
         ]);
 
-
         $data = PaymentSetting::updateOrCreate(['id' => 1], $request->toArray());
-
 
         $response['stripe_status'] = $data->stripe_status;
         $response['stripe_use'] = $data->stripe_use;

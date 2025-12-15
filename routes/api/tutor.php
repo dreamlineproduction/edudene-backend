@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Tutor\TutorAuthController;
 
 
 Route::prefix('v1')->group(function () {   
+	Route::post('tutor/login', [TutorAuthController::class, 'login']);
     Route::post('tutor', [TutorAuthController::class, 'save']);
     Route::post('tutor/register', [TutorAuthController::class, 'register']);
 });

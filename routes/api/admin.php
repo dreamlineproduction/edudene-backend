@@ -19,8 +19,7 @@ use App\Http\Controllers\Api\Admin\SubSubCategoryController;
 
 Route::prefix('v1')->group(function () {   
     Route::post('admin/login', [AdminAuthController::class, 'login']);
-        Route::apiResource('admin/coupons', CouponController::class);
-
+	Route::apiResource('admin/coupons', CouponController::class);
 });
 
 
