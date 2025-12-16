@@ -59,16 +59,42 @@ class UserVerificationController extends Controller
         }
 
 
-        $data['id_proof'] =  UserVerification::updateOrCreate(['user_id' => $user->id],$createArray);
+        $data['id_proof'] =  UserVerification::create($createArray);
         return jsonResponse(true, 'Id proof document saved successfully.',$data);  
     }
 
     /**
      * Display the specified resource.
      */
-    public function face(string $id)
+    public function faceVerification(Request $request)
     {
         //
+        $request->validate([
+            'image_id' => 'required|integer',
+        ]);  
+
+        $user = auth('sanctum')->user();
+
+        $newPath = 'users/'.$user->id;
+
+        $createArray = [
+            'user_id' => $user->id,
+            'type' => 'Face',
+            'status' => 'Pending',
+        ];
+
+        if(notEmpty($request->image_id)) 
+        {
+            $file = finalizeFile($request->image_id,$newPath);
+            $createArray = array_merge($createArray,[
+                'face_image' => $file['path'],
+                'face_image_url' => $file['url']
+            ]);
+        }
+
+
+        $data['face_verification'] =  UserVerification::create($createArray);
+        return jsonResponse(true, 'Face image saved successfully.',$data);  
     }
 
     /**

@@ -18,6 +18,7 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:1'])->group(function () {
 
 
     Route::post('user/kyc', [UserVerificationController::class, 'kyc']);
+	Route::post('user/face-verification', [UserVerificationController::class, 'faceVerification']);
 
     // Change Password Route
     Route::post('user/change-password', [UserProfileController::class, 'changePassword']);
