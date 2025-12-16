@@ -93,7 +93,7 @@ class UserVerificationController extends Controller
         }
 
 
-        $data['face_verification'] =  UserVerification::create($createArray);
+        $data['last_face_proof'] =  UserVerification::create($createArray);
         return jsonResponse(true, 'Face image saved successfully.',$data);  
     }
 
