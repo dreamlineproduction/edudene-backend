@@ -2077,6 +2077,139 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "KYC-Face Verification",
+          "id": "d1bffe64-328a-491e-9c29-71f999502dfd",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "121|edudene_token_LNmUFIDQTZ0weeLbEqKVifgNbWA6xeFWV1wZj9Lx1aba9ad8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}admin/face-verification",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "face-verification"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show KYC-Face Verification",
+          "id": "cb640b31-a23b-415b-b30b-3b6f86a29d95",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "121|edudene_token_LNmUFIDQTZ0weeLbEqKVifgNbWA6xeFWV1wZj9Lx1aba9ad8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}admin/face-verification/4",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "face-verification",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "KYC-IDProof Verification",
+          "id": "4a81e6cb-e83c-4cf4-97e3-98c68ac28b20",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "121|edudene_token_LNmUFIDQTZ0weeLbEqKVifgNbWA6xeFWV1wZj9Lx1aba9ad8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}admin/idproof-verification",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "idproof-verification"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show KYC-IDProof Verification",
+          "id": "db26a10d-4e4d-437f-b045-1b5737f458cd",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "121|edudene_token_LNmUFIDQTZ0weeLbEqKVifgNbWA6xeFWV1wZj9Lx1aba9ad8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}admin/idproof-verification/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "idproof-verification",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "KYC-Verification(Face,IDProof)",
+          "id": "6fa276e9-eaaf-4760-a89d-2a5f5eb164a2",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}admin/idproof-verification/3",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "idproof-verification",
+                "3"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "5aa356e5-2ca7-4095-b778-af5d37fefaaa"

@@ -13,7 +13,8 @@ use App\Http\Controllers\Api\Admin\PageController;
 use App\Http\Controllers\Api\Admin\SettingController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
-
+use App\Http\Controllers\Api\Admin\UserVerificationController;
+use App\Http\Controllers\Api\User\UserProfileController;
 
 // Settings
 
@@ -51,8 +52,16 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
 
     // Faq Routes
     Route::apiResource('admin/faqs', FaqController::class);
-
     
+    // Profile Routes
+    Route::get('admin/face-verification', [UserVerificationController::class, 'facialVerification']);
+    Route::get('admin/face-verification/{ID}', [UserVerificationController::class, 'showFaceVerification']);
+    Route::get('admin/idproof-verification', [UserVerificationController::class, 'idProofVerification']);
+    Route::get('admin/idproof-verification/{ID}', [UserVerificationController::class, 'showIdProofVerification']);
+
+    Route::put('admin/verification/{ID}', [UserVerificationController::class, 'update']);
+
+
     // Pages Routes
     Route::apiResource('admin/pages',PageController::class);
 

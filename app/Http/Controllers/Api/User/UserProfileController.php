@@ -314,7 +314,7 @@ class UserProfileController extends Controller
         $user = auth('sanctum')->user();
 
         if (!Hash::check($request->current_password, $user->password)) {
-            return jsonResponse(false, "We couldn't verify your current password. If you forgot it, use “Forgot password”", null, 400);
+            return jsonResponse(false, "We couldn't verify your current password. If you forgot it, use “Forgot password”", null,   );
         }
 
         if($request->current_password === $request->new_password){
@@ -328,13 +328,5 @@ class UserProfileController extends Controller
         ]);
         
         return jsonResponse(true, 'Password changed successfully.', null, 200);          
-    }
-
-    // public function kyc(Request $request)
-    // {
-              
-    // }
-
-
-
+    }   
 }

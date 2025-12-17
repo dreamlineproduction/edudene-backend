@@ -9,14 +9,6 @@ use Illuminate\Http\Request;
 class UserVerificationController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function kyc(Request $request)
@@ -95,21 +87,5 @@ class UserVerificationController extends Controller
 
         $data['last_face_proof'] =  UserVerification::create($createArray);
         return jsonResponse(true, 'Face image saved successfully.',$data);  
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    }    
 }
