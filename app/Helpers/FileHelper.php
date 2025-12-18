@@ -284,7 +284,7 @@ if(!function_exists('finalizeFile'))
 }
 
 if(!function_exists('deleteS3File')){
-    function deleteS3File(string $path){
+    function deleteS3File(string $path = null){
         if(empty($path)){
             return;
         }

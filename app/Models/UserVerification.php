@@ -11,6 +11,7 @@ class UserVerification extends Model
     protected $fillable = [
         'user_id',
         'type',
+        'id_type',
         'front_side_document',
         'front_side_document_url',
         'back_side_document',

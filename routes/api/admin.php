@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\AdminProfileController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\CategoryLevelFourController;
 use App\Http\Controllers\Api\Admin\CouponController;
+use App\Http\Controllers\APi\Admin\EmailChangeController;
 use App\Http\Controllers\Api\Admin\FaqSectionController;
 use App\Http\Controllers\Api\Admin\FaqController;
 use App\Http\Controllers\Api\Admin\PageController;
@@ -53,14 +54,16 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     // Faq Routes
     Route::apiResource('admin/faqs', FaqController::class);
     
-    // Profile Routes
+    // KYC Verification Routes
     Route::get('admin/face-verification', [UserVerificationController::class, 'facialVerification']);
     Route::get('admin/face-verification/{ID}', [UserVerificationController::class, 'showFaceVerification']);
     Route::get('admin/idproof-verification', [UserVerificationController::class, 'idProofVerification']);
     Route::get('admin/idproof-verification/{ID}', [UserVerificationController::class, 'showIdProofVerification']);
-
     Route::put('admin/verification/{ID}', [UserVerificationController::class, 'update']);
 
+    // 
+    Route::get('admin/email-change-request', [EmailChangeController::class, 'index']);
+    Route::put('admin/email-change-request/{ID}', [EmailChangeController::class, 'update']);
 
     // Pages Routes
     Route::apiResource('admin/pages',PageController::class);

@@ -33,7 +33,7 @@ class CategoryController extends Controller
 
 		$paginated = $categories->paginate($perPage, ['*'], 'page', $page);
 
-		 return jsonResponse(true, 'Categories fetched successfully', [
+		return jsonResponse(true, 'Categories fetched successfully', [
 			'categories' => $paginated->items(),
 			'total' => $paginated->total(),
 			'current_page' => $paginated->currentPage(),

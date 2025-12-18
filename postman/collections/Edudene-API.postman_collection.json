@@ -2210,6 +2210,62 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Email Change Request",
+          "id": "8ca845ba-d09e-4f53-8fa8-c7b19d93e369",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "122|edudene_token_ze0d9iPNtcQhreWFVNbpUxzyirIChgW1zk6himvF69a54c39",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}admin/email-change-request",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "email-change-request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{BASE_URL}}admin/email-change-request",
+          "id": "ca598891-c397-4af9-a577-e1b64162de9d",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\":\"Approved\",\r\n    \"reason\":\"\"\r\n}\r\n\r\n// {\r\n//     \"status\":\"Declined\",\r\n//     \"reason\":\"sasasas\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}admin/email-change-request/13",
+              "host": [
+                "{{BASE_URL}}admin"
+              ],
+              "path": [
+                "email-change-request",
+                "13"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "5aa356e5-2ca7-4095-b778-af5d37fefaaa"
@@ -4385,7 +4441,9 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": "/C:/Users/user/OneDrive/Desktop/dummy-image-video/dummypdf.pdf"
+                  "src": [
+                    "/C:/Users/user/OneDrive/Desktop/dummy-image-video/dummypdf.pdf"
+                  ]
                 }
               ]
             },
@@ -4423,7 +4481,9 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": "/C:/Users/user/OneDrive/Desktop/dummy-image-video/Dummy Video For Website.mp4"
+                  "src": [
+                    "/C:/Users/user/OneDrive/Desktop/dummy-image-video/Dummy Video For Website.mp4"
+                  ]
                 }
               ]
             },
@@ -4718,7 +4778,9 @@
             {
               "key": "file",
               "type": "file",
-              "src": "/C:/Users/user/OneDrive/Desktop/dummy-image-video/filter.jpg"
+              "src": [
+                "/C:/Users/user/OneDrive/Desktop/dummy-image-video/filter.jpg"
+              ]
             }
           ]
         },

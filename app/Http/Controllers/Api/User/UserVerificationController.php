@@ -29,6 +29,7 @@ class UserVerificationController extends Controller
         $createArray = [
             'user_id' => $user->id,
             'type' => 'IDProof',
+            'id_type' => $request->id_type,
             'status' => 'Pending',
         ];
 
