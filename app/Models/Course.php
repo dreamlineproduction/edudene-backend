@@ -19,6 +19,7 @@ class Course extends Model
         'category_id',
         'sub_category_id',
         'sub_sub_category_id',
+		'category_level_four_id',
         'country_id',
         'state_id',
         'status',

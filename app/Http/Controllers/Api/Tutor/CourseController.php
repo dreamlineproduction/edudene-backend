@@ -10,6 +10,7 @@ use App\Models\CourseRequirement;
 use App\Models\CourseSeo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use PhpParser\Node\Stmt\TryCatch;
 
 class CourseController extends Controller
 {
@@ -40,11 +41,33 @@ class CourseController extends Controller
         $course = $this->singleCourse($id);
 
         if(notEmpty($course)) {
-            return jsonResponse(true,'Course data',$course);
+            return jsonResponse(true,'Course data',['course'=>$course]);
         }   
 
         return jsonResponse(false,'Course not found in our database',null,404);
     }
+
+	/**
+     * Create course by title
+    */
+	public function createCourseByTitle(Request $request){
+		try {
+			$request->validate([
+				'title' => 'required|string|max:190',
+			]);
+			$user = auth('sanctum')->user();
+
+			$course = new Course();
+			$course->title = $request->title;
+			$course->user_id = $user->id;
+			$course->slug = generateUniqueSlug($request->title, 'App\Models\Course');
+			$course->save();
+
+			return jsonResponse(true, 'Course created successfully', ['course' => $course]);
+		} catch(\Exception $e){
+            return jsonResponse(false, $e->getMessage(), null,500);
+        }
+	}
 
     /**
      * Save course basic information
@@ -58,10 +81,11 @@ class CourseController extends Controller
                 'short_description' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'level' => 'required|string|in:Beginner,Advanced,Intermediate',
-                'course_type_id' => 'required|integer|exists:course_types,id',
+                //'course_type_id' => 'required|integer|exists:course_types,id',
                 'category_id' => 'required|integer|exists:categories,id',
                 'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
                 'sub_sub_category_id' => 'nullable|integer|exists:sub_sub_categories,id',
+				'category_level_four_id' => 'nullable|integer|exists:category_level_fours,id',
             ];
 
             if($request->has('type') && $request->type == 1){
@@ -79,7 +103,7 @@ class CourseController extends Controller
             ]);
             $find = ['user_id' => $user->id, 'id' => $request->course_id];
             $course = Course::updateOrCreate($find,$request->toArray());
-            return jsonResponse(true, 'Course created successfully.', $course);
+            return jsonResponse(true, 'Course basic info saved successfully.', $course);
         } catch(\Exception $e){
             return jsonResponse(false, $e->getMessage(), null,500);
         }
@@ -91,34 +115,22 @@ class CourseController extends Controller
     /**
      * Save course requirements
      */
-    public function saveRequirment(Request $request)
+    public function saveRequirement(Request $request)
     {
-        //
         $validation =[     
             'course_id' => 'required|integer|exists:courses,id',     
-            'requirments' => 'required|array|min:1',
-            'requirments.*.title' => 'required|string|max:150',
+            'title' => 'required|string|max:255',
         ];
-        
 
         $request->validate($validation);
+        
+		CourseRequirement::create([
+			'course_id' => $request->course_id,
+			'title' => $request->title,
+		]);
 
-        if(empty($request->requirments)){
-            return jsonResponse(false, 'Please provide at least one requirement.', null, 422);
-        }
-
-        // Delete existing requirements and create new ones
-        CourseRequirement::where('course_id', $request->course_id)->delete();
-
-        foreach($request->requirments as $requirement){
-            CourseRequirement::create([
-                'course_id' => $request->course_id,
-                'title' => $requirement['title'],
-            ]);
-        }
-                
         $course = $this->singleCourse($request->course_id);          
-        return jsonResponse(true, 'Course data', $course);
+        return jsonResponse(true, 'Requirement added successfully.', $course);
     }
 
     /**

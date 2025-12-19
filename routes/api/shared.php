@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\SettingController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\FileController;
@@ -32,8 +33,10 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
 
     // Course Routes
     Route::get('course', [CourseController::class, 'index']);
+	Route::get('course/{id}', [CourseController::class, 'show']);
+	Route::post('course/save-by-title', [CourseController::class, 'createCourseByTitle']);
     Route::post('course/save-basic-information', [CourseController::class, 'saveBasicInformation']);
-    Route::post('course/save-requirment', [CourseController::class, 'saveRequirment']);
+    Route::post('course/save-requirement', [CourseController::class, 'saveRequirement']);
     Route::post('course/save-outcome', [CourseController::class, 'saveOutcome']);
     Route::post('course/save-price', [CourseController::class, 'savePrice']);
     Route::post('course/save-media', [CourseController::class, 'saveMedia']);
@@ -64,4 +67,11 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     // Message Management
     Route::get('/chat/{chat}', [ChatController::class, 'getMessages']); // Get history for a chat
     Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage']); // Send a new message    
+
+	// Categories
+	Route::get('categories', [CategoryController::class, 'index']); // Get main category
+	Route::get('categories-level-two', [CategoryController::class, 'subCategory']); // Get sub category
+	Route::get('categories-level-three', [CategoryController::class, 'subSubCategory']); // Get sub sub category
+	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category level four
+
 });
