@@ -132,4 +132,9 @@ if(!function_exists('isYouTube')){
         return (bool) preg_match('/(youtube\.com|youtu\.be)/i', $url);
     }
 }
+
+
+if(!function_exists('genrateUserAvtar')){
+   
+}
 ?>

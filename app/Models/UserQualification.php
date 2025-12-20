@@ -24,5 +24,8 @@ class UserQualification extends Model
         'updated_at',
     ];
 
+    protected $casts = [
+        'is_show_profile' => 'boolean',
+    ];
 
 }
