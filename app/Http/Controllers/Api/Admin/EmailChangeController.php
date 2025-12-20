@@ -16,7 +16,6 @@ class EmailChangeController extends Controller
      */
     public function index(Request $request)
     {
-        //
         $sortBy = $request->get('sort_by', 'title');
     	$sortDirection = $request->get('sort_direction', 'asc');
         $perPage = (int) $request->get('per_page', 10);
@@ -81,7 +80,14 @@ class EmailChangeController extends Controller
         $data = EmailChangeRequest::find($id);
         if(empty($data)) {
             return jsonResponse(false, 'Data not found', [], 404);
+        }   
+
+
+        $emailExists =  User::where('email',$data->new_email)->exists();
+        if(notEmpty($emailExists)){
+            return jsonResponse(false, 'The requested email address is already registered in our system.', [], 404);
         }
+
 
         $data->update([
             'status' => $request->status,
@@ -95,15 +101,8 @@ class EmailChangeController extends Controller
             $user->update([
                 'email' => $data->new_email
             ]);
-
-            // Delete the email change request
-            $data->delete();           
         }
 
-
-        if($request->status === 'Declined'){
-            // Delete the email change request       
-        }
 
         $user = User::where('id', $data->user_id)->first();
 

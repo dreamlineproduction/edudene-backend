@@ -40,12 +40,12 @@ class EmailChangeRequestStatus extends Mailable
     {
         if($this->mailData['status'] === 'Declined') {
             return new Content(
-                view: 'view.emails.user.email-change-status-declined',
+                view: 'emails.user.email-change-status-declined',
             );
         }
 
         return new Content(
-            view: 'view.emails.user.email-change-status-approved',
+            view: 'emails.user.email-change-status-approved',
         );
     }
 

@@ -1,18 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\School;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classes;
+use App\Models\ClassSessions;
 use Illuminate\Http\Request;
 
-class ChangeEmailRequestController extends Controller
+class ClassSessionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(int $classId = 0)
     {
-        //
+        $classes =  Classes::where('id', $classId)->with('class_sessions')->first();
+        if(empty($classes)){
+            return jsonResponse(false, 'Class not found in our database', null, 404);
+        }
+
+        $classSessions = $classes->class_sessions->toArray();
+
+        return jsonResponse(true, 
+            'Class sessions list',
+            ['class_sessions' => $classSessions]
+        );        
     }
 
     /**

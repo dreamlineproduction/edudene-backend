@@ -2212,7 +2212,7 @@
           "response": []
         },
         {
-          "name": "Email Change Request",
+          "name": "Email Change Request List",
           "id": "8ca845ba-d09e-4f53-8fa8-c7b19d93e369",
           "request": {
             "auth": {
@@ -2240,7 +2240,7 @@
           "response": []
         },
         {
-          "name": "{{BASE_URL}}admin/email-change-request",
+          "name": "Email Change Request Update",
           "id": "ca598891-c397-4af9-a577-e1b64162de9d",
           "request": {
             "method": "PUT",
@@ -2269,6 +2269,785 @@
         }
       ],
       "id": "5aa356e5-2ca7-4095-b778-af5d37fefaaa"
+    },
+    {
+      "name": "School",
+      "item": [
+        {
+          "name": "Class Create",
+          "id": "4785d972-d766-4833-ab10-0cc1eff30f5c",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "content-type": true,
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "126|edudene_token_3YUfaQdmW0CCit9MhkMDWHRzMhcwSTD0dGAXUR8Q52fa54ab",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "b1398b23-fe06-4244-a378-a00858627945"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "4b1e5892-a7c1-4df7-9fdc-fdb1f608139d"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"class_type_id\": \"2\",\r\n    \"category_id\": \"8\",\r\n    \"sub_category_id\": \"7\",\r\n    \"sub_sub_category_id\": \"6\",\r\n    \"category_level_four_id\": \"8\",\r\n    \"tutor_id\": 82,\r\n    \"school_id\": \"1\",\r\n    \"start_date\": \"2025-01-01\",\r\n    \"end_date\": \"2025-01-31\",\r\n    \"hour\": \"5\",\r\n    \"minute\": \"30\",\r\n    \"price\": \"1500\",\r\n    \"status\": \"Pending\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}classes",
+              "host": [
+                "{{BASE_URL}}classes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Class List",
+          "id": "1fe45cc2-4a8c-4c8f-93f4-d18f6d7e881b",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "126|edudene_token_3YUfaQdmW0CCit9MhkMDWHRzMhcwSTD0dGAXUR8Q52fa54ab",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}classes",
+              "host": [
+                "{{BASE_URL}}classes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "id": "2e6ea458-9600-41ff-a17b-7c57d4cf0026",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"dani@mailinator.com\",\r\n    \"password\":\"google-oauth\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}school/login",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Class Session List",
+          "id": "49e7fc6f-a3c5-4bff-afa4-9beeee345c3f",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "126|edudene_token_3YUfaQdmW0CCit9MhkMDWHRzMhcwSTD0dGAXUR8Q52fa54ab",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}classes/5/sessions",
+              "host": [
+                "{{BASE_URL}}classes"
+              ],
+              "path": [
+                "5",
+                "sessions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "d58c3c94-5a2c-4c7e-b8b1-f830ba135e66"
+    },
+    {
+      "name": "Tutor",
+      "item": [
+        {
+          "name": "Login",
+          "id": "29102adb-ed02-466b-83a8-59d9956e2370",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"password\":\"admin@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}tutor/login",
+              "host": [
+                "{{BASE_URL}}tutor"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "id": "ae8e8ac6-61f4-4709-8814-72ed4104e9fe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"timezone\":\"UTC\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}tutor/register",
+              "host": [
+                "{{BASE_URL}}tutor"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "8b2ac66a-7501-4e4a-97c8-472c671876e8"
+    },
+    {
+      "name": "Frontend",
+      "item": [
+        {
+          "name": "Courses",
+          "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses?category_id=6",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Course Details",
+          "id": "446e6552-d2c6-435c-a9da-c3bccd65f8b6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses/mastering-laravel-12-with-react",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "path": [
+                "mastering-laravel-12-with-react"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Course Review List",
+          "id": "fd5f76f5-87ae-4c2c-b06c-4497ae3efc29",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses/review/5",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "path": [
+                "review",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Course Review Post",
+          "id": "cb49d5d2-0054-41c8-a2c7-dfd3ce477fae",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}courses/review/5",
+              "host": [
+                "{{BASE_URL}}courses"
+              ],
+              "path": [
+                "review",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Page List",
+          "id": "4c5f9400-4582-4585-9923-010d7cc3975c",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}pages",
+              "host": [
+                "{{BASE_URL}}pages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Page  Show",
+          "id": "38ebad07-e424-4a00-9f6c-af4cbbae915d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}pages/about_us",
+              "host": [
+                "{{BASE_URL}}pages"
+              ],
+              "path": [
+                "about_us"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Topics List",
+          "id": "de6a1ea2-6ea0-4e4e-8241-cbb26cd741cc",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}contact/topics",
+              "host": [
+                "{{BASE_URL}}contact"
+              ],
+              "path": [
+                "topics"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Contact Us Query",
+          "id": "1b94e776-60fc-4597-bcfb-0a4d62edc5cf",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Gaurav\",\r\n    \"email\":\"gaurav@gmail.com\",\r\n    \"topic\":5,\r\n    \"subject\":\"Testing Subject\",\r\n    \"file_id\":48,\r\n    \"message\":\"Lorem dummy testing message\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}contact",
+              "host": [
+                "{{BASE_URL}}contact"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "id": "8643368b-082b-4230-8c0e-1e036bfd2ddf",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}forgot-password",
+              "host": [
+                "{{BASE_URL}}forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check valid token",
+          "id": "a2593c36-771a-42ce-99a3-863cd5055ee8",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            },
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}check-token?token=0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL",
+              "host": [
+                "{{BASE_URL}}check-token"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Password Update",
+          "id": "46de9cfa-a529-43f3-9c23-c2420a2440d6",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"user3@example.com\",\r\n    \"token\":\"0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL\",\r\n    \"password\":\"admin@123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}update-password",
+              "host": [
+                "{{BASE_URL}}update-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Faqs List",
+          "id": "57235b20-06c0-40cf-a805-7536835ea717",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "96|edudene_token_QlvSqzFQVHfdvqEvAZl1Kqp20mNYkPVJGWjNzCWwae6a5de3",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}faqs",
+              "host": [
+                "{{BASE_URL}}faqs"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "b12b39d2-2f67-47d1-8349-eac19b21800b"
     },
     {
       "name": "User/Student",
@@ -2879,77 +3658,6 @@
         }
       ],
       "id": "fdeda60a-c159-4156-9c77-dd8e6fb9ae3d"
-    },
-    {
-      "name": "Tutor",
-      "item": [
-        {
-          "name": "Login",
-          "id": "29102adb-ed02-466b-83a8-59d9956e2370",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"password\":\"admin@123\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}tutor/login",
-              "host": [
-                "{{BASE_URL}}tutor"
-              ],
-              "path": [
-                "login"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Register",
-          "id": "ae8e8ac6-61f4-4709-8814-72ed4104e9fe",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"timezone\":\"UTC\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}tutor/register",
-              "host": [
-                "{{BASE_URL}}tutor"
-              ],
-              "path": [
-                "register"
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "id": "8b2ac66a-7501-4e4a-97c8-472c671876e8"
     },
     {
       "name": "Course",
@@ -3782,574 +4490,6 @@
         }
       ],
       "id": "b0c3b1c1-03b8-481d-af04-079027dfc512"
-    },
-    {
-      "name": "Frontend",
-      "item": [
-        {
-          "name": "Courses",
-          "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}courses?category_id=6",
-              "host": [
-                "{{BASE_URL}}courses"
-              ],
-              "query": [
-                {
-                  "key": "category_id",
-                  "value": "6"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Course Details",
-          "id": "446e6552-d2c6-435c-a9da-c3bccd65f8b6",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}courses/mastering-laravel-12-with-react",
-              "host": [
-                "{{BASE_URL}}courses"
-              ],
-              "path": [
-                "mastering-laravel-12-with-react"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Course Review List",
-          "id": "fd5f76f5-87ae-4c2c-b06c-4497ae3efc29",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}courses/review/5",
-              "host": [
-                "{{BASE_URL}}courses"
-              ],
-              "path": [
-                "review",
-                "5"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Course Review Post",
-          "id": "cb49d5d2-0054-41c8-a2c7-dfd3ce477fae",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}courses/review/5",
-              "host": [
-                "{{BASE_URL}}courses"
-              ],
-              "path": [
-                "review",
-                "5"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Page List",
-          "id": "4c5f9400-4582-4585-9923-010d7cc3975c",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}pages",
-              "host": [
-                "{{BASE_URL}}pages"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Page  Show",
-          "id": "38ebad07-e424-4a00-9f6c-af4cbbae915d",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}pages/about_us",
-              "host": [
-                "{{BASE_URL}}pages"
-              ],
-              "path": [
-                "about_us"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Topics List",
-          "id": "de6a1ea2-6ea0-4e4e-8241-cbb26cd741cc",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}contact/topics",
-              "host": [
-                "{{BASE_URL}}contact"
-              ],
-              "path": [
-                "topics"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Contact Us Query",
-          "id": "1b94e776-60fc-4597-bcfb-0a4d62edc5cf",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"name\":\"Gaurav\",\r\n    \"email\":\"gaurav@gmail.com\",\r\n    \"topic\":5,\r\n    \"subject\":\"Testing Subject\",\r\n    \"file_id\":48,\r\n    \"message\":\"Lorem dummy testing message\"\r\n\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}contact",
-              "host": [
-                "{{BASE_URL}}contact"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Forgot Password",
-          "id": "8643368b-082b-4230-8c0e-1e036bfd2ddf",
-          "protocolProfileBehavior": {
-            "disabledSystemHeaders": {
-              "accept": true
-            }
-          },
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\":\"user3@example.com\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}forgot-password",
-              "host": [
-                "{{BASE_URL}}forgot-password"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Check valid token",
-          "id": "a2593c36-771a-42ce-99a3-863cd5055ee8",
-          "protocolProfileBehavior": {
-            "disabledSystemHeaders": {
-              "accept": true
-            },
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\":\"user3@example.com\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}check-token?token=0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL",
-              "host": [
-                "{{BASE_URL}}check-token"
-              ],
-              "query": [
-                {
-                  "key": "token",
-                  "value": "0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Password Update",
-          "id": "46de9cfa-a529-43f3-9c23-c2420a2440d6",
-          "protocolProfileBehavior": {
-            "disabledSystemHeaders": {
-              "accept": true
-            }
-          },
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\":\"user3@example.com\",\r\n    \"token\":\"0s4S9XbGVuBcI1PEzpKv0aFcmYhEmxnic0d6gp8KPfC4CAbsU1ZFTMOO5FRLGWQ4qFCNcEDFCddZInPDhJxiWRJSsL\",\r\n    \"password\":\"admin@123456\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}update-password",
-              "host": [
-                "{{BASE_URL}}update-password"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Faqs List",
-          "id": "57235b20-06c0-40cf-a805-7536835ea717",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "96|edudene_token_QlvSqzFQVHfdvqEvAZl1Kqp20mNYkPVJGWjNzCWwae6a5de3",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}faqs",
-              "host": [
-                "{{BASE_URL}}faqs"
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "id": "b12b39d2-2f67-47d1-8349-eac19b21800b"
     },
     {
       "name": "Shared",
