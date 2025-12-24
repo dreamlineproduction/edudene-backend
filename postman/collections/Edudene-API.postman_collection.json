@@ -2473,12 +2473,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}classes/5/sessions",
+              "raw": "{{BASE_URL}}classes/7/sessions",
               "host": [
                 "{{BASE_URL}}classes"
               ],
               "path": [
-                "5",
+                "7",
                 "sessions"
               ]
             }
