@@ -19,8 +19,13 @@ class ClassSessionController extends Controller
             return jsonResponse(false, 'Class not found in our database', null, 404);
         }
 
-        $classSessions = $classes->class_sessions->toArray();
+        $classSessions = $classes->class_sessions;
 
+        $classSessions = collect($classSessions)->map(function ($session) {
+            $session->start_date = formatDisplayDate($session->start_date);
+            return $session;
+        });
+        
         return jsonResponse(true, 
             'Class sessions list',
             ['class_sessions' => $classSessions]

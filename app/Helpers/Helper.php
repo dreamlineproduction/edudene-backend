@@ -134,7 +134,78 @@ if(!function_exists('isYouTube')){
 }
 
 
-if(!function_exists('genrateUserAvtar')){
-   
+
+if (!function_exists('calculateDuration')) {
+
+    function calculateDuration($startDate, $endDate)
+    {
+        if (!$startDate || !$endDate) {
+            return null;
+        }
+
+        try {
+            $start = new DateTime($startDate);
+            $end   = new DateTime($endDate);
+
+            // Difference
+            $diff = $start->diff($end);
+
+            // Total days fix (same day = 1)
+            $totalDays = $diff->days === 0 ? 1 : $diff->days + 1;
+
+            return [
+                'years'       => $diff->y,
+                'months'      => $diff->m,
+                'days'        => $diff->d,
+                'total_days'  => $totalDays,
+            ];
+        } catch (Exception $e) {
+            return null;
+        }
+    }
 }
+
+
+if (!function_exists('formatDisplayDate')) {
+    function formatDisplayDate($date,$format = 'j M Y')
+    {
+        if (!$date) {
+            return null;
+        }
+
+        try {
+            return (new DateTime($date))->format($format);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+}
+
+if (!function_exists('minutesToHours')) {
+    function minutesToHours($minutes = 0)
+    {
+        if (!is_numeric($minutes) || $minutes <= 0) {
+            return "0h 0m";
+        }
+
+        $minutes = (int) $minutes;
+        $hrs  = intdiv($minutes, 60);
+        $mins = $minutes % 60;
+
+        if ($hrs > 0 && $mins > 0) {
+            return "{$hrs} hours {$mins} minutes";
+        }
+
+        if ($hrs > 0) {
+            return "{$hrs} hours";
+        }
+
+        if ($mins > 0) {
+            return "{$mins} minutes";
+        }
+
+        return "0h 0m";
+    }
+}
+
 ?>

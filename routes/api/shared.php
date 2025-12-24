@@ -6,11 +6,16 @@ use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\StateController;
+use App\Http\Controllers\Api\TutorController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Tutor\CourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseController;
 use App\Http\Controllers\Api\Tutor\CourseLessonController;
 use App\Http\Controllers\Api\User\UserAuthController;
+use App\Http\Controllers\Api\School\ClassController;
+use App\Http\Controllers\Api\School\ClassSessionController;
+
 
 Route::prefix('v1')->group(function () {   
     Route::post('sent-otp-to-email', [UserAuthController::class, 'sendOtpToEmail']);
@@ -73,5 +78,10 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
 	Route::get('categories-level-two', [CategoryController::class, 'subCategory']); // Get sub category
 	Route::get('categories-level-three', [CategoryController::class, 'subSubCategory']); // Get sub sub category
 	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category level four
+
+    Route::get('tutors', [TutorController::class, 'index']); // Get all tutors
+
+    Route::apiResource('classes', ClassController::class);
+    Route::get('classes/{classId}/sessions', [ClassSessionController::class, 'index']);
 
 });

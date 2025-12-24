@@ -20,30 +20,33 @@ class ClassController extends Controller
         $perPage = (int) $request->get('per_page', 10);
         $page = (int) $request->get('page', 1);
 
+        $loggedInUser = auth('sanctum')->user();
+
         $query = Classes::query()
             ->select(
                 'classes.*',
                 'tutors.full_name as tutor_name',
+                'tutors.email as tutor_email',
                 'schools.full_name as school_author',
                 'schools.email as school_email',
-                'category_level_fours.title as subject'
+                'category_level_fours.title as subject',
+                'class_types.title as class_type'
             )
+            ->where('school_id',$loggedInUser->id)
             ->leftJoin('users as tutors', 'tutors.id', '=', 'classes.tutor_id')
             ->leftJoin('users as schools', 'schools.id', '=', 'classes.school_id')
-            ->leftJoin(
-                'category_level_fours',
-                'category_level_fours.id',
-                '=',
-                'classes.category_level_four_id'
-            );
+            ->leftJoin('category_level_fours','category_level_fours.id','=','classes.category_level_four_id')
+            ->leftJoin('class_types','class_types.id','=','classes.class_type_id');
 
         if ($request->filled('search')) {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
                 $q->where('tutors.full_name', 'like', "%{$search}%")
+                ->orWhere('tutors.email', 'like', "%{$search}%")
                 ->orWhere('schools.email', 'like', "%{$search}%")
-                ->orWhere('category_level_fours.title', 'like', "%{$search}%");
+                ->orWhere('class_types.title', 'like', "%{$search}%")
+                ->orWhere('classes.status', 'like', "%{$search}%");
             });
         }
 
@@ -64,8 +67,36 @@ class ClassController extends Controller
 
         $paginated = $query->paginate($perPage, ['*'], 'page', $page);
 
+        $classes = collect($paginated->items())->map(function ($class) {
+
+            $class->start_date = formatDisplayDate($class->start_date);
+            $class->end_date   = formatDisplayDate($class->end_date);
+            $class->timeline   = minutesToHours($class->duration);
+
+            $duration = calculateDuration($class->start_date,$class->end_date);
+            if (!$duration) {
+                $class->duration = null;
+            }
+
+            $parts = [];
+            if ($duration['years'] > 0) {
+                $parts[] = $duration['years'] . ' ' . ($duration['years'] > 1 ? 'Years' : 'Year');
+            }
+
+            if ($duration['months'] > 0) {
+                $parts[] = $duration['months'] . ' ' . ($duration['months'] > 1 ? 'Months' : 'Month');
+            }
+
+            if ($duration['total_days'] > 0) {
+                $parts[] = $duration['total_days'] . ' ' . ($duration['days'] > 1 ? 'Days' : 'Day');
+            }
+
+            $class->formatted_duration = implode(', ', $parts);
+            return $class;
+        });
+
         return jsonResponse(true, 'Classes fetched successfully', [
-            'users' => $paginated->items(),
+            'classes' =>$classes,
             'total' => $paginated->total(),
             'current_page' => $paginated->currentPage(),
             'per_page' => $paginated->perPage(),
@@ -98,6 +129,18 @@ class ClassController extends Controller
 
         $validated = $request->validate($validation);
 
+        $startDate = (new DateTime($request->start_date))->format('Y-m-d');
+        $validated['start_date'] = $startDate;
+
+
+        if(notEmpty($request->end_date)){
+            $endDate = (new DateTime($request->end_date))->format('Y-m-d');    
+            $validated['end_date'] = $endDate;
+        }  else {
+            $validated['end_date'] = $startDate;
+        }       
+
+
         $loggedInUser = auth('sanctum')->user();
 
         // Create class duration
@@ -111,6 +154,7 @@ class ClassController extends Controller
 
 
         $startDate = new DateTime($validated['start_date']);
+
         $endDate   = new DateTime($validated['end_date']);
         $endDate->modify('+1 day');
 
@@ -126,21 +170,64 @@ class ClassController extends Controller
         return jsonResponse(true, 'Class created successfully', $class);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+   public function show($id)
     {
-        //
+        $loggedInUser = auth('sanctum')->user();
+
+        $class = Classes::query()
+            ->select(
+                'classes.*',
+                'tutors.full_name as tutor_name',
+                'tutors.email as tutor_email',
+                'schools.full_name as school_author',
+                'schools.email as school_email',
+                'category_level_fours.title as subject',
+                'class_types.title as class_type'
+            )
+            ->where('classes.school_id', $loggedInUser->id)
+            ->where('classes.id', $id)
+            ->leftJoin('users as tutors', 'tutors.id', '=', 'classes.tutor_id')
+            ->leftJoin('users as schools', 'schools.id', '=', 'classes.school_id')
+            ->leftJoin('category_level_fours', 'category_level_fours.id', '=', 'classes.category_level_four_id')
+            ->leftJoin('class_types', 'class_types.id', '=', 'classes.class_type_id')
+            ->first();
+
+        if (!$class) {
+            return jsonResponse(false, 'Class not found', 404);
+        }
+
+        $class->timeline = minutesToHours($class->duration);
+
+        $duration = calculateDuration($class->start_date, $class->end_date);
+
+        if ($duration) {
+            $parts = [];
+
+            if ($duration['years'] > 0) {
+                $parts[] = $duration['years'] . ' ' . ($duration['years'] > 1 ? 'Years' : 'Year');
+            }
+
+            if ($duration['months'] > 0) {
+                $parts[] = $duration['months'] . ' ' . ($duration['months'] > 1 ? 'Months' : 'Month');
+            }
+
+            if ($duration['total_days'] > 0) {
+                $parts[] = $duration['total_days'] . ' ' . ($duration['total_days'] > 1 ? 'Days' : 'Day');
+            }
+
+            $class->formatted_duration = implode(', ', $parts);
+        } else {
+            $class->formatted_duration = null;
+        }
+
+        $class->start_date = formatDisplayDate($class->start_date);
+        $class->end_date   = formatDisplayDate($class->end_date);
+
+        return jsonResponse(true, 'Class fetched successfully', [
+            'classes' => $class
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -153,7 +240,7 @@ class ClassController extends Controller
             return jsonResponse(false, 'Class not found in our database', null, 404);
         }
 
-        $data->delete();
+        //$data->delete();
         return jsonResponse(true, 'Class deleted successfully');
     }
 }

@@ -2335,7 +2335,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "126|edudene_token_3YUfaQdmW0CCit9MhkMDWHRzMhcwSTD0dGAXUR8Q52fa54ab",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
                   "type": "string"
                 }
               ]
@@ -2343,9 +2343,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}classes",
+              "raw": "{{BASE_URL}}classes/7",
               "host": [
                 "{{BASE_URL}}classes"
+              ],
+              "path": [
+                "7"
               ]
             }
           },
@@ -4494,6 +4497,31 @@
     {
       "name": "Shared",
       "item": [
+        {
+          "name": "Tutors",
+          "id": "713ff1bf-4672-4b3d-aefd-fcac5ed5a5fc",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}tutors",
+              "host": [
+                "{{BASE_URL}}tutors"
+              ]
+            }
+          },
+          "response": []
+        },
         {
           "name": "User Logout",
           "id": "e768009a-089a-41b5-b665-a08e2192d223",
