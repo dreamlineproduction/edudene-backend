@@ -15,7 +15,8 @@ use App\Http\Controllers\Api\Tutor\CourseLessonController;
 use App\Http\Controllers\Api\User\UserAuthController;
 use App\Http\Controllers\Api\School\ClassController;
 use App\Http\Controllers\Api\School\ClassSessionController;
-
+use App\Http\Controllers\Api\Tutor\CourseOutcomeController;
+use App\Http\Controllers\Api\Tutor\CourseRequirmentController;
 
 Route::prefix('v1')->group(function () {   
     Route::post('sent-otp-to-email', [UserAuthController::class, 'sendOtpToEmail']);
@@ -41,11 +42,23 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
 	Route::get('course/{id}', [CourseController::class, 'show']);
 	Route::post('course/save-by-title', [CourseController::class, 'createCourseByTitle']);
     Route::post('course/save-basic-information', [CourseController::class, 'saveBasicInformation']);
-    Route::post('course/save-requirement', [CourseController::class, 'saveRequirement']);
-    Route::post('course/save-outcome', [CourseController::class, 'saveOutcome']);
     Route::post('course/save-price', [CourseController::class, 'savePrice']);
     Route::post('course/save-media', [CourseController::class, 'saveMedia']);
     Route::post('course/save-seo', [CourseController::class, 'saveSeo']);
+
+	// Course Requirment Routes
+    Route::post('course/save-requirement', [CourseRequirmentController::class, 'saveRequirement']);
+	Route::get('course/fetch-requirements/{courseId}', [CourseRequirmentController::class, 'getRequirements']);
+	Route::post('course/requirements/reorder', [CourseRequirmentController::class, 'updateSortOrder']);
+	Route::put('course/requirements/{id}', [CourseRequirmentController::class, 'updateRequirement']);
+	Route::delete('course/requirements/{id}', [CourseRequirmentController::class, 'deleteRequirement']);
+
+	// Course Outcome Routes
+	Route::post('course/save-outcome', [CourseOutcomeController::class, 'saveOutcome']);
+	Route::get('course/fetch-outcomes/{courseId}', [CourseOutcomeController::class, 'getOutcomes']);
+	Route::post('course/outcomes/reorder', [CourseOutcomeController::class, 'updateSortOrder']);
+	Route::put('course/outcomes/{id}', [CourseOutcomeController::class, 'updateOutcome']);
+	Route::delete('course/outcomes/{id}', [CourseOutcomeController::class, 'deleteOutcome']);
     
     // Course Chapter Routes
     Route::get('course/{COURSE_ID}/chapter', [CourseChapterController::class,'index']);

@@ -115,27 +115,6 @@ class CourseController extends Controller
     /**
      * Save course requirements
      */
-    public function saveRequirement(Request $request)
-    {
-        $validation =[     
-            'course_id' => 'required|integer|exists:courses,id',     
-            'title' => 'required|string|max:255',
-        ];
-
-        $request->validate($validation);
-        
-		CourseRequirement::create([
-			'course_id' => $request->course_id,
-			'title' => $request->title,
-		]);
-
-        $course = $this->singleCourse($request->course_id);          
-        return jsonResponse(true, 'Requirement added successfully.', $course);
-    }
-
-    /**
-     * Save course requirements
-     */
     public function saveOutcome(Request $request)
     {
         $request->validate([     
@@ -276,7 +255,6 @@ class CourseController extends Controller
         $course = $this->singleCourse($request->course_id);
         return jsonResponse(true, 'Course SEO information updated successfully.', $course);
     }
-
 
     /**
      * Remove the specified resource from storage.

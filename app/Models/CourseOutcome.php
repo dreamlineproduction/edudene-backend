@@ -11,6 +11,7 @@ class CourseOutcome extends Model
     protected $fillable = [
         'course_id',
         'title',
+		'sort'
     ];
 
     protected $hidden   = [
