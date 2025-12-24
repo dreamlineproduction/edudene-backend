@@ -2343,6 +2343,81 @@
             "method": "GET",
             "header": [],
             "url": {
+              "raw": "{{BASE_URL}}classes",
+              "host": [
+                "{{BASE_URL}}classes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Class Show",
+          "id": "e952eb4a-c68c-47e7-a058-d5d939fee479",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}classes/7",
+              "host": [
+                "{{BASE_URL}}classes"
+              ],
+              "path": [
+                "7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Class Update",
+          "id": "4226093a-5de4-40d9-82c2-fba89c2b0622",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "4774a5e4-9929-4bd9-a413-ee09e73c8e42"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "9190bf75-ab8d-4722-8861-5558ba9e7c3c"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\":\"Declined\",\r\n    \"reason\":\"It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
               "raw": "{{BASE_URL}}classes/7",
               "host": [
                 "{{BASE_URL}}classes"
@@ -2404,6 +2479,57 @@
               ],
               "path": [
                 "5",
+                "sessions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Class Session Update",
+          "id": "0a59f2fc-984e-4504-b020-a66972b943a0",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "608f66fd-e2e9-4813-8478-f89e9eaf1f75"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "88bed637-1b9e-4896-80d4-264b53699257"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sessions\":[\r\n        {\r\n            \"id\": \"65\",\r\n            \"start_date\": \"21 Dec 2025\",\r\n            \"start_time\": \"01:00\",\r\n            \"end_time\": \"02:30\",\r\n            \"topic\": \"A\",\r\n            \"is_leave\": \"No\"\r\n        },\r\n        {\r\n            \"id\": \"66\",\r\n            \"start_date\": \"22 Dec 2025\",\r\n            \"start_time\": \"01:00\",\r\n            \"end_time\": \"02:30\",\r\n            \"topic\": \"B\",\r\n            \"is_leave\": \"No\"\r\n        },\r\n        {\r\n            \"id\": \"67\",\r\n            \"start_date\": \"23 Dec 2025\",\r\n            \"start_time\": \"01:00\",\r\n            \"end_time\": \"02:30\",\r\n            \"topic\": \"C\",\r\n            \"is_leave\": \"No\"\r\n        },\r\n        {\r\n            \"id\": \"68\",\r\n            \"start_date\": \"24 Dec 2025\",\r\n            \"start_time\": \"01:00\",\r\n            \"end_time\": \"02:00\",\r\n            \"topic\": \"D\",\r\n            \"is_leave\": \"No\"\r\n        }\r\n    ],\r\n    \"timezone\":\"USA\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}classes/7/sessions",
+              "host": [
+                "{{BASE_URL}}classes"
+              ],
+              "path": [
+                "7",
                 "sessions"
               ]
             }
