@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api\School;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Tutor\ClassStatus;
+use App\Mail\User\EmailChangeRequestStatus;
 use App\Models\Classes;
 use App\Models\ClassSessions;
+use App\Models\School;
 use DateInterval,DatePeriod,DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ClassController extends Controller
 {
@@ -69,8 +73,8 @@ class ClassController extends Controller
 
         $classes = collect($paginated->items())->map(function ($class) {
 
-            $class->start_date = formatDisplayDate($class->start_date);
-            $class->end_date   = formatDisplayDate($class->end_date);
+            $class->formatted_start_date = formatDisplayDate($class->start_date);
+            $class->formatted_end_date   = formatDisplayDate($class->end_date);
             $class->timeline   = minutesToHours($class->duration);
 
             $duration = calculateDuration($class->start_date,$class->end_date);
@@ -170,7 +174,7 @@ class ClassController extends Controller
         return jsonResponse(true, 'Class created successfully', $class);
     }
 
-   public function show($id)
+    public function show($id)
     {
         $loggedInUser = auth('sanctum')->user();
 
@@ -220,14 +224,52 @@ class ClassController extends Controller
             $class->formatted_duration = null;
         }
 
-        $class->start_date = formatDisplayDate($class->start_date);
-        $class->end_date   = formatDisplayDate($class->end_date);
+        $class->formatted_start_date = formatDisplayDate($class->start_date);
+        $class->formatted_end_date   = formatDisplayDate($class->end_date);
 
         return jsonResponse(true, 'Class fetched successfully', [
             'classes' => $class
         ]);
     }
 
+     public function update(Request $request, $id)
+    {
+        $validation = [
+            'status' => 'required|in:Approved,Declined',
+        ];
+
+        if($request->status === 'Declined'){
+            $validation['reason'] = 'required|string|max:255';
+        }
+
+        $request->validate($validation);
+
+
+        $classes = Classes::with(['tutor','school'])->find($id);
+        if(empty($classes)) {
+            return jsonResponse(false, 'Data not found', [], 404);
+        }   
+
+        
+        //$classes->update($request->toArray());
+
+        $schoolInfo = School::where('user_id',$classes->school_id)->first();
+
+        $mailData = [
+            'fullName' => $classes->tutor->full_name,
+            'schoolName' => $schoolInfo->school_name,
+            'status' => $request->status,
+            'reason' => $request->reason,
+        ];
+
+        try{
+           Mail::to($classes->tutor->email)->send(new ClassStatus($mailData)); 
+        } catch (\Exception $e) {
+            return jsonResponse(false, 'Something went wrong', [], 500);
+        }
+
+        return jsonResponse(true, 'Class updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.

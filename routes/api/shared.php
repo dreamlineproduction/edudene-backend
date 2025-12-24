@@ -83,5 +83,6 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('classes', ClassController::class);
     Route::get('classes/{classId}/sessions', [ClassSessionController::class, 'index']);
+    Route::put('classes/{classId}/sessions', [ClassSessionController::class, 'update']);
 
 });
