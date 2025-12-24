@@ -57,12 +57,14 @@ class Course extends Model
 
     public function courseOutcomes()
     {
-        return $this->hasMany(CourseOutcome::class);
+        return $this->hasMany(CourseOutcome::class)
+			->orderBy('sort', 'asc');
     }
 
     public function courseRequirements()
     {
-        return $this->hasMany(CourseRequirement::class);
+        return $this->hasMany(CourseRequirement::class)
+			->orderBy('sort', 'asc');
     }
 
     public function courseSeo()
