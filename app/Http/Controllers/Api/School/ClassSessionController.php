@@ -61,7 +61,7 @@ class ClassSessionController extends Controller
             'sessions.*.start_time' => 'required|date_format:H:i',
             'sessions.*.end_time' => 'required|date_format:H:i|after:sessions.*.start_time',
             'sessions.*.topic' => 'nullable|string',
-            'sessions.*.is_leave' => 'required|in:Yes,No',
+            'sessions.*.is_leave' => 'required|in:Yes,NO',
             'timezone' => 'required|string',
         ]);
 
