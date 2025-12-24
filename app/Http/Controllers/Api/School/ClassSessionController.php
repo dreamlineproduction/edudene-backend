@@ -22,6 +22,8 @@ class ClassSessionController extends Controller
         $classSessions = $classes->class_sessions;
 
         $classSessions = collect($classSessions)->map(function ($session) {
+            $session->start_time = formatDisplayDate($session->start_time,'H:i');
+            $session->end_time = formatDisplayDate($session->end_time,'H:i');
             $session->start_date = formatDisplayDate($session->start_date);
             return $session;
         });
@@ -61,7 +63,7 @@ class ClassSessionController extends Controller
             'sessions.*.start_time' => 'required|date_format:H:i',
             'sessions.*.end_time' => 'required|date_format:H:i|after:sessions.*.start_time',
             'sessions.*.topic' => 'nullable|string',
-            'sessions.*.is_leave' => 'required|in:Yes,No',
+            'sessions.*.is_leave' => 'required|in:Yes,NO',
             'timezone' => 'required|string',
         ]);
 
@@ -101,7 +103,7 @@ class ClassSessionController extends Controller
             }
         } 
 
-        return jsonResponse(true, 'Class sessions updated successfully');
+        return jsonResponse(true, 'Class sessions saved successfully.');
     }
 
     /**

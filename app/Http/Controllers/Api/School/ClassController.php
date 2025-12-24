@@ -240,7 +240,9 @@ class ClassController extends Controller
 
         if($request->status === 'Declined'){
             $validation['reason'] = 'required|string|max:255';
+            $validation['decline_text'] = $request->reason;
         }
+
 
         $request->validate($validation);
 
@@ -251,7 +253,10 @@ class ClassController extends Controller
         }   
 
         
-        //$classes->update($request->toArray());
+        $classes->update([
+            'status'=>$request->status,
+            'decline_text'=>$request->reason,
+        ]);
 
         $schoolInfo = School::where('user_id',$classes->school_id)->first();
 
@@ -268,7 +273,7 @@ class ClassController extends Controller
             return jsonResponse(false, 'Something went wrong', [], 500);
         }
 
-        return jsonResponse(true, 'Class updated successfully.');
+        return jsonResponse(true, 'Status updated successfully.');
     }
 
     /**
