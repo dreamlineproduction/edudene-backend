@@ -94,6 +94,11 @@ class User extends Authenticatable
         return $this->hasOne(UserVerification::class)->where('type','Face')->latest();
     }
     
+    public function tutor()
+    {
+        return $this->hasOne(Tutor::class, 'user_id', 'id');
+    }
+    
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -2535,6 +2535,161 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "School Teacher",
+          "id": "610b28ca-2504-4b84-b606-946d5d97152e",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "48984951-b261-44b1-beb5-03a63b456552"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "79e9736c-0ecc-4884-82db-d9d6cc31535f"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"Rahul Sharma\",\r\n    \"timezone\": \"Asia/Kolkata\",\r\n    \"email\": \"rahul.sharma@example.com\",\r\n    \"password\": \"Test@1234\",\r\n    \"phone_number\": \"9876543210\",\r\n    \"address_line_1\": \"123, MG Road\",\r\n    \"address_line_2\": \"Near Metro Station\",\r\n    \"country\": \"India\",\r\n    \"state\": \"Maharashtra\",\r\n    \"city\": \"Mumbai\",\r\n    \"zip\": \"400001\",\r\n    \"ip_agreement\": \"No\",\r\n    \"is_freelancer\": \"Yes\",\r\n    \"status\":\"Active\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}school/teacher",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "teacher"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Teacher List",
+          "id": "371abf4e-c490-44b9-9f53-5de7bd1e212e",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/teacher",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "teacher"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Teacher Show",
+          "id": "3161393e-5416-4807-bb1d-e4eb8ca973f3",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/teacher/88",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "teacher",
+                "88"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Shool Teacher Update",
+          "id": "d2a9c81f-72ce-4a06-b7cf-f404c34d85c9",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/teacher/88",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "teacher",
+                "88"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Teacher Delete",
+          "id": "212ebc2b-6d6d-4cbe-9208-407c086623ec",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/teacher/88",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "teacher",
+                "88"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "d58c3c94-5a2c-4c7e-b8b1-f830ba135e66"
