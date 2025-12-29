@@ -24,11 +24,11 @@ class SchoolAuthController extends Controller
             'login_datetime' => 'nullable|string|max:150',
         ]);
 
-        $user = User::where(['email' => $request->email, 'role_id' => 3])->first();
+        $user = User::where(['email' => $request->email])->whereIn('role_id',[3,4])->first();
 
         // Check if user exists
         if (!$user) {
-            return jsonResponse(false, 'School not found in our database.', $user, 404);
+            return jsonResponse(false, 'Account not found in our database.', $user, 404);
         }
 
         // Check if user is temporarily inactive due to too many failed login attempts

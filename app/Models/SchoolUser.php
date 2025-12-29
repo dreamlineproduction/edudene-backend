@@ -15,4 +15,15 @@ class SchoolUser extends Model
         'agreement_file_url',
         'is_freelancer',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 }

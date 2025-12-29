@@ -24,7 +24,7 @@ class ClassController extends Controller
         $perPage = (int) $request->get('per_page', 10);
         $page = (int) $request->get('page', 1);
 
-        $loggedInUser = auth('sanctum')->user();
+        $loggedInUser = auth('sanctum')->user()->load('school');
 
         $query = Classes::query()
             ->select(
@@ -36,7 +36,15 @@ class ClassController extends Controller
                 'category_level_fours.title as subject',
                 'class_types.title as class_type'
             )
-            ->where('school_id',$loggedInUser->id)
+            ->where(function ($query) use ($loggedInUser) {
+
+                if(!empty($loggedInUser->school->id)){
+                    $query->where('school_id', $loggedInUser->school->id);
+                } else {
+                    $query->orWhere('tutor_id', $loggedInUser->id);
+                }
+                            
+            })
             ->leftJoin('users as tutors', 'tutors.id', '=', 'classes.tutor_id')
             ->leftJoin('users as schools', 'schools.id', '=', 'classes.school_id')
             ->leftJoin('category_level_fours','category_level_fours.id','=','classes.category_level_four_id')
@@ -145,13 +153,16 @@ class ClassController extends Controller
         }       
 
 
-        $loggedInUser = auth('sanctum')->user();
+        $loggedInUser = auth('sanctum')->user()->load('school');
+        if (!$loggedInUser->school) {
+            return jsonResponse(false, 'School not found for this user', null, 404);
+        }
 
         // Create class duration
         $validated['duration'] = ($validated['hour']*60) + $validated['minute'];
 
         // Merge school_id safely
-        $validated['school_id'] = $loggedInUser->id;
+        $validated['school_id'] = $loggedInUser->school->id;
 
         // Create class
         $class = Classes::create($validated);
@@ -166,9 +177,10 @@ class ClassController extends Controller
         foreach ($period as $date) {
            ClassSessions::create([
                 'class_id' => $class->id,
-                'school_id' => $loggedInUser->id,
+                'school_id' => $loggedInUser->school->id,
                 'tutor_id' => $validated['tutor_id'],
                 'start_date' => $date->format('Y-m-d'),
+                
            ]);
         }
         return jsonResponse(true, 'Class created successfully', $class);
@@ -176,10 +188,11 @@ class ClassController extends Controller
 
     public function show($id)
     {
-        $loggedInUser = auth('sanctum')->user();
+        $loggedInUser = auth('sanctum')->user()->load('school');
 
-        $class = Classes::query()
-            ->select(
+        $query = Classes::query();
+
+            $query->select(
                 'classes.*',
                 'tutors.full_name as tutor_name',
                 'tutors.email as tutor_email',
@@ -188,13 +201,22 @@ class ClassController extends Controller
                 'category_level_fours.title as subject',
                 'class_types.title as class_type'
             )
-            ->where('classes.school_id', $loggedInUser->id)
             ->where('classes.id', $id)
             ->leftJoin('users as tutors', 'tutors.id', '=', 'classes.tutor_id')
             ->leftJoin('users as schools', 'schools.id', '=', 'classes.school_id')
             ->leftJoin('category_level_fours', 'category_level_fours.id', '=', 'classes.category_level_four_id')
-            ->leftJoin('class_types', 'class_types.id', '=', 'classes.class_type_id')
-            ->first();
+            ->leftJoin('class_types', 'class_types.id', '=', 'classes.class_type_id');
+            
+            if(!empty($loggedInUser->school->id)){
+                $query->where('classes.school_id', $loggedInUser->school->id);
+            } else {
+                $query->orWhere('classes.tutor_id', $loggedInUser->id);    
+            } 
+
+           
+
+
+        $class = $query->first();
 
         if (!$class) {
             return jsonResponse(false, 'Class not found', 404);
@@ -246,10 +268,16 @@ class ClassController extends Controller
 
         $request->validate($validation);
 
+        $loggedInUser = auth('sanctum')->user()->load('school');
 
-        $classes = Classes::with(['tutor','school'])->find($id);
+        $classes = Classes::with(['tutor','school'])->where([
+            'school_id' => $loggedInUser->school->id,
+            'id'=> $id
+        ])->first();
+
+
         if(empty($classes)) {
-            return jsonResponse(false, 'Data not found', [], 404);
+            return jsonResponse(false, 'Class not found in our database.', [], 404);
         }   
 
         
@@ -258,11 +286,10 @@ class ClassController extends Controller
             'decline_text'=>$request->reason,
         ]);
 
-        $schoolInfo = School::where('user_id',$classes->school_id)->first();
 
         $mailData = [
             'fullName' => $classes->tutor->full_name,
-            'schoolName' => $schoolInfo->school_name,
+            'schoolName' => $loggedInUser->school_name,
             'status' => $request->status,
             'reason' => $request->reason,
         ];
@@ -287,7 +314,7 @@ class ClassController extends Controller
             return jsonResponse(false, 'Class not found in our database', null, 404);
         }
 
-        //$data->delete();
+        $data->delete();
         return jsonResponse(true, 'Class deleted successfully');
     }
 }

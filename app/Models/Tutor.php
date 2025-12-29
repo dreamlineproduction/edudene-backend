@@ -36,6 +36,7 @@ class Tutor extends Model
         'video',
         'video_poster',
         'is_admin_verified',
+        'is_house',
         'created_at',
         'updated_at',
     ];

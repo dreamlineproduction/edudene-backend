@@ -13,9 +13,16 @@ class TutorController extends Controller
      */
     public function index($roleId = 2)
     {
-        //
         $query = User::query()
-            ->where('role_id',$roleId)
+            ->select('users.id','users.role_id','users.full_name','school_users.is_freelancer')
+            ->leftJoin('school_users','school_users.user_id','=','users.id')
+            ->where(function($q){
+                $q->where('users.role_id',2)
+                ->orWhere(function($q2)  {
+                    $q2->where('users.role_id',4)
+                    ->where('school_users.is_freelancer', 'Yes');
+                });
+            })
             ->orderBy('full_name','asc');
 
         $tutors =  $query->get();

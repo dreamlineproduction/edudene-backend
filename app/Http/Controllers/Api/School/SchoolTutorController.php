@@ -25,7 +25,7 @@ class SchoolTutorController extends Controller
             ->whereIn('id', function ($query) use ($loggedInUser) {
                 $query->select('user_id')
                     ->from('school_users')
-                    ->where('school_id', $loggedInUser->id);
+                    ->where('school_id', $loggedInUser->school->id);
             });
 
         if ($request->filled('search')) {
@@ -53,8 +53,13 @@ class SchoolTutorController extends Controller
 
         $paginated = $users->with('tutor')->paginate($perPage);
 
+        $users = collect($paginated->items())->map(function ($user) {
+            $user->formatted_last_login_datetime = formatDisplayDate($user->last_login_datetime,'j M Y / h:i:s A');
+
+            return $user;
+        });
         return jsonResponse(true, 'Tutors fetched successfully', [
-            'users' => $paginated->items(),
+            'users' => $users,
             'total' => $paginated->total(),
             'current_page' => $paginated->currentPage(),
             'per_page' => $paginated->perPage(),
@@ -81,7 +86,7 @@ class SchoolTutorController extends Controller
             'city' => 'required|string|max:255',
             'zip' => 'required|string|max:255',
             'ip_agreement' => 'required|string|in:Yes,No',
-            'is_freelancer' => 'required|string|in:Yes,No',
+            'freelancer' => 'required|string|in:Yes,No',
         ]);
 
 
@@ -120,19 +125,20 @@ class SchoolTutorController extends Controller
                 'state' => $request->state,
                 'city' => $request->city,
                 'zip' => $request->zip,
+                'is_house' => 'Yes'
             ]);
 
             // School mapping
-            $school = auth('sanctum')->user();
+            $loggedInUser = auth('sanctum')->user()->load('school');
 
             SchoolUser::create([
                 'user_id' => $user->id,
-                'school_id' => $school->id,
+                'school_id' => $loggedInUser->school->id,
                 'ip_agreement' => $request->ip_agreement,
-                'is_freelancer' => $request->is_freelancer,
+                'is_freelancer' => $request->freelancer,
             ]);
 
-            $schoolInfo = School::where('user_id', $school->id)->first();
+            ///$schoolInfo = School::where('user_id', $school->id)->first();
 
             // Mail data
             $mailData = [
@@ -140,7 +146,7 @@ class SchoolTutorController extends Controller
                 'fullName' => $request->full_name,
                 'email' => $request->email,
                 'password' => $request->password, // temporary password
-                'schoolName' => $schoolInfo->school_name,
+                'schoolName' => $loggedInUser->school->school_name,
                 'loginLink' => env('WEBSITE_URL') . '/school/login',
             ];
 
@@ -160,19 +166,22 @@ class SchoolTutorController extends Controller
      */
     public function show(string $id)
     {
-        //
         $loggedInUser = auth('sanctum')->user();
+
         $user = User::where('id', $id)
-            ->whereIn('id', function ($query) use ($loggedInUser) {
-                $query->select('user_id')
-                    ->from('school_users')
-                    ->where('school_id', $loggedInUser->id);
+            ->whereHas('schoolUser', function ($q) use ($loggedInUser) {
+                $q->where('school_id', $loggedInUser->id);
             })
-            ->with('tutor')
+            ->with([
+                'tutor',
+                'schoolUser:*'
+            ])
             ->first();
-        if (empty($user)) {
+
+        if (!$user) {
             return jsonResponse(false, 'Tutor not found in our database', null, 404);
         }
+
         return jsonResponse(true, 'Tutor details', $user);
     }
 

@@ -14,7 +14,18 @@ class ClassSessionController extends Controller
      */
     public function index(int $classId = 0)
     {
-        $classes =  Classes::where('id', $classId)->with('class_sessions')->first();
+        $loggedInUser = auth('sanctum')->user()->load('school');
+        
+        $classes =  Classes::where('id', $classId)
+        ->with('class_sessions')
+        ->where(function ($query) use ($loggedInUser) {
+            if(!empty($loggedInUser->school->id)){
+                $query->where('school_id', $loggedInUser->school->id);
+            } else {
+                $query->orWhere('tutor_id', $loggedInUser->id);    
+            }             
+        })
+        ->first();
         if(empty($classes)){
             return jsonResponse(false, 'Class not found in our database', null, 404);
         }
@@ -34,28 +45,14 @@ class ClassSessionController extends Controller
         );        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+   
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        $loggedInUser = auth('sanctum')->user();
+        $loggedInUser = auth('sanctum')->user()->load('school');
 
         $request->validate([
             'sessions' => 'required|array',
@@ -63,7 +60,7 @@ class ClassSessionController extends Controller
             'sessions.*.start_time' => 'required|date_format:H:i',
             'sessions.*.end_time' => 'required|date_format:H:i|after:sessions.*.start_time',
             'sessions.*.topic' => 'nullable|string',
-            'sessions.*.is_leave' => 'required|in:Yes,NO',
+            'sessions.*.is_leave' => 'required|in:Yes,No',
             'timezone' => 'required|string',
         ]);
 
@@ -72,13 +69,22 @@ class ClassSessionController extends Controller
             return jsonResponse(false, 'Class not found in our database', null, 404);
         }
 
+
+        if($loggedInUser->role_id === 4){
+            
+            
+        }
+
         foreach ($request->sessions as $session) {
             $classesSessions =  ClassSessions::where([
                 'id'=> $session['id'],
                 'class_id'=> $classes->id])
                 ->where(function ($query) use ($loggedInUser) {
-                    $query->where('school_id', $loggedInUser->id)
-                        ->orWhere('tutor_id', $loggedInUser->id);
+                    if(!empty($loggedInUser->school->id)){
+                        $query->where('school_id', $loggedInUser->school->id);
+                    } else {
+                        $query->orWhere('tutor_id', $loggedInUser->id);    
+                    }  
                 })
                 ->first();
             if(!empty($classesSessions)){
@@ -106,11 +112,4 @@ class ClassSessionController extends Controller
         return jsonResponse(true, 'Class sessions saved successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
