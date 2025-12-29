@@ -131,12 +131,24 @@ class SchoolTutorController extends Controller
             // School mapping
             $loggedInUser = auth('sanctum')->user()->load('school');
 
-            SchoolUser::create([
+            $schoolUser =  SchoolUser::create([
                 'user_id' => $user->id,
                 'school_id' => $loggedInUser->school->id,
                 'ip_agreement' => $request->ip_agreement,
                 'is_freelancer' => $request->freelancer,
             ]);
+
+            $newPath = $user->id;
+            
+            // Save favicon logo
+            if (notEmpty($request->ip_document)) {                            
+                $document = finalizeFile($request->ip_document,$newPath);
+                $schoolUser->update([
+                    'agreement_file' => $document['path'],
+                    'agreement_file_url' => $document['url']
+                ]);
+
+            }
 
             ///$schoolInfo = School::where('user_id', $school->id)->first();
 
