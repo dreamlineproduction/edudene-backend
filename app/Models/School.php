@@ -29,6 +29,17 @@ class School extends Model
         'country',
         'website',
         'social_media',
+        'stripe_email',
+        'facebook',
+        'instagram',
+        'linkedin',
+        'youtube',
+        'x',
+        'vimeo',
+        'pinterest',
+        'github',
+        'logo',
+        'logo_url'
     ];
 
     public function user(){

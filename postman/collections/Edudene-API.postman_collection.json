@@ -2274,6 +2274,124 @@
       "name": "School",
       "item": [
         {
+          "name": "School Show",
+          "id": "ac6d7291-5e93-4c42-87e6-0565fa208d0a",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/5",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Update",
+          "id": "344579c2-f6d2-49c9-828a-7b74b50a597a",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "e9aa1d30-f089-4290-a504-83054be4eff4"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "028d4a69-6df7-4bfe-ad67-99de3afab360"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"school_name\": \"Green Valley Public School\",\r\n    \"about_us\": \"Green Valley Public School is a co-educational institution focused on academic excellence and overall student development.\",\r\n    \"address_line_1\": \"123, MG Road\",\r\n    \"address_line_2\": \"Near City Mall\",\r\n    \"phone_number\": \"+91 98765 43210\",\r\n    \"city\": \"New Delhi\",\r\n    \"country\": \"India\",\r\n    \"state\": \"Delhi\",\r\n    \"zip\": \"110001\",\r\n    \"website\": \"https://www.greenvalleyschool.edu.in\",\r\n    \"year_of_registration\": \"2005\",\r\n    \"stripe_email\": \"payments@greenvalleyschool.edu.in\",\r\n    \"facebook\": \"https://facebook.com/greenvalleyschool\",\r\n    \"instagram\": \"https://instagram.com/greenvalleyschool\",\r\n    \"linkedin\": \"https://linkedin.com/school/green-valley-public-school\",\r\n    \"youtube\": \"https://youtube.com/@greenvalleyschool\",\r\n    \"x\": \"https://x.com/greenvalleyschool\",\r\n    \"vimeo\": \"https://vimeo.com/greenvalleyschool\",\r\n    \"pinterest\": \"https://pinterest.com/greenvalleyschool\",\r\n    \"github\": \"https://github.com/greenvalleyschool\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}school/5",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Change Password",
+          "id": "d1223551-cf73-49ef-a19f-281262c40786",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "3acf5466-f10e-4491-ac23-a82539012867"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "4dcaeab4-0ad0-4f16-93d7-db6274fd99dd"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"current_password\":\"\",\r\n    \"new_password\":\"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}school/5",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Class Create",
           "id": "4785d972-d766-4833-ab10-0cc1eff30f5c",
           "protocolProfileBehavior": {
