@@ -208,4 +208,14 @@ if (!function_exists('minutesToHours')) {
     }
 }
 
+if (!function_exists('shortDescription')) {
+    function shortDescription($text, int $limit = 120)
+    {
+        if (empty($text)) {
+            return '';
+        }
+        
+        return Str::limit(strip_tags($text ?? ''), $limit, '...');
+    }
+}
 ?>

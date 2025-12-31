@@ -2380,12 +2380,12 @@
               }
             },
             "url": {
-              "raw": "{{BASE_URL}}school/5",
+              "raw": "{{BASE_URL}}school/change-password",
               "host": [
                 "{{BASE_URL}}school"
               ],
               "path": [
-                "5"
+                "change-password"
               ]
             }
           },
@@ -2886,6 +2886,21 @@
     {
       "name": "Frontend",
       "item": [
+        {
+          "name": "School List",
+          "id": "25c7f980-2ea5-41da-9580-1895e6494fbc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school",
+              "host": [
+                "{{BASE_URL}}school"
+              ]
+            }
+          },
+          "response": []
+        },
         {
           "name": "Courses",
           "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",

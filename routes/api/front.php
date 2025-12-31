@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\User\UserAuthController;
 use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
 use App\Http\Controllers\Api\FaqController as FrontFaqController;
+use App\Http\Controllers\Api\School\SchoolController;
 use App\Http\Controllers\Api\User\ChangeEmailRequestController as FrontChangeEmailRequestController;
 
 
@@ -42,5 +43,7 @@ Route::prefix('v1')->group(function () {
     // 
     Route::get('user/email-change', [FrontChangeEmailRequestController::class, 'index']);
     Route::post('user/email-change', [FrontChangeEmailRequestController::class, 'store']);
+
+    Route::get('school', [SchoolController::class, 'index']);
 });
 ?>

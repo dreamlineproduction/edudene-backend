@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\School\SchoolController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
+    
+
     Route::post('school', [SchoolAuthController::class, 'store']);
     Route::post('school/login', [SchoolAuthController::class, 'login']);
     Route::post('school/register', [SchoolAuthController::class, 'register']);

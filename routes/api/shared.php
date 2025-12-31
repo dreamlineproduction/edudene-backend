@@ -32,6 +32,9 @@ Route::prefix('v1')->group(function () {
     Route::get('states/{COUNTRY_ID}', [StateController::class, 'index']);
 
     Route::get('settings', [SettingController::class, 'show']);
+
+    
+
 });
 
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {

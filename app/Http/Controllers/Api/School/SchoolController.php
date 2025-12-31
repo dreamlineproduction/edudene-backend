@@ -15,7 +15,18 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        //
+        $schools  = School::where('status', 'Active')
+            ->with('user:id,full_name,email')
+            ->get();
+
+        $schools = $schools->map(function ($school) {
+            $school->short_description = shortDescription($school->about_us, 100);
+            return $school;
+        });
+
+
+        $data['schools'] = $schools;
+        return jsonResponse(true, 'Schools', $data);
     }
 
     /**
@@ -33,9 +44,23 @@ class SchoolController extends Controller
     {
         $loggedInUser = auth('sanctum')->user();
 
+        if (!$loggedInUser) {
+           $school  = School::where('status', 'Active')
+                ->where('id', $id)
+                ->with('user:id,full_name,email')
+                ->first();
+
+            $school->short_description = shortDescription($school->about_us, 100);
+
+
+            $data['schools'] = $school;
+            return jsonResponse(true, 'Schools', $data);
+            
+        }
+
         $school = $loggedInUser
             ->school()
-            ->with('user:id,full_name')
+            ->with('user:id,full_name,email')
             ->first();
 
         if (!$school) {
