@@ -17,6 +17,9 @@ class SchoolController extends Controller
     {
         $schools  = School::where('status', 'Active')
             ->with('user:id,full_name,email')
+            ->withCount('tutors')
+            ->withCount('courses')
+            ->withCount('classes')
             ->get();
 
         $schools = $schools->map(function ($school) {
@@ -48,6 +51,7 @@ class SchoolController extends Controller
            $school  = School::where('status', 'Active')
                 ->where('id', $id)
                 ->with('user:id,full_name,email')
+                ->withCount('tutors')
                 ->first();
 
             $school->short_description = shortDescription($school->about_us, 100);

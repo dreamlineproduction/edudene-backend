@@ -2893,9 +2893,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}school",
+              "raw": "{{BASE_URL}}schools",
               "host": [
-                "{{BASE_URL}}school"
+                "{{BASE_URL}}schools"
               ]
             }
           },

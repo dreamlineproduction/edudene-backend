@@ -45,4 +45,19 @@ class School extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function tutors()
+    {
+        return $this->belongsToMany(User::class, 'school_users');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'school_courses');
+    }
+
+    public function classes()
+    {
+        return $this->hasMany(Classes::class, 'school_id');
+    }
 }
