@@ -103,12 +103,23 @@ class SchoolController extends Controller
             return jsonResponse(false, 'User not found.',404);
         }
 
-        $schoolSlug = generateUniqueSlug($request->school_name, 'App\Models\School', $user->id, 'school_slug');
+        $schoolSlug = generateUniqueSlug($request->school_name, 'App\Models\School', $user->id, 'school_slug','-');
 
         // Update other profile information
         $request->merge([
             'school_slug' => $schoolSlug
         ]);
+
+
+        $newPath = $user->id;
+        // Save 
+        if (notEmpty($request->logo)) {                            
+            $document = finalizeFile($request->logo,$newPath);
+            $request->merge([
+                'logo' => $document['path'],
+                'logo_url' => $document['url']
+            ]);
+        }
 
         School::updateOrCreate(['user_id' => $user->id], $request->toArray());
 

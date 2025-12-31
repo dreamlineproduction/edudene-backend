@@ -2741,7 +2741,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "130|edudene_token_riuxmznjGJRUgY3c43uSOV49zqDQfMD2AhU5ezCvbfdb2e51",
+                  "value": "164|edudene_token_bu0vQhBMjWwqpqvyYXu60vpB1Y5Uakqslx2mykdrb7363f83",
                   "type": "string"
                 }
               ]
@@ -2749,13 +2749,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}school/teachers/91",
+              "raw": "{{BASE_URL}}school/teachers/97",
               "host": [
                 "{{BASE_URL}}school"
               ],
               "path": [
                 "teachers",
-                "91"
+                "97"
               ]
             }
           },

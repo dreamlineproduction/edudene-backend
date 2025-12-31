@@ -142,7 +142,7 @@ class SchoolTutorController extends Controller
 
             $newPath = $user->id;
             
-            // Save favicon logo
+            // Save 
             if (notEmpty($request->ip_document)) {                            
                 $document = finalizeFile($request->ip_document,$newPath);
                 $schoolUser->update([
@@ -180,11 +180,11 @@ class SchoolTutorController extends Controller
      */
     public function show(string $id)
     {
-        $loggedInUser = auth('sanctum')->user();
+        $loggedInUser = auth('sanctum')->user()->load('school');
 
         $user = User::where('id', $id)
             ->whereHas('schoolUser', function ($q) use ($loggedInUser) {
-                $q->where('school_id', $loggedInUser->id);
+                $q->where('school_id', $loggedInUser->school->id);
             })
             ->with([
                 'tutor',

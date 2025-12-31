@@ -67,7 +67,7 @@ if (!function_exists('jsonResponse')) {
 }
 
 if(!function_exists('generateUniqueSlug')){
-    function generateUniqueSlug($title, $model,  $id = null, $field = 'slug'){
+    function generateUniqueSlug($title, $model,  $id = null, $field = 'slug',$customSeparator = null){
         $separator = '-';
 
         if(!class_exists($model)){
@@ -80,6 +80,10 @@ if(!function_exists('generateUniqueSlug')){
 
         if($field !== 'slug'){
             $separator = '_';
+        }
+
+        if(!empty($customSeparator)){
+            $separator =  $customSeparator;
         }
 
         $counter = 1;

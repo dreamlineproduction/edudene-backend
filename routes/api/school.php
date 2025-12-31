@@ -21,6 +21,9 @@ Route::prefix('v1')->group(function () {
 //
 Route::prefix('v1')->middleware(['auth:sanctum','role:3'])->group(function () {   
 
+    Route::apiResource('school/classes', ClassController::class);
+    Route::apiResource('school/teachers', SchoolTutorController::class);
+
     // Change Password Route
     Route::post('school/change-password', [SchoolController::class, 'changePassword']);
     Route::get('school/{SCHOOL_ID}', [SchoolController::class, 'show']);
@@ -28,9 +31,6 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:3'])->group(function () {
     
 
 
-    Route::apiResource('school/classes', ClassController::class);
-    //Route::get('school/classes/{classId}/sessions', [ClassSessionController::class, 'index']);
-    //Route::put('school/classes/{classId}/sessions', [ClassSessionController::class, 'update']);    
-    Route::apiResource('school/teachers', SchoolTutorController::class);
+   
 });
 ?>
