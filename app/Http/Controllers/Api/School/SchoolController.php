@@ -240,7 +240,7 @@ class SchoolController extends Controller
 
         
 
-        $data['schools'] = $school->classes;
+        $data['schools'] = $school;
         return jsonResponse(true, 'Schools', $data);
     }
 }
