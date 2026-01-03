@@ -37,9 +37,9 @@ class CourseLessonController extends Controller
         //'Youtube','Vimeo','Video','Image','Document','VideoUrl'
 
         $validation =[
-            'type' => 'required|in:Youtube,Vimeo,VideoUrl,Video,Image,Document',
+            //'type' => 'required|in:Youtube,Vimeo,VideoUrl,Video,Image,Document',
+			'type' => 'required|in:Youtube,Video',
         ];
-
 
         
         if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
@@ -64,6 +64,8 @@ class CourseLessonController extends Controller
             'course_id' => $course->id,
         ]);
 
+		$insertData['summary'] = $request->summary;
+		$insertData['title'] = $request->title;
         $insertData['course_id'] = $courseId;
         $insertData['course_chapter_id'] = $courseChapterId;
         $insertData['type'] = $request->type;
@@ -90,7 +92,7 @@ class CourseLessonController extends Controller
 
         $data = CourseLesson::create($insertData);
 
-        return jsonResponse(true, 'Course lesson created successfully.', $data);
+        return jsonResponse(true, 'Course lesson created successfully.', ['lesson' => $data]);
     }
 
     /**
@@ -140,7 +142,6 @@ class CourseLessonController extends Controller
             $validation['file_id'] = 'required|exists:files,id';
         } 
 
-
         $request->validate($validation);
 
         $courseLesson =  CourseLesson::where(['course_id' => $courseId, 'course_chapter_id' => $courseChapterId, 'id' => $id])->first();
@@ -148,6 +149,7 @@ class CourseLessonController extends Controller
             return jsonResponse(false, 'Course lesson not found.', null, 404);
         }
 
+		$updateData['summary'] = $request->summary;
         $updateData['course_id'] = $courseId;
         $updateData['course_chapter_id'] = $courseChaper->id;
         $updateData['type'] = $request->type;

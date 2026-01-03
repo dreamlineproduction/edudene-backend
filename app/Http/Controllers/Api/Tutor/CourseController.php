@@ -17,22 +17,45 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $user = auth('sanctum')->user();
-        $data = Course::where('user_id', $user->id)
-            ->with(['user',
-                'courseType',
-                'category',
-                'subCategory',
-                'subSubCategory',
-                'courseOutcomes',
-                'courseRequirements',
-                'courseSeo',
-                'courseChapters'
-            ])->get();
-        return jsonResponse(true, 'Course list', $data);
+		$user = auth('sanctum')->user();
+
+		$courses = Course::query()
+			->where('user_id', $user->id)
+			->with([
+					'user',
+					'courseType',
+					'category',
+					'subCategory',
+					'courseChapters',
+				]);
+		
+		if (!empty($request->search)) {
+			$courses = $courses->where('title','like','%'.$request->search.'%');
+		}
+
+		$sortBy = $request->get('sort_by', 'title');
+    	$sortDirection = $request->get('sort_direction', 'asc');
+
+		if (in_array($sortBy, ['id', 'title', 'status', 'created_at'])) {
+			$courses = $courses->orderBy($sortBy, $sortDirection);
+		} else {
+			$courses = $courses->orderBy('title', 'asc');
+		}
+
+		$perPage = (int) $request->get('per_page', 10);
+    	$page = (int) $request->get('page', 1);
+
+		$paginated = $courses->paginate($perPage, ['*'], 'page', $page);
+
+		return jsonResponse(true, 'Categories fetched successfully', [
+			'courses' => $paginated->items(),
+			'total' => $paginated->total(),
+			'current_page' => $paginated->currentPage(),
+			'per_page' => $paginated->perPage(),
+		]);
+
     }
 
 
@@ -326,8 +349,17 @@ class CourseController extends Controller
 
     private function singleCourse(string $id){
          $course =  Course::where('id',$id)
-            ->with(['user','courseType','category','subCategory','subSubCategory',
-            'courseOutcomes','courseRequirements','courseAsset','courseSeo','courseChapters'
+            ->with([
+				'user',
+				'courseType',
+				'category',
+				'subCategory',
+				'subSubCategory',
+            	'courseOutcomes',
+				'courseRequirements',
+				'courseAsset',
+				'courseSeo',
+				'courseChapters.courseLessons'
             ])->first(); 
 
         return $course;

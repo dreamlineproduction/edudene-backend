@@ -19,4 +19,9 @@ class CourseChapter extends Model
         'created_at',
         'updated_at',
     ];
+
+	public function courseLessons()
+    {
+        return $this->hasMany(CourseLesson::class);
+    }
 }

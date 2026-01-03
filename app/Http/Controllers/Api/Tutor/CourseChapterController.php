@@ -27,8 +27,8 @@ class CourseChapterController extends Controller
         //
         $request->validate([
             'title' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            //'price' => 'required|numeric|min:0',
+            //'discount_price' => 'nullable|numeric|min:0|lt:price',
         ]);
 
         $course =  Course::find($courseId);
@@ -42,7 +42,7 @@ class CourseChapterController extends Controller
         $data = CourseChapter::create($request->toArray());
 
         
-        return jsonResponse(true, 'Course chapter created successfully.', $data);
+        return jsonResponse(true, 'Course chapter created successfully.', ['chapter' => $data]);
     }
 
     /**
@@ -67,8 +67,8 @@ class CourseChapterController extends Controller
         //
         $request->validate([
             'title' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            //'price' => 'required|numeric|min:0',
+            //'discount_price' => 'nullable|numeric|min:0|lt:price',
         ]);
 
         $courseChapter = CourseChapter::where(['course_id' => $couseId, 'id' => $id])->first();
@@ -77,7 +77,7 @@ class CourseChapterController extends Controller
         }
         $courseChapter->update($request->toArray());
 
-        return jsonResponse(true, 'Course chapter updated successfully.', $courseChapter);
+        return jsonResponse(true, 'Course chapter updated successfully.', ['chapter' => $courseChapter]);
     }
 
     /**
