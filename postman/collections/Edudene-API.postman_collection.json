@@ -2823,7 +2823,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\":\"demo@example.com\",\r\n    \"password\":\"admin@123\"\r\n}",
+              "raw": "{\r\n    \"email\":\"dani@mailinator.com\",\r\n    \"password\":\"admin@123\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2893,9 +2893,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}schools",
+              "raw": "{{BASE_URL}}school/front",
               "host": [
-                "{{BASE_URL}}schools"
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "front"
               ]
             }
           },
@@ -4113,7 +4116,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "2|edudene_token_tpHfxDlknYMlNnvAnVJ5lkoOEVuVjga2A5JM5wa3dcfb03a0",
+                  "value": "166|edudene_token_WeTlkvDBMBI4FPXVfVxpZ5L6E2T2qa7PJdR7MwPU4b45b05e",
                   "type": "string"
                 }
               ]
@@ -4133,7 +4136,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"title\": \"Building RESTful APIs with Laravel 12\",\r\n  \"slug\": \"building-restful-apis-with-laravel-12\",\r\n  \"short_description\": \"Master the art of building secure, scalable REST APIs using Laravel 12.\",\r\n  \"description\": \"In this course, you'll learn how to design, build, and deploy robust RESTful APIs using Laravel 12. You’ll cover routing, authentication with Sanctum, data validation, API resource transformation, versioning, and best practices for performance and security.\",\r\n  \"level\": \"Intermediate\",\r\n  \"course_type_id\": 1,\r\n  \"category_id\": 6,\r\n  \"sub_category_id\": 4,\r\n  \"sub_sub_category_id\": 5,\r\n  \"country_id\": null,\r\n  \"state_id\": null,\r\n  \"created_at\": \"2025-11-08\",\r\n  \"timezone\": \"UTC\"\r\n}\r\n",
+              "raw": "{\r\n  \"title\": \"Building RESTful APIs with Laravel 12\",\r\n  \"slug\": \"building-restful-apis-with-laravel-12\",\r\n  \"short_description\": \"Master the art of building secure, scalable REST APIs using Laravel 12.\",\r\n  \"description\": \"In this course, you'll learn how to design, build, and deploy robust RESTful APIs using Laravel 12. You’ll cover routing, authentication with Sanctum, data validation, API resource transformation, versioning, and best practices for performance and security.\",\r\n  \"level\": \"Intermediate\",\r\n  \"category_id\": 8,\r\n  \"sub_category_id\": 7,\r\n  \"sub_sub_category_id\": 6,\r\n  \"country_id\": null,\r\n  \"state_id\": null,\r\n  \"created_at\": \"2025-11-08\",\r\n  \"timezone\": \"UTC\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -4900,6 +4903,56 @@
                 "1",
                 "lesson",
                 "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "id": "82a6b5d7-039e-4f85-811b-69cfcf8c0ec7",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "166|edudene_token_WeTlkvDBMBI4FPXVfVxpZ5L6E2T2qa7PJdR7MwPU4b45b05e",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "c2ff5b1e-1d6c-4aa6-be6b-9f1b1f80cf98"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "1a0b0c2b-e31f-4b80-bab5-0905893f3bbf"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"course_id\":8,\r\n    \"file_id\":182\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-cover-image",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-cover-image"
               ]
             }
           },

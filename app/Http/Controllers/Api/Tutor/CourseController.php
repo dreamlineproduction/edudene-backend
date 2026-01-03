@@ -279,6 +279,33 @@ class CourseController extends Controller
         return jsonResponse(true, 'Course SEO information updated successfully.', $course);
     }
 
+    public function saveCoverImage(Request $request)
+    {
+        $request->validate([
+            'course_id' => 'required|integer|exists:courses,id',
+            'file_id' => 'required|integer|exists:files,id',
+        ]);
+
+
+        $newPath = 'courses/course-'.$request->course_id;
+
+        $finalizeImage = finalizeFile($request->file_id,$newPath);
+
+        $insertData = [];
+        $insertData['type'] = 'Local';
+        $insertData['poster'] = $finalizeImage['path'];
+        $insertData['poster_url'] = $finalizeImage['url'];
+
+        $find = ['course_id' => $request->course_id];
+        CourseAsset::updateOrCreate($find,$insertData);
+
+        $course = $this->singleCourse($request->course_id);
+        return jsonResponse(true, 'Course cover image updated successfully.', $course);
+
+    }
+
+
+
     /**
      * Remove the specified resource from storage.
      */

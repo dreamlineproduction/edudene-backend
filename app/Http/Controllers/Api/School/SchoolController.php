@@ -48,13 +48,27 @@ class SchoolController extends Controller
         $loggedInUser = auth('sanctum')->user();
 
         if (!$loggedInUser) {
-           $school  = School::where('status', 'Active')
-                ->where('id', $id)
-                ->with('user:id,full_name,email')
+            $q  = School::query();
+
+            if(is_numeric($id)){
+                $q->where('id', $id);
+            } else {
+                $q->where('school_slug', $id);
+            }
+
+            $school = $q->where('status', 'Active')               
+                ->with(['user:id,full_name,email','tutors','courses','classes'])
                 ->withCount('tutors')
+                ->withCount('courses')
+                ->withCount('classes')
                 ->first();
 
+            if (!$school) {
+                return jsonResponse(false, 'School not found in our database.', null, 404);
+            }
+
             $school->short_description = shortDescription($school->about_us, 100);
+            $school->profile_created = formatDisplayDate($school->created_at, 'Y');
 
 
             $data['schools'] = $school;
@@ -68,7 +82,7 @@ class SchoolController extends Controller
             ->first();
 
         if (!$school) {
-            return jsonResponse(false, 'School not found in our database.', [], 404);
+            return jsonResponse(false, 'School not found in our database.', null, 404);
         }
 
         return jsonResponse(true, 'School details', [

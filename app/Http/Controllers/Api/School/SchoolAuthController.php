@@ -181,7 +181,7 @@ class SchoolAuthController extends Controller
         ]);
 
         //$user = auth('sanctum')->user();
-        $schoolSlug = generateUniqueSlug($request->school_name, 'App\Models\School', $user->id, 'school_slug');
+        $schoolSlug = generateUniqueSlug($request->school_name, 'App\Models\School', $user->id, 'school_slug','-');
 
         // Update other profile information
         $request->merge([

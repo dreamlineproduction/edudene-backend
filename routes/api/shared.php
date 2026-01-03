@@ -48,6 +48,7 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::post('course/save-price', [CourseController::class, 'savePrice']);
     Route::post('course/save-media', [CourseController::class, 'saveMedia']);
     Route::post('course/save-seo', [CourseController::class, 'saveSeo']);
+    Route::post('course/save-cover-image', [CourseController::class, 'saveCoverImage']);
 	Route::delete('course/{id}', [CourseController::class, 'destroy']);
 
 	// Course Requirment Routes
