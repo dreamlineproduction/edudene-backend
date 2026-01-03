@@ -41,6 +41,12 @@ class Tutor extends Model
         'updated_at',
     ];
 
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'user_id');
+    }
+
     protected $hidden = [ 
         'created_at',
         'updated_at',

@@ -38,6 +38,20 @@ class Classes extends Model
         return $this->belongsTo(User::class, 'school_id');
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    public function sub_category()
+    {
+        return $this->belongsTo(SubCategory::class, 'sub_category_id');
+    }
+
+    public function sub_sub_category()
+    {
+        return $this->belongsTo(SubSubCategory::class, 'sub_sub_category_id');
+    }
+
     public function category_level_four()
     {
         return $this->belongsTo(CategoryLevelFour::class, 'category_level_four_id');

@@ -2905,6 +2905,25 @@
           "response": []
         },
         {
+          "name": "School Details",
+          "id": "7a0e99ae-2849-4238-9f39-079ad90e4e30",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "front",
+                "green-valley-public-school-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Courses",
           "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",
           "protocolProfileBehavior": {
@@ -4252,6 +4271,56 @@
           "response": []
         },
         {
+          "name": "Course Cover Image",
+          "id": "82a6b5d7-039e-4f85-811b-69cfcf8c0ec7",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "166|edudene_token_WeTlkvDBMBI4FPXVfVxpZ5L6E2T2qa7PJdR7MwPU4b45b05e",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "c2ff5b1e-1d6c-4aa6-be6b-9f1b1f80cf98"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "1a0b0c2b-e31f-4b80-bab5-0905893f3bbf"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"course_id\":8,\r\n    \"file_id\":182\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}course/save-cover-image",
+              "host": [
+                "{{BASE_URL}}course"
+              ],
+              "path": [
+                "save-cover-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Course Save Price",
           "id": "2a34c593-1fb6-45bf-8f26-023eccfe2dd8",
           "request": {
@@ -4903,56 +4972,6 @@
                 "1",
                 "lesson",
                 "6"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "New Request",
-          "id": "82a6b5d7-039e-4f85-811b-69cfcf8c0ec7",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "166|edudene_token_WeTlkvDBMBI4FPXVfVxpZ5L6E2T2qa7PJdR7MwPU4b45b05e",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text",
-                "uuid": "c2ff5b1e-1d6c-4aa6-be6b-9f1b1f80cf98"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text",
-                "uuid": "1a0b0c2b-e31f-4b80-bab5-0905893f3bbf"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"course_id\":8,\r\n    \"file_id\":182\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}course/save-cover-image",
-              "host": [
-                "{{BASE_URL}}course"
-              ],
-              "path": [
-                "save-cover-image"
               ]
             }
           },

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\School;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classes;
+use App\Models\Course;
 use App\Models\School;
+use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -46,35 +49,6 @@ class SchoolController extends Controller
     public function show(string $id)
     {
         $loggedInUser = auth('sanctum')->user();
-
-        if (!$loggedInUser) {
-            $q  = School::query();
-
-            if(is_numeric($id)){
-                $q->where('id', $id);
-            } else {
-                $q->where('school_slug', $id);
-            }
-
-            $school = $q->where('status', 'Active')               
-                ->with(['user:id,full_name,email','tutors','courses','classes'])
-                ->withCount('tutors')
-                ->withCount('courses')
-                ->withCount('classes')
-                ->first();
-
-            if (!$school) {
-                return jsonResponse(false, 'School not found in our database.', null, 404);
-            }
-
-            $school->short_description = shortDescription($school->about_us, 100);
-            $school->profile_created = formatDisplayDate($school->created_at, 'Y');
-
-
-            $data['schools'] = $school;
-            return jsonResponse(true, 'Schools', $data);
-            
-        }
 
         $school = $loggedInUser
             ->school()
@@ -174,4 +148,99 @@ class SchoolController extends Controller
         
         return jsonResponse(true, 'Password changed successfully.', null, 200);          
     } 
+
+
+    public function showFront(string $id)
+    {
+        $q  = School::query();
+
+        if(is_numeric($id)){
+            $q->where('id', $id);
+        } else {
+            $q->where('school_slug', $id);
+        }
+
+        $school = $q->where('status', 'Active')               
+            ->with([
+                'user:id,full_name,email',
+                'tutors',
+                'courses',
+                'classes.class_type:id,title',
+                'classes.category:id,title',
+                'classes.sub_category:id,title',
+                'classes.sub_sub_category:id,title',
+                'classes.category_level_four:id,title',
+                'classes.tutor:id,full_name,email'
+            ])
+            ->withCount('tutors')
+            ->withCount('courses')               
+            ->withCount('classes')
+            ->first();
+
+        if (!$school) {
+            return jsonResponse(false, 'School not found in our database.', null, 404);
+        }
+
+
+
+        $school->classes->map(function ($class) {
+            $class->formatted_start_date = formatDisplayDate($class->start_date,'d-M-Y');
+            $class->formatted_end_date = formatDisplayDate($class->end_date,'d-M-Y');
+
+            $class->tutor->about  = null;
+            $class->tutor->avatar  = null;
+            $tutorInfo = Tutor::select('about','avatar')->where('id', $class->tutor_id)->first();
+            if(!empty($tutorInfo) && !empty($tutorInfo->about)){
+                $class->tutor->about = $tutorInfo->about;
+            }
+            if(!empty($tutorInfo) && !empty($tutorInfo->avatar)){
+                $class->tutor->avatar = $tutorInfo->avatar;
+            }
+           
+               
+
+
+            $duration = calculateDuration($class->start_date,$class->end_date);
+            if (!$duration) {
+                $class->formatted_duration = null;
+            }
+
+            $parts = [];
+            if ($duration['years'] > 0) {
+                $parts[] = $duration['years'] . ' ' . ($duration['years'] > 1 ? 'Years' : 'Year');
+            }
+
+            if ($duration['months'] > 0) {
+                $parts[] = $duration['months'] . ' ' . ($duration['months'] > 1 ? 'Months' : 'Month');
+            }
+
+            if ($duration['total_days'] > 0) {
+                $parts[] = $duration['total_days'] . ' ' . ($duration['days'] > 1 ? 'Days' : 'Day');
+            }
+
+            $class->formatted_duration = implode(', ', $parts);
+            return $class;
+        });
+       
+        $school->tutors->map(function ($tutor) {
+            $tutor->total_reviews = 980;
+            $tutor->avg_rating = 4.8;
+            $tutor->hourly_rate = 80;
+
+            $tutor->total_courses = Course::where('user_id', $tutor->id)->count();
+            $tutor->total_classes = Classes::where('tutor_id', $tutor->id)->count();
+            return $tutor;
+        });
+
+        $school->short_description = shortDescription($school->about_us, 100);
+        $school->profile_created = formatDisplayDate($school->created_at, 'Y');
+
+        $school->total_reviews = 659;
+        $school->avg_rating = 4.9;
+
+        
+
+        $data['schools'] = $school->classes;
+        return jsonResponse(true, 'Schools', $data);
+    }
 }

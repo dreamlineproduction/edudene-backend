@@ -45,6 +45,6 @@ Route::prefix('v1')->group(function () {
     Route::post('user/email-change', [FrontChangeEmailRequestController::class, 'store']);
 
     Route::get('school/front', [SchoolController::class, 'index']);
-    Route::get('school/front/{SCHOOL_SLUG}', [SchoolController::class, 'show']);
+    Route::get('school/front/{SCHOOL_SLUG}', [SchoolController::class, 'showFront']);
 });
 ?>
