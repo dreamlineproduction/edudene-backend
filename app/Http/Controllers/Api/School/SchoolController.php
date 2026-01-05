@@ -225,7 +225,7 @@ class SchoolController extends Controller
         $school->tutors->map(function ($tutor) {
             $tutor->total_reviews = 980;
             $tutor->avg_rating = 4.8;
-            $tutor->hourly_rate = 80;
+            $tutor->hourly_rate = rand(50,250);
 
             $tutor->total_courses = Course::where('user_id', $tutor->id)->count();
             $tutor->total_classes = Classes::where('tutor_id', $tutor->id)->count();
@@ -235,7 +235,7 @@ class SchoolController extends Controller
         $school->short_description = shortDescription($school->about_us, 100);
         $school->profile_created = formatDisplayDate($school->created_at, 'Y');
 
-        $school->total_reviews = 659;
+        $school->total_reviews = rand(100,1000);
         $school->avg_rating = 4.9;
 
         
