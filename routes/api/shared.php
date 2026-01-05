@@ -42,13 +42,14 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
 
     // Course Routes
     Route::get('course', [CourseController::class, 'index']);
+	Route::put('course/change-status', [CourseController::class, 'changeStatus']);
 	Route::get('course/{id}', [CourseController::class, 'show']);
 	Route::post('course/save-by-title', [CourseController::class, 'createCourseByTitle']);
     Route::post('course/save-basic-information', [CourseController::class, 'saveBasicInformation']);
     Route::post('course/save-price', [CourseController::class, 'savePrice']);
     Route::post('course/save-media', [CourseController::class, 'saveMedia']);
     Route::post('course/save-seo', [CourseController::class, 'saveSeo']);
-    Route::post('course/save-cover-image', [CourseController::class, 'saveCoverImage']);
+    Route::post('course/save-cover-image', [CourseController::class, 'saveCoverImage']);	
 	Route::delete('course/{id}', [CourseController::class, 'destroy']);
 
 	// Course Requirment Routes
@@ -77,9 +78,7 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::post('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson', [CourseLessonController::class,'store']);
     Route::put('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'update']);
     Route::get('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'show']);
-
     Route::delete('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'destroy']);    
-
 
     // Chat Contacts & Initialization
     Route::get('/chat/contacts', [ChatController::class, 'contacts']);

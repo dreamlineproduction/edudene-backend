@@ -300,11 +300,62 @@ class CourseController extends Controller
         CourseAsset::updateOrCreate($find,$insertData);
 
         $course = $this->singleCourse($request->course_id);
-        return jsonResponse(true, 'Course cover image updated successfully.', $course);
+        return jsonResponse(true, 'Course cover image updated successfully.', ['course' => $course]);
 
     }
 
+	// Change Course Status
+	public function changeStatus(Request $request) {
 
+		$request->validate([
+			'status'    => 'required|in:Active,Inactive,Draft,Pending,Decline',
+		]);
+
+		$course = Course::find($request->course_id);
+
+		if (!$course) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Course not found'
+			], 404);
+		}
+
+		// User trying to publish course
+		if ($request->status === 'Pending') {
+			$course->status = 'Pending';
+			$course->save();
+
+			return response()->json([
+				'status' => true,
+				'message' => 'Your course has been sent for admin approval. It will be published once approved.',
+				'data' => ['course' => $course]
+			]);
+		}
+		// user logic end here
+
+		// If status is Decline, reason is mandatory
+		if ($request->status === 'Decline' && empty($request->reason)) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Reason is required when status is Decline'
+			], 400);
+		}
+
+		if (in_array($request->status, ['Decline', 'Pending'])) {
+			$course->reason = $request->reason;
+		} else {
+			$course->reason = null;
+		}
+
+		$course->status = $request->status;
+		$course->save();
+
+		return response()->json([
+			'status' => true,
+			'message' => 'Course status updated successfully.',
+			'data' => ['course' => $course]
+		]);
+	}
 
     /**
      * Remove the specified resource from storage.
