@@ -254,7 +254,7 @@ class ClassController extends Controller
         ]);
     }
 
-     public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validation = [
             'status' => 'required|in:Approved,Declined',

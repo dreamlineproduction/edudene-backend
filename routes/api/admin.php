@@ -14,8 +14,9 @@ use App\Http\Controllers\Api\Admin\PageController;
 use App\Http\Controllers\Api\Admin\SettingController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\UserVerificationController;
-use App\Http\Controllers\Api\User\UserProfileController;
+use App\Http\Controllers\Api\Admin\TutorController as AdminTutorController;
 
 // Settings
 
@@ -73,5 +74,14 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::post('admin/setting/website-setting', [SettingController::class, 'saveWebsite']);
     Route::post('admin/setting/stripe-setting', [SettingController::class, 'saveStripe']);
     Route::post('admin/setting/payment-setting', [SettingController::class, 'savePayment']);
+
+
+    // Users
+    Route::put('admin/users/{ID}/change-status', [UserController::class, 'changeStatus']);
+    Route::put('admin/users/{ID}/send-warning', [UserController::class, 'sendWarning']);
+    Route::apiResource('admin/users', UserController::class);
+
+
+    Route::apiResource('admin/tutors', AdminTutorController::class);
 
 });

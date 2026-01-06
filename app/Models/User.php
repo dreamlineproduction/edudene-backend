@@ -29,6 +29,7 @@ class User extends Authenticatable
         'status',
         'timezone',
         'profile_step',
+        'login_provider',
         'is_profile_complete'
     ];
 

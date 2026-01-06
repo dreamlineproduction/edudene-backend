@@ -197,6 +197,7 @@ class UserAuthController extends Controller
                 'role_id'=> 1,
                 'email' => $payload['email'],
                 'full_name' => $payload['name'],
+                'login_provider' => 'Google',
                 'password' => bcrypt('google-oauth') 
             ]);
 
@@ -256,6 +257,7 @@ class UserAuthController extends Controller
                 'role_id'=> 1,
                 'email' => $data['email'],
                 'full_name' => $data['name'],
+                'login_provider' => 'LinkedIn',
                 'password' => bcrypt('linkedin-oauth') 
             ]);
 
@@ -319,6 +321,7 @@ class UserAuthController extends Controller
                 'role_id'=> 1,
                 'email' => $data['email'],
                 'full_name' => $data['name'],
+                'login_provider' => 'Facebook',
                 'password' => bcrypt('linkedin-oauth') 
             ]);
 
