@@ -59,12 +59,12 @@ class FileController extends Controller
         return jsonResponse(true,'Document uploaded successfully', $responseArray);
     }
 
-    public function imageTesting($fileId)
-    {
-        $finalizeImage =  finalizeFile($fileId, 'profile');
+    // public function imageTesting($fileId)
+    // {
+    //     $finalizeImage =  finalizeFile($fileId, 'profile');
 
-        $filePath = generateImageThumbnail($finalizeImage['path'], 500, 'profile');
+    //     $filePath = generateImageThumbnail($finalizeImage['path'], 500, 'profile');
 
-        return jsonResponse(true, 'Tested successfully', $filePath);
-    }
+    //     return jsonResponse(true, 'Tested successfully', $filePath);
+    // }
 }

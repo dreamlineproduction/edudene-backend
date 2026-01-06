@@ -52,16 +52,19 @@ class SchoolController extends Controller
 
         $school = $loggedInUser
             ->school()
-            ->with('user:id,full_name,email')
             ->first();
 
         if (!$school) {
             return jsonResponse(false, 'School not found in our database.', null, 404);
         }
 
-        return jsonResponse(true, 'School details', [
-            'school' => $school
-        ]);
+        $data['school'] =  array_merge(
+            $loggedInUser->only(['id', 'role_id', 'full_name','email','user_name']),
+            $school->toArray()
+        );
+
+
+        return jsonResponse(true, 'School details', $data);
     }
 
     /**
@@ -69,49 +72,104 @@ class SchoolController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-        $loggedInUser = auth('sanctum')->user();
+        $user = auth('sanctum')->user();
+
+        if (!$user) {
+            return jsonResponse(false, 'Unauthorized', null, 401);
+        }
+
+        $school = $user->school()->first();
 
         $request->validate([
             'school_name' => 'required|string|max:200',
-            'about_us' => 'required|string|max:200',
+            'about_us' => 'required|string',
             'address_line_1' => 'required|string|max:200',
-            'phone_number' => 'required|string|max:15',            
+            'address_line_2' => 'nullable|string|max:200',
+            'phone_number' => 'required|string|max:15',
             'city' => 'required|string|max:200',
             'country' => 'required|string|max:200',
             'state' => 'required|string|max:200',
             'zip' => 'required|string|max:200',
-            'year_of_registration' => 'required|digits:4|integer',                        
-            'stripe_email' => 'required|email'                        
+            'year_of_registration' => 'required|digits:4',
+            'stripe_email' => 'required|email',
+
+            // optional socials
+            'website' => 'nullable|url',
+            'facebook' => 'nullable|url',
+            'linkedin' => 'nullable|url',
+            'instagram' => 'nullable|url',
+            'youtube' => 'nullable|url',
+            'x' => 'nullable|url',
+            'vimeo' => 'nullable|url',
+            'pinterest' => 'nullable|url',
+            'github' => 'nullable|url',
         ]);
 
-
-        $user = User::where('id', $loggedInUser->id)->first();
-        if(empty($user)){
-            return jsonResponse(false, 'User not found.',404);
-        }
-
-        $schoolSlug = generateUniqueSlug($request->school_name, 'App\Models\School', $user->id, 'school_slug','-');
-
-        // Update other profile information
-        $request->merge([
-            'school_slug' => $schoolSlug
+        $user->update([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
         ]);
 
+        $schoolSlug = generateUniqueSlug(
+            $request->school_name,
+            School::class,
+            $user->id,
+            'school_slug',
+            '-'
+        );
 
-        $newPath = $user->id;
-        // Save 
-        if (notEmpty($request->logo)) {                            
-            $document = finalizeFile($request->logo,$newPath);
-            $request->merge([
-                'logo' => $document['path'],
-                'logo_url' => $document['url']
-            ]);
+        $schoolData = $request->only([
+            'school_name',
+            'about_us',
+            'address_line_1',
+            'address_line_2',
+            'phone_number',
+            'city',
+            'state',
+            'country',
+            'zip',
+            'website',
+            'year_of_registration',
+            'stripe_email',
+            'facebook',
+            'linkedin',
+            'instagram',
+            'youtube',
+            'x',
+            'vimeo',
+            'pinterest',
+            'github',
+        ]);
+
+        $schoolData['school_slug'] = $schoolSlug;
+        $schoolData['user_id'] = $user->id;
+
+        /** Handle logo upload */
+        if ($request->filled('logo')) {
+
+            if ($school && $school->logo) {
+                deleteS3File($school->logo);
+            }
+
+            $document = finalizeFile($request->logo, 'schools');
+
+            $schoolData['logo'] = $document['path'];
+            $schoolData['logo_url'] = $document['url'];
         }
 
-        School::updateOrCreate(['user_id' => $user->id], $request->toArray());
+        /** Create or update school */
+        $school = School::updateOrCreate(
+            ['user_id' => $user->id],
+            $schoolData
+        );
 
-        return jsonResponse(true, 'School profile updated successfully');
+        /** Clean response */
+        $data['school'] = array_merge(
+            $user->only(['id', 'role_id', 'full_name', 'email', 'user_name']),
+            $school->toArray()
+        );
+
+        return jsonResponse(true, 'School profile updated successfully', $data);
     }
 
     /**

@@ -34,6 +34,7 @@ class ContactController extends Controller
         ]);
 
         try{
+            
             $finalize = finalizeFile($request->file_id,'contact');
 
             

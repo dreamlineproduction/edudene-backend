@@ -2813,6 +2813,40 @@
       "id": "d58c3c94-5a2c-4c7e-b8b1-f830ba135e66"
     },
     {
+      "name": "School Tutor",
+      "item": [
+        {
+          "name": "New Request",
+          "id": "4a036e44-3373-4a43-a366-977a389d7447",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "168|edudene_token_yb8AX7GgoY1x92BGCfJOqnj9nTvhzECTPEwuByy1b8828386",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/tutor-profile",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "tutor-profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "989912bb-dfe6-4ba0-bc23-e4bf8e358933"
+    },
+    {
       "name": "Tutor",
       "item": [
         {

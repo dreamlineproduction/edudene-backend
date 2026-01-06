@@ -18,6 +18,16 @@ Route::prefix('v1')->group(function () {
 
 });
 
+Route::prefix('v1')->middleware(['auth:sanctum','role:4'])->group(function () {   
+
+   Route::get('school/tutor-profile', [SchoolTutorController::class, 'show']);
+   Route::put('school/tutor-profile', [SchoolTutorController::class, 'updateV2']);
+   
+    
+
+   
+});
+
 //
 Route::prefix('v1')->middleware(['auth:sanctum','role:3'])->group(function () {   
 
@@ -30,7 +40,8 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:3'])->group(function () {
     Route::put('school/{SCHOOL_ID}', [SchoolController::class, 'update']);
     
 
-
    
 });
+
+
 ?>

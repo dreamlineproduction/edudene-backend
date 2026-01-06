@@ -140,7 +140,7 @@ class SchoolTutorController extends Controller
                 'is_freelancer' => $request->freelancer,
             ]);
 
-            $newPath = $user->id;
+            $newPath = 'schools';
             
             // Save 
             if (notEmpty($request->ip_document)) {                            
@@ -178,25 +178,27 @@ class SchoolTutorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        $loggedInUser = auth('sanctum')->user()->load('school');
+        $loggedInUser = auth('sanctum')->user();
 
-        $user = User::where('id', $id)
-            ->whereHas('schoolUser', function ($q) use ($loggedInUser) {
-                $q->where('school_id', $loggedInUser->school->id);
-            })
+        $user = User::where('id', $loggedInUser->id)
             ->with([
                 'tutor',
-                'schoolUser:*'
             ])
             ->first();
 
-        if (!$user) {
+        if (!$user || !$user->tutor) {
             return jsonResponse(false, 'Tutor not found in our database', null, 404);
         }
 
-        return jsonResponse(true, 'Tutor details', $user);
+        $data['tutor'] =  array_merge(
+            $user->only(['id', 'role_id', 'full_name','email','user_name']),
+            $user->tutor->toArray()
+        );
+
+
+        return jsonResponse(true, 'Tutor details', $data);
     }
 
     /**
@@ -204,7 +206,6 @@ class SchoolTutorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $loggedInUser = auth('sanctum')->user();
         $user = User::where('id', $id)
             ->whereIn('id', function ($query) use ($loggedInUser) {
@@ -271,5 +272,113 @@ class SchoolTutorController extends Controller
         $user->delete();
 
         return jsonResponse(true, 'Tutor deleted successfully.');
+    }
+
+
+    public function updateV2(Request $request)
+    {
+        $loggedInUser = auth('sanctum')->user();
+
+        $user = User::where('id', $loggedInUser->id)
+            ->with([
+                'tutor',
+            ])
+            ->first();
+
+        if (!$user || !$user->tutor) {
+            return jsonResponse(false, 'Tutor not found in our database', null, 404);
+        }
+
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255|unique:users,user_name,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+
+            'phone_number' => 'required|string|min:10|max:15|unique:tutors,phone_number,' . $user->tutor->id,
+            'about' => 'required|string',
+            'what_i_teach' => 'required|string|max:255',
+            'education' => 'required|string|max:255',
+            'language' => 'required|string|max:255',
+
+            'address_line_1' => 'required|string|max:255',
+            'address_line_2' => 'nullable|string|max:255',
+            'country' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'zip' => 'required|string|max:255',
+
+            'highest_qualification' => 'required|string|max:255',
+            'university' => 'required|string|max:255',
+            'passing_year' => 'required|max:10',
+
+            'facebook_url' => 'nullable|url',
+            'linkedin_url' => 'nullable|url',
+            'x_url' => 'nullable|url',
+
+            //'profile_image' => 'required|integer',
+            'timezone' => 'required|string|max:150',
+        ]);
+
+        $user->update([
+            'full_name' => $request->full_name,
+            'timezone' => getDefaultTimezone($request->timezone),
+        ]);
+
+
+        // Save 
+        if (notEmpty($request->profile_image)) {
+
+            // Delete Old Profile image from server
+            if(!empty($user->tutor->avatar)){
+                deleteS3File($user->tutor->avatar);    
+            }
+            
+
+            $imageArray = finalizeFile($request->profile_image,'schools');
+            $user->tutor->update([
+                'avatar' => $imageArray['path'],
+                'avatar_url' => $imageArray['url']
+            ]);
+        }
+
+        /** TUTOR UPDATE */
+        $user->tutor->update([
+            'phone_number' => $request->phone_number,
+            'about' => $request->about,
+            'what_i_teach' => $request->what_i_teach,
+            'education' => $request->education,
+            'language' => $request->language,
+
+            'address_line_1' => $request->address_line_1,
+            'address_line_2' => $request->address_line_2,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'zip' => $request->zip,
+
+            'highest_qualification' => $request->highest_qualification,
+            'university' => $request->university,
+            'passing_year' => $request->passing_year,
+
+            'facebook_url' => $request->facebook_url,
+            'linkedin_url' => $request->linkedin_url,
+            'x_url' => $request->x_url,
+        ]);
+
+        
+        $user = User::where('id', $user->id)
+            ->with([
+                'tutor',
+            ])
+            ->first();
+
+      
+        $data['tutor'] =  array_merge(
+            $user->only(['id', 'role_id', 'full_name','email','user_name']),
+            $user->tutor->toArray()
+        );
+
+
+        return jsonResponse(true, 'Tutor updated successfully.', $data);
     }
 }
