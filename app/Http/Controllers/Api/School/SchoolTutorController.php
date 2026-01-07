@@ -207,6 +207,7 @@ class SchoolTutorController extends Controller
     public function update(Request $request, string $id)
     {
         $loggedInUser = auth('sanctum')->user();
+        
         $user = User::where('id', $id)
             ->whereIn('id', function ($query) use ($loggedInUser) {
                 $query->select('user_id')
