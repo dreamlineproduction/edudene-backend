@@ -54,7 +54,7 @@ class SchoolController extends Controller
         });
 
         return jsonResponse(true, 'School fetched successfully', [
-            'users' => $schools,
+            'schools' => $schools,
             'total' => $paginated->total(),
             'current_page' => $paginated->currentPage(),
             'per_page' => $paginated->perPage(),
@@ -75,14 +75,14 @@ class SchoolController extends Controller
     public function show(string $id)
     {
         //
-        $user = School::with('user:id,full_name,email')->whereIn('role_id', [3])->find($id);
+        $school = School::with('user:id,full_name,email')->find($id);
 
-        if (empty($user)) {
+        if (empty($school)) {
             return jsonResponse(false, 'School not found in our database', null, 404);
         }
 
 
-        return jsonResponse(true, 'School fetched successfully', ['user' => $user]);
+        return jsonResponse(true, 'School fetched successfully', ['school' => $school]);
     }
 
     /**

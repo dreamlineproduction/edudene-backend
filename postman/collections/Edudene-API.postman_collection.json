@@ -205,6 +205,25 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "New Request",
+              "id": "6276ef5b-1b11-4c51-93f7-aeae8acf804c",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/schools/5",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "schools",
+                    "5"
+                  ]
+                }
+              },
+              "response": []
             }
           ],
           "id": "317ac6cf-d42c-45de-b9f8-ebd9d9c91be8"
