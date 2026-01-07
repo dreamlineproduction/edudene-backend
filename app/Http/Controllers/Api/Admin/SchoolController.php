@@ -3,25 +3,23 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\SchoolUser;
-
+use App\Models\School;
 use Illuminate\Http\Request;
 
-class TutorController extends Controller
+class SchoolController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $users = User::with('tutor')
-            ->whereIn('role_id', [2, 4]);
+        //
+        $schools = School::with('user:id,full_name,email');
 
         if (!empty($request->search)) {
             $search = $request->search;
 
-            $users->where(function ($q) use ($search) {
+            $schools->where(function ($q) use ($search) {
                 $q->where('id', 'like', "%{$search}%")
                   ->orWhere('full_name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
@@ -31,33 +29,32 @@ class TutorController extends Controller
             });
         }
 
-        $sortBy = $request->get('sort_by', 'full_name');
+        $sortBy = $request->get('sort_by', 'school_name');
         $sortDirection = $request->get('sort_direction', 'asc');
 
         if (in_array($sortBy, ['id', 'full_name', 'email', 'timezone', 'login_provider', 'created_at'])) {
-            $users->orderBy($sortBy, $sortDirection);
+            $schools->orderBy($sortBy, $sortDirection);
         } else {
-            $users->orderBy('full_name', 'asc');
+            $schools->orderBy('school_name', 'asc');
         }
 
         $perPage = (int) $request->get('per_page', 10);
         $page = (int) $request->get('page', 1);
 
-        $paginated = $users->paginate($perPage, ['*'], 'page', $page);
+        $paginated = $schools->paginate($perPage, ['*'], 'page', $page);
 
-        $users = collect($paginated->items())->map(function ($user) {
+        $schools = collect($paginated->items())->map(function ($user) {
 
             $user->formatted_last_login_datetime = $user->last_login_datetime
                 ? formatDisplayDate($user->last_login_datetime, 'd-M-Y H:i:A')
                 : null;
 
-            $user->school_tutor = SchoolUser::where('user_id', $user->id)->exists();
 
             return $user;
         });
 
-        return jsonResponse(true, 'User fetched successfully', [
-            'users' => $users,
+        return jsonResponse(true, 'School fetched successfully', [
+            'users' => $schools,
             'total' => $paginated->total(),
             'current_page' => $paginated->currentPage(),
             'per_page' => $paginated->perPage(),
@@ -77,14 +74,15 @@ class TutorController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::with('tutor')->whereIn('role_id', [2,4])->find($id);
+        //
+        $user = School::with('user:id,full_name,email')->whereIn('role_id', [3])->find($id);
 
         if (empty($user)) {
-            return jsonResponse(false, 'User not found in our database', null, 404);
+            return jsonResponse(false, 'School not found in our database', null, 404);
         }
 
 
-        return jsonResponse(true, 'User fetched successfully', ['user' => $user]);
+        return jsonResponse(true, 'School fetched successfully', ['user' => $user]);
     }
 
     /**

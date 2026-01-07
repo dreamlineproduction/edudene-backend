@@ -48,6 +48,22 @@ class User extends Authenticatable
         return $this->hasOne(UserInformation::class);
     }
 
+    public function tutor()
+    {
+        return $this->hasOne(Tutor::class);
+    }
+
+    public function school()
+    {
+        return $this->hasOne(School::class);
+    }
+
+    public function schoolUser()
+    {
+        return $this->hasOne(SchoolUser::class, 'user_id');
+    }
+    
+
     public function qualification()
     {
         return $this->hasMany(UserQualification::class);
@@ -95,21 +111,7 @@ class User extends Authenticatable
         return $this->hasOne(UserVerification::class)->where('type','Face')->latest();
     }
     
-    public function tutor()
-    {
-        return $this->hasOne(Tutor::class);
-    }
-
-    public function school()
-    {
-        return $this->hasOne(School::class);
-    }
-
-    public function schoolUser()
-    {
-        return $this->hasOne(SchoolUser::class, 'user_id');
-    }
-    
+   
     /**
      * The attributes that should be hidden for serialization.
      *

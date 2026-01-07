@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Admin\SubSubCategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\UserVerificationController;
 use App\Http\Controllers\Api\Admin\TutorController as AdminTutorController;
+use App\Http\Controllers\Api\Admin\SchoolController as AdminSchoolController;
 
 // Settings
 
@@ -79,9 +80,13 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     // Users
     Route::put('admin/users/{ID}/change-status', [UserController::class, 'changeStatus']);
     Route::put('admin/users/{ID}/send-warning', [UserController::class, 'sendWarning']);
+
     Route::apiResource('admin/users', UserController::class);
 
 
     Route::apiResource('admin/tutors', AdminTutorController::class);
+
+    // School Routes
+    Route::apiResource('admin/schools', AdminSchoolController::class);
 
 });

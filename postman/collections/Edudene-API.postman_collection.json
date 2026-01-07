@@ -40,6 +40,35 @@
               "response": []
             },
             {
+              "name": "User Show",
+              "id": "770d3005-7708-44e8-9453-06da89942c0f",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "188|edudene_token_wfBQg4RcmuT4Ekj5QeloZ9WEFlEbaAKjXsxpnPCmf9422c2d",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/users/62",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "users",
+                    "62"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "User Change Status",
               "id": "2f939639-c1e2-4734-b570-309dc13cb07f",
               "request": {
@@ -145,6 +174,103 @@
             }
           ],
           "id": "85023397-e90b-4971-99e5-48f43f3993ee"
+        },
+        {
+          "name": "Schools",
+          "item": [
+            {
+              "name": "School List",
+              "id": "b99c40b9-d800-4bc3-8ccc-35a9041f4ffa",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "188|edudene_token_wfBQg4RcmuT4Ekj5QeloZ9WEFlEbaAKjXsxpnPCmf9422c2d",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/schools",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "schools"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "id": "317ac6cf-d42c-45de-b9f8-ebd9d9c91be8"
+        },
+        {
+          "name": "Tutors",
+          "item": [
+            {
+              "name": "Tutor List",
+              "id": "f103a547-568a-4b93-8db0-e760c2743129",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "188|edudene_token_wfBQg4RcmuT4Ekj5QeloZ9WEFlEbaAKjXsxpnPCmf9422c2d",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/tutors",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "tutors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Tutor Show",
+              "id": "a3575ca9-e80b-4b92-9627-3d1e35fc4373",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "188|edudene_token_wfBQg4RcmuT4Ekj5QeloZ9WEFlEbaAKjXsxpnPCmf9422c2d",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/tutors/61",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "tutors",
+                    "61"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "id": "429e0741-75db-4abe-aa51-af019df937e0"
         },
         {
           "name": "Category",

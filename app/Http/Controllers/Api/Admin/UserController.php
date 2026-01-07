@@ -16,11 +16,22 @@ class UserController extends Controller
     public function index(Request $request)
     {
         //
-        $users = User::query()->where('role_id', 1);
+        $users = User::query()
+        ->where('role_id', 1)
+        ->with('information');
 
 		if (!empty($request->search)) {
-			$users = $users->where('title','like','%'.$request->search.'%');
-		}
+            $search = $request->search;
+
+            $users->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                  ->orWhere('full_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhereHas('information', function ($userInfo) use ($search) {
+                      $userInfo->where('phone_number', 'like', "%{$search}%");
+                  });
+            });
+        }
 
 		$sortBy = $request->get('sort_by', 'full_name');
     	$sortDirection = $request->get('sort_direction', 'asc');
@@ -36,9 +47,16 @@ class UserController extends Controller
 
 		$paginated = $users->paginate($perPage, ['*'], 'page', $page);
 
+        $users = collect($paginated->items())->map(function ($user) {
+             $user->formatted_last_login_datetime = $user->last_login_datetime
+                ? formatDisplayDate($user->last_login_datetime, 'd-M-Y H:i:A')
+                : null;
+            
+            return $user;
+        });
 
 		return jsonResponse(true, 'User fetched successfully', [
-			'users' => $paginated->items(),
+			'users' => $users,
 			'total' => $paginated->total(),
 			'current_page' => $paginated->currentPage(),
 			'per_page' => $paginated->perPage(),
@@ -58,7 +76,14 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::with('information')->where('role_id',1)->find($id);
+
+        if (empty($user)) {
+            return jsonResponse(false, 'User not found in our database', null, 404);
+        }
+
+
+        return jsonResponse(true, 'User fetched successfully', ['user' => $user]);
     }
 
     /**
@@ -122,6 +147,6 @@ class UserController extends Controller
             new SendWarningToAllUser($mailData)
         );
 
-        return jsonResponse(true, 'Role changed successfully');
+        return jsonResponse(true, 'Send successfully.');
     }
 }
