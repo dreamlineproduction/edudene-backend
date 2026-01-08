@@ -276,13 +276,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{BASE_URL}}admin/tutors/61",
+                  "raw": "{{BASE_URL}}admin/tutors/96",
                   "host": [
                     "{{BASE_URL}}admin"
                   ],
                   "path": [
                     "tutors",
-                    "61"
+                    "96"
                   ]
                 }
               },

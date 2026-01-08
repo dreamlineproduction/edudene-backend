@@ -83,7 +83,9 @@ class TutorController extends Controller
             return jsonResponse(false, 'User not found in our database', null, 404);
         }
 
-
+        $user->formatted_last_login_datetime = $user->last_login_datetime
+                ? formatDisplayDate($user->last_login_datetime, 'd-M-Y H:i:A')
+                : null;
         return jsonResponse(true, 'User fetched successfully', ['user' => $user]);
     }
 
