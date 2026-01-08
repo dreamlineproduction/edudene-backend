@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseAsset;
 use App\Models\CourseOutcome;
-use App\Models\CourseRequirement;
 use App\Models\CourseSeo;
+use App\Models\SchoolCourse;
+use App\Models\SchoolUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use PhpParser\Node\Stmt\TryCatch;
 
 class CourseController extends Controller
 {
@@ -22,15 +22,30 @@ class CourseController extends Controller
 		$user = auth('sanctum')->user();
 
 		$courses = Course::query()
-			->where('user_id', $user->id)
 			->with([
 					'user',
 					'courseType',
 					'category',
 					'subCategory',
-					'courseChapters',
-				]);
+					'courseChapters' => function($q) {
+						$q->withCount('courseLessons');
+					}					
+			]);
+
+		// if course created by school user
+		if ($user->role_id === 3) {
+
+			// Fetch school data from school_users
+			$schoolUserInfo = SchoolUser::select('school_id')->where('user_id', $user->id)->first();
+			
+			if (!empty($schoolUserInfo)) {
+				$courses = $courses->where('school_id', $schoolUserInfo->school_id);
+			}
+		} else {
+			$courses = $courses->where('user_id', $user->id);
+		}
 		
+
 		if (!empty($request->search)) {
 			$courses = $courses->where('title','like','%'.$request->search.'%');
 		}
@@ -49,8 +64,16 @@ class CourseController extends Controller
 
 		$paginated = $courses->paginate($perPage, ['*'], 'page', $page);
 
+		$coursesWithLessonCount = collect($paginated->items())->map(function ($course) {
+			$course->total_lessons = $course->courseChapters
+				->sum('course_lessons_count');
+
+			return $course;
+		});
+
+
 		return jsonResponse(true, 'Categories fetched successfully', [
-			'courses' => $paginated->items(),
+			'courses' => $coursesWithLessonCount,
 			'total' => $paginated->total(),
 			'current_page' => $paginated->currentPage(),
 			'per_page' => $paginated->perPage(),
@@ -84,6 +107,18 @@ class CourseController extends Controller
 			$course->title = $request->title;
 			$course->user_id = $user->id;
 			$course->slug = generateUniqueSlug($request->title, 'App\Models\Course');
+
+			// if course created by school user
+			if ($user->role_id === 3) {
+
+				// Fetch school data from school_users
+				$schoolUserInfo = SchoolUser::where('user_id', $user->id)->first();
+
+				if (!empty($schoolUserInfo)) {
+					$course->school_id = $schoolUserInfo->school_id;
+				}
+			}
+
 			$course->save();
 
 			return jsonResponse(true, 'Course created successfully', ['course' => $course]);
@@ -404,7 +439,6 @@ class CourseController extends Controller
         return;
     }
 
-
     // No Need
     private function firstReachable(array $urls): ?string
     {
@@ -423,7 +457,6 @@ class CourseController extends Controller
         }
         return null;
     }
-
 
     private function singleCourse(string $id){
          $course =  Course::where('id',$id)
