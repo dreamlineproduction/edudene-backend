@@ -44,6 +44,11 @@ class Tutor extends Model
         'is_house',
         'created_at',
         'updated_at',
+		'enable_one_to_one',
+		'enable_trainer',
+		'enable_courses',
+		'one_to_one_hourly_rate',
+		'trainer_hourly_rate'
     ];
 
 
@@ -56,4 +61,10 @@ class Tutor extends Model
         'created_at',
         'updated_at',
     ];
+
+	protected $casts = [
+		'enable_one_to_one' => 'boolean',
+		'enable_trainer' => 'boolean',
+		'enable_courses' => 'boolean',
+	];
 }

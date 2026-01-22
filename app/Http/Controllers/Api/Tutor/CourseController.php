@@ -22,7 +22,7 @@ class CourseController extends Controller
 		$user = auth('sanctum')->user();
 
 		$courses = Course::query()
-			->with([
+  			->with([
 					'user',
 					'courseType',
 					'category',
@@ -384,6 +384,8 @@ class CourseController extends Controller
 
 		$course->status = $request->status;
 		$course->save();
+
+		$course = $this->singleCourse($request->course_id);
 
 		return response()->json([
 			'status' => true,
