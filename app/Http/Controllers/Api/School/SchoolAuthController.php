@@ -24,7 +24,7 @@ class SchoolAuthController extends Controller
             'login_datetime' => 'nullable|string|max:150',
         ]);
 
-        $user = User::where(['email' => $request->email])->whereIn('role_id',[3,4])->first();
+        $user = User::where(['email' => $request->email])->whereIn('role_id',[2,3,4])->first();
 
         // Check if user exists
         if (!$user) {

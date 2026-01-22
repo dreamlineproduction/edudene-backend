@@ -169,6 +169,34 @@ if (!function_exists('calculateDuration')) {
     }
 }
 
+if (!function_exists('calculateTimeDuration')) {
+
+    function calculateTimeDuration($start, $end)
+    {
+        $startTime = new DateTime($start);
+        $endTime   = new DateTime($end);
+
+        // handle next-day time
+        if ($endTime < $startTime) {
+            $endTime->modify('+1 day');
+        }
+
+        $diff = $startTime->diff($endTime);
+
+        // total hours including days
+        $totalHours = ($diff->days * 24) + $diff->h;
+
+        // clean formatting
+        $hoursText = $totalHours > 0 ? $totalHours . ' hour ' : '';
+        $minutesText = $diff->i . ' min';
+
+        return trim($hoursText . $minutesText);
+    }
+}
+
+
+
+
 
 if (!function_exists('formatDisplayDate')) {
     function formatDisplayDate($date,$format = 'j M Y')

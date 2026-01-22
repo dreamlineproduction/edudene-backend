@@ -32,7 +32,7 @@ class Course extends Model
     
     public function user()
     {
-        return $this->belongsTo(User::class)->select('id','role_id','full_name','user_name');
+        return $this->belongsTo(User::class);
     }
     
     public function courseType()
@@ -76,6 +76,12 @@ class Course extends Model
     {
         return $this->hasMany(CourseChapter::class);
     }
+
+    public function courseLessons()
+    {
+        return $this->hasMany(CourseLesson::class);
+    }
+
 
     public function courseAsset()
     {

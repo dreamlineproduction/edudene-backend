@@ -34,12 +34,12 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:3'])->group(function () {
     Route::apiResource('school/classes', ClassController::class);
     Route::apiResource('school/teachers', SchoolTutorController::class);
 
+
     // Change Password Route
     Route::post('school/change-password', [SchoolController::class, 'changePassword']);
     Route::get('school/{SCHOOL_ID}', [SchoolController::class, 'show']);
     Route::put('school/{SCHOOL_ID}', [SchoolController::class, 'update']);
     
-
    
 });
 

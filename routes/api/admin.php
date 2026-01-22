@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\UserVerificationController;
 use App\Http\Controllers\Api\Admin\TutorController as AdminTutorController;
 use App\Http\Controllers\Api\Admin\SchoolController as AdminSchoolController;
+use App\Http\Controllers\Api\Admin\CourseController as AdminCourseController;
+
 
 // Settings
 
@@ -87,6 +89,11 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::apiResource('admin/tutors', AdminTutorController::class);
 
     // School Routes
+    Route::put('admin/schools/{ID}/change-status', [AdminSchoolController::class, 'changeStatus']);
+     Route::put('admin/schools/{ID}/send-warning', [AdminSchoolController::class, 'sendWarning']);
     Route::apiResource('admin/schools', AdminSchoolController::class);
 
+    // Tutor Routes
+    Route::put('admin/courses/{ID}/change-status', [AdminCourseController::class, 'changeStatus']);
+    Route::apiResource('admin/courses', AdminCourseController::class);
 });

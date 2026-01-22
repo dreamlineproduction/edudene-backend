@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\School;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
+use App\Models\ClassSessions;
 use App\Models\Course;
 use App\Models\School;
 use App\Models\Tutor;
@@ -35,13 +36,7 @@ class SchoolController extends Controller
         return jsonResponse(true, 'Schools', $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+   
 
     /**
      * Display the specified resource.
@@ -172,13 +167,7 @@ class SchoolController extends Controller
         return jsonResponse(true, 'School profile updated successfully', $data);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 
 
     public function changePassword(Request $request)
@@ -219,21 +208,35 @@ class SchoolController extends Controller
         }
 
         $school = $q->where('status', 'Active')               
-            ->with([
-                'user:id,full_name,email',
-                'tutors',
-                'courses',
-                'classes.class_type:id,title',
-                'classes.category:id,title',
-                'classes.sub_category:id,title',
-                'classes.sub_sub_category:id,title',
-                'classes.category_level_four:id,title',
-                'classes.tutor:id,full_name,email'
-            ])
-            ->withCount('tutors')
-            ->withCount('courses')               
-            ->withCount('classes')
-            ->first();
+        ->with([
+            'user:id,full_name,email',
+            'tutors',
+            'classes.class_type:id,title,status',
+            'classes.category:id,title',
+            'classes.sub_category:id,title',
+            'classes.sub_sub_category:id,title',
+            'classes.category_level_four:id,title',
+            'classes.tutor:id,full_name,email',
+
+            'courses' => function ($query) {
+                $query->where('courses.status', 'Active');
+            },
+            'classes' => function ($query) {
+                $query->where('classes.status', 'Approved');
+            },
+        ])
+        ->withCount('tutors')
+        ->withCount([
+            'courses as courses_count' => function ($query) {
+                $query->where('status', 'Active');
+            }
+        ])          
+        ->withCount([
+            'classes as classes_count' => function ($query) {
+                $query->where('status', 'Approved');
+            }
+        ])
+        ->first();
 
         if (!$school) {
             return jsonResponse(false, 'School not found in our database.', null, 404);
@@ -300,5 +303,68 @@ class SchoolController extends Controller
 
         $data['schools'] = $school;
         return jsonResponse(true, 'Schools', $data);
+    }
+
+
+    public function viewTimelineModal(string $id)
+    {
+        $classes =  Classes::select(
+            'start_date',
+            'end_date',
+            'id',
+            'school_id',
+            'duration',
+            'price')
+            ->where('id', $id)
+            ->first();
+
+        if(empty($classes)){
+            return jsonResponse(false, 'Class not found in our database', null, 404);
+        }
+
+        $classes->formatted_start_date = formatDisplayDate($classes->start_date,'d-M-Y');
+        $classes->formatted_end_date = formatDisplayDate($classes->end_date,'d-M-Y');
+
+        $classes->formatted_total_hours  = minutesToHours($classes->duration);            
+        $duration = calculateDuration($classes->start_date,$classes->end_date);
+        if (!$duration) {
+            $classes->duration = null;
+        }
+
+        $parts = [];
+        if ($duration['years'] > 0) {
+            $parts[] = $duration['years'] . ' ' . ($duration['years'] > 1 ? 'Years' : 'Year');
+        }
+
+        if ($duration['months'] > 0) {
+            $parts[] = $duration['months'] . ' ' . ($duration['months'] > 1 ? 'Months' : 'Month');
+        }
+
+        if ($duration['total_days'] > 0) {
+            $parts[] = $duration['total_days'] . ' ' . ($duration['days'] > 1 ? 'Days' : 'Day');
+        }
+
+        $classes->formatted_duration = implode(', ', $parts);
+        
+        $classSessions =  ClassSessions::where('class_id', $id)->get();
+
+        if($classSessions->isEmpty()){
+            return jsonResponse(false, 'No sessions found for this class', null, 404);
+        }
+
+        $classSessions = collect($classSessions)->map(function ($session) {
+            $session->formatted_start_time = formatDisplayDate($session->start_time,'H:i');
+            $session->formatted_end_time = formatDisplayDate($session->end_time,'H:i');
+            $session->formatted_start_date = formatDisplayDate($session->start_date);
+
+            $session->time_duration = calculateTimeDuration($session->start_time,$session->end_time);
+            
+            return $session;
+        });
+
+        $data['classes'] = $classes;
+        $data['sessions'] = $classSessions;
+
+        return jsonResponse(true, 'Class sessions list', $data);
     }
 }

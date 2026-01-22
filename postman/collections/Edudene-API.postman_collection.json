@@ -207,9 +207,19 @@
               "response": []
             },
             {
-              "name": "New Request",
+              "name": "School Show",
               "id": "6276ef5b-1b11-4c51-93f7-aeae8acf804c",
               "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "188|edudene_token_wfBQg4RcmuT4Ekj5QeloZ9WEFlEbaAKjXsxpnPCmf9422c2d",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "GET",
                 "header": [],
                 "url": {
@@ -220,6 +230,58 @@
                   "path": [
                     "schools",
                     "5"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School Change status",
+              "id": "1edd8d31-eaa2-453d-ab45-c41c22c8e731",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "188|edudene_token_wfBQg4RcmuT4Ekj5QeloZ9WEFlEbaAKjXsxpnPCmf9422c2d",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text",
+                    "uuid": "eb4522a0-4069-4d9c-8ea8-51f4cb99e312"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text",
+                    "uuid": "4afc2ac3-876e-49db-8ba8-6b17148073c0"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"status\":\"Inactive\",\r\n    \"description\":\"Testing Kuch bhi\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}admin/schools/5/change-status",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "schools",
+                    "5",
+                    "change-status"
                   ]
                 }
               },
@@ -2525,6 +2587,60 @@
           "id": "4a3ac4d8-7669-4fff-9841-58f9535f382e"
         },
         {
+          "name": "Course",
+          "item": [
+            {
+              "name": "Course List",
+              "id": "a56bd771-f044-44cc-b14a-20cb1beedc8e",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "188|edudene_token_wfBQg4RcmuT4Ekj5QeloZ9WEFlEbaAKjXsxpnPCmf9422c2d",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/courses",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "courses"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "id": "1a834265-9d0b-438c-bad8-f96a4c46ec04",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/courses/9/change-status",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "courses",
+                    "9",
+                    "change-status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "id": "c41963b3-307a-4f91-954e-6928a18330a2"
+        },
+        {
           "name": "Login",
           "id": "ae6cb0c8-fe3a-4b61-93d7-be04034964af",
           "request": {
@@ -3295,6 +3411,27 @@
               "path": [
                 "front",
                 "green-valley-public-school-1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List School Timeline",
+          "id": "7e01a384-2793-449f-bf68-1a90b0fdbd6c",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/front/classes/26/timeline",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "front",
+                "classes",
+                "26",
+                "timeline"
               ]
             }
           },

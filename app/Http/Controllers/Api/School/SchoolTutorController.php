@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\School;
 use App\Http\Controllers\Controller;
 use App\Mail\School\TutorCreation;
 use App\Models\School;
-use App\Models\SchoolUser;
+use App\Models\SchoolAggrement;
 use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class SchoolTutorController extends Controller
         $users = User::query()
             ->whereIn('id', function ($query) use ($loggedInUser) {
                 $query->select('user_id')
-                    ->from('school_users')
+                    ->from('school_aggrements')
                     ->where('school_id', $loggedInUser->school->id);
             });
 
@@ -133,7 +133,7 @@ class SchoolTutorController extends Controller
             // School mapping
             $loggedInUser = auth('sanctum')->user()->load('school');
 
-            $schoolUser =  SchoolUser::create([
+            $schoolAggrement =  SchoolAggrement::create([
                 'user_id' => $user->id,
                 'school_id' => $loggedInUser->school->id,
                 'ip_agreement' => $request->ip_agreement,
@@ -145,7 +145,7 @@ class SchoolTutorController extends Controller
             // Save 
             if (notEmpty($request->ip_document)) {                            
                 $document = finalizeFile($request->ip_document,$newPath);
-                $schoolUser->update([
+                $schoolAggrement->update([
                     'agreement_file' => $document['path'],
                     'agreement_file_url' => $document['url']
                 ]);
@@ -211,7 +211,7 @@ class SchoolTutorController extends Controller
         $user = User::where('id', $id)
             ->whereIn('id', function ($query) use ($loggedInUser) {
                 $query->select('user_id')
-                    ->from('school_users')
+                    ->from('school_aggrements')
                     ->where('school_id', $loggedInUser->id);
             })
             ->with('tutor')
@@ -263,7 +263,7 @@ class SchoolTutorController extends Controller
             ->where('role_id', 4)
             ->whereIn('id', function ($query) use ($loggedInUser) {
                 $query->select('user_id')
-                    ->from('school_users')
+                    ->from('school_aggrements')
                     ->where('school_id', $loggedInUser->id);
             })
             ->first();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AccountInactiveMailToAllUser;
 use App\Mail\SendWarningToAllUser;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -110,10 +111,15 @@ class UserController extends Controller
     }
 
     public function changeStatus(Request $request, $id){
-        $request->validate([
-            'status' => 'required|in:Active,Inactive',          
-        ]);
+        $validation = [
+            'status' => 'required|in:Active,Inactive', 
+        ];
 
+        if($request->status === 'Inactive'){
+            $validation['description'] = 'required|string';
+        }
+
+        $request->validate($validation);
         $user = User::find($id);
 
         if (empty($user)) {
@@ -122,6 +128,21 @@ class UserController extends Controller
 
         $user->status = $request->status;
         $user->save();
+
+        // Send mail to user 
+        if($request->status === 'Inactive')
+        {
+            $mailData = [
+                'fullName' => $user->full_name,
+                'description' => $request->description
+            ];
+            
+            Mail::to($user->email)->send(
+                new AccountInactiveMailToAllUser($mailData)
+            );
+           
+        }
+
         return jsonResponse(true, 'Status changed successfully');
     }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\User\UserAuthController;
@@ -46,5 +47,16 @@ Route::prefix('v1')->group(function () {
 
     Route::get('school/front', [SchoolController::class, 'index']);
     Route::get('school/front/{SCHOOL_SLUG}', [SchoolController::class, 'showFront']);
+    Route::get('school/front/classes/{CLASS_ID}/timeline', [SchoolController::class, 'viewTimelineModal']);
+    
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/add', [CartController::class, 'add']);
+        Route::post('/update-qty', [CartController::class, 'updateQty']);
+        Route::delete('/remove/{id}', [CartController::class, 'remove']);
+        Route::delete('/clear', [CartController::class, 'clear']);
+    });
 });
+
+
 ?>
