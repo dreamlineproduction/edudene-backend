@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Api\CartController;
+
 use Google\Client as GoogleClient;
 
 class UserAuthController extends Controller
@@ -162,12 +164,17 @@ class UserAuthController extends Controller
         LoginAttempt::where('email', $request->email)->delete();
 
 
+        
+
         // Generate token
+        app(CartController::class)->mergeAfterLogin($request,$user->id);
         $token = $user->createToken('auth_token')->plainTextToken;
+
+       
 
         $data['user'] = $user;
         $data['token'] = $token;
-        return jsonResponse(true, 'Login successfully.', $data);
+        //return jsonResponse(true, 'Login successfully.', $data);
     }
 
 

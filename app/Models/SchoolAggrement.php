@@ -16,12 +16,13 @@ class SchoolAggrement extends Model
         'is_freelancer',
     ];
 
-    public function user()
+    
+    public function teacher()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-
+    
     protected $hidden = [
         'created_at',
         'updated_at'

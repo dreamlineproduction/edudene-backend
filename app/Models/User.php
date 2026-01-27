@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Testing\Fluent\Concerns\Has;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\SchoolAggrement;
 
 class User extends Authenticatable
 {
@@ -63,6 +64,10 @@ class User extends Authenticatable
         return $this->hasOne(SchoolUser::class, 'user_id');
     }
     
+    public function schoolAgreements()
+    {
+        return $this->hasMany(SchoolAggrement::class, 'user_id');
+    }
 
     public function qualification()
     {

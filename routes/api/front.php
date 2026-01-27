@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
 use App\Http\Controllers\Api\FaqController as FrontFaqController;
 use App\Http\Controllers\Api\School\SchoolController;
+use App\Http\Controllers\Api\SchoolController as FrontSchoolController;
 use App\Http\Controllers\Api\User\ChangeEmailRequestController as FrontChangeEmailRequestController;
 
 
@@ -19,8 +20,8 @@ Route::prefix('v1')->group(function () {
     Route::post('contact', [ContactController::class, 'store']);
     
 
-    Route::get('courses', [FrontCourseController::class, 'index']);
-    Route::get('courses/{SLUG}', [FrontCourseController::class, 'show']);
+    Route::get('front/courses', [FrontCourseController::class, 'index']);
+    Route::get('front/courses/{SLUG}', [FrontCourseController::class, 'show']);
 
 
     Route::post('user/register', [UserAuthController::class, 'register']);
@@ -46,9 +47,14 @@ Route::prefix('v1')->group(function () {
     Route::post('user/email-change', [FrontChangeEmailRequestController::class, 'store']);
 
     Route::get('school/front', [SchoolController::class, 'index']);
-    Route::get('school/front/{SCHOOL_SLUG}', [SchoolController::class, 'showFront']);
-    Route::get('school/front/classes/{CLASS_ID}/timeline', [SchoolController::class, 'viewTimelineModal']);
+    Route::get('school/front/{SCHOOL_SLUG}', [FrontSchoolController::class, 'show']);
+    Route::get('school/front/classes/{CLASS_ID}/timeline', [FrontSchoolController::class, 'viewTimelineModal']);
+    Route::get('school/front/{SCHOOL_SLUG}/classes', [FrontSchoolController::class, 'classes']);
+    Route::get('school/front/{SCHOOL_SLUG}/courses', [FrontSchoolController::class, 'course']);
+    Route::get('school/front/{SCHOOL_SLUG}/teachers', [FrontSchoolController::class, 'teachers']);
     
+
+
     Route::prefix('cart')->group(function () {
         Route::get('/', [CartController::class, 'index']);
         Route::post('/add', [CartController::class, 'add']);

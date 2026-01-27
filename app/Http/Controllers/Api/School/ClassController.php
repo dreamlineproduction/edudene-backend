@@ -165,6 +165,9 @@ class ClassController extends Controller
         $validated['school_id'] = $loggedInUser->school->id;
 
         // Create class
+
+        // Merge school_id safely
+        $validated['description'] = $request->description;
         $class = Classes::create($validated);
 
 
@@ -183,6 +186,25 @@ class ClassController extends Controller
                 
            ]);
         }
+
+
+        // Upload cover image
+
+        /** Handle logo upload */
+        if ($request->filled('cover_image')) {
+
+            if ($class && $class->cover_image) {
+                deleteS3File($class->cover_image);
+            }
+
+            $image = finalizeFile($request->cover_image, 'schools');
+
+            $class->cover_image = $image['path'];
+            $class->cover_image_url = $image['url'];
+
+            $class->save();
+        }
+
         return jsonResponse(true, 'Class created successfully', $class);
     }
 

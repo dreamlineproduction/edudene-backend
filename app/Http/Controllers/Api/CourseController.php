@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\SchoolAggrement;
+use App\Models\Classes;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -117,20 +119,28 @@ class CourseController extends Controller
 
         // ---------- Relationships ----------
         $query->with([
-            'user',
-            'category',
+            'user:id,full_name,user_name',
+            'user.information:id,user_id,avatar,avatar_url',
+            'school:id,school_name,logo,logo_url,about_us,school_slug',            
             'courseType',
-            'subCategory',
-            'subSubCategory',
-            'courseOutcomes',
-            'courseRequirements',
+            'category:id,title',
+            'subCategory:id,title',
+            'subSubCategory:id,title',
+            'categoryLevelFour:id,title',
+            'courseOutcomes:id,course_id,title',
+            'courseRequirements:id,course_id,title',
             'courseAsset',
             'courseSeo',
-            'courseChapters',
+            'courseChapters.courseLessons',
+            'courseChapters' => function ($q) {
+                $q->withCount('courseLessons');
+            },                        
             'reviews'
         ])
+       
         ->withAvg('reviews', 'rating')
-        ->withCount('reviews');
+        ->withCount('reviews')
+        ->withCount('courseChapters');
 
         $course = $query->where('slug', $slug)->first();
 
@@ -138,7 +148,58 @@ class CourseController extends Controller
             return jsonResponse(false, 'Course not found', null, 404);
         }
 
-        return jsonResponse(true, 'Course details', $course);
+        if($course->school_id > 0)
+        {
+            $creator['id'] = $course->school->id;
+            $creator['name'] = $course->school->school_name;
+            $creator['image_url'] = $course->school->logo_url;
+            $creator['slug'] = $course->school->school_slug;
+            $creator['about_us'] = shortDescription($course->school->about_us,90);
+
+            $totalCourse = Course::where('school_id',$course->school->id)->count();
+            $creator['total_course'] = $totalCourse;
+
+            $totalClasses = Classes::where('school_id',$course->school->id)->count();
+            $creator['total_classes'] = $totalClasses;
+
+            $totalTutors = SchoolAggrement::where('school_id',$course->school->id)->count();
+            $creator['total_tutors'] = $totalTutors;
+
+        } else {
+            $creator['id'] = $course->user->id;
+            $creator['name'] = $course->user->full_name;
+            $creator['image_url'] = $course->user->avatar_url;
+            $creator['slug'] = $course->user->user_name;
+
+            $creator['about_us'] = $course->user->about_us;
+
+
+            $totalCourse = Course::where('user_id',$course->user->id)->count();
+            $creator['total_course'] = $totalCourse;
+
+            $totalClasses = Classes::where('user_id',$course->user->id)->count();
+            $creator['total_classes'] = 0;
+
+            $totalTutors = Course::where('user_id',$course->user->id)->count();
+            $creator['total_classes'] = $totalTutors;
+        }
+
+
+
+        $course->creator = $creator;
+
+        $course->formatted_created_at = formatDisplayDate($course->created_at,'d/m/Y');
+        $course->formatted_updated_at = formatDisplayDate($course->updated_at,'d/m/Y');
+
+        $course->avg_rating = 4.5;
+
+        
+        $course->total_lessons = $course->courseChapters->sum('course_lessons_count');
+            
+        
+
+        $data['course'] = $course;
+        return jsonResponse(true, 'Course details', $data);
 
     }
 

@@ -20,6 +20,9 @@ class Classes extends Model
         'price',
         'status',
         'decline_text',
+        'description',
+        'cover_image',
+        'cover_image_url',
         'created_at',
         'updated_at',
     ];

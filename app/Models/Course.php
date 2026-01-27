@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Course extends Model
 {
     //
+    protected $appends = ['discount_percent'];
+
+    
     protected $fillable = [
         'user_id',
         'title',
@@ -34,6 +37,11 @@ class Course extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
     
     public function courseType()
     {
@@ -53,6 +61,11 @@ class Course extends Model
     public function subSubCategory()
     {
         return $this->belongsTo(SubSubCategory::class);
+    }
+
+    public function categoryLevelFour()
+    {
+        return $this->belongsTo(CategoryLevelFour::class);
     }
 
     public function courseOutcomes()
@@ -99,8 +112,24 @@ class Course extends Model
         return $value ? round($value, 1) : 0;
     }
 
-    protected $hidden   = [
-        'created_at',
-        'updated_at',
-    ];
+    public function getDiscountPercentAttribute()
+    {
+        if (
+            empty($this->price) ||
+            empty($this->discount_price) ||
+            $this->discount_price >= $this->price
+        ) {
+            return 0;
+        }
+
+        return round(
+            (($this->price - $this->discount_price) / $this->price) * 100
+        );
+    }
+
+
+    // protected $hidden   = [
+    //     'created_at',
+    //     'updated_at',
+    // ];
 }

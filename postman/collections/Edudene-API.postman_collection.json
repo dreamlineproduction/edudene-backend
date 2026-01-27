@@ -3417,6 +3417,80 @@
           "response": []
         },
         {
+          "name": "School Courses",
+          "id": "c64d2c2b-772c-496a-8159-5d96bf8dc029",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1/courses?page=1",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "front",
+                "green-valley-public-school-1",
+                "courses"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "uuid": "aa58dc9d-8c5f-43b3-9a6a-113dcc6a1f49"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Classes",
+          "id": "84417866-ed25-48e4-8cd6-c9098545f716",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1/classes",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "front",
+                "green-valley-public-school-1",
+                "classes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Teacher",
+          "id": "2fc32e91-7b88-49ce-9cf7-ddb2dcc98c72",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1/teachers?page=1",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "front",
+                "green-valley-public-school-1",
+                "teachers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "uuid": "99b7c452-8a42-4355-bcba-a30108aee90a"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "List School Timeline",
           "id": "7e01a384-2793-449f-bf68-1a90b0fdbd6c",
           "request": {
@@ -3531,12 +3605,13 @@
               }
             },
             "url": {
-              "raw": "{{BASE_URL}}courses/mastering-laravel-12-with-react",
+              "raw": "{{BASE_URL}}front/courses/the-complete-prompt-engineering-for-ai-bootcamp-(2026)-1",
               "host": [
-                "{{BASE_URL}}courses"
+                "{{BASE_URL}}front"
               ],
               "path": [
-                "mastering-laravel-12-with-react"
+                "courses",
+                "the-complete-prompt-engineering-for-ai-bootcamp-(2026)-1"
               ]
             }
           },

@@ -38,10 +38,10 @@ return new class extends Migration
                 ->on('carts')
                 ->cascadeOnDelete();
 
-            // prevent duplicate same item
-            $table->unique([
-                'cart_id',
-            ]);
+            $table->unique(
+                ['cart_id', 'item_type', 'item_id'],
+                'cart_item_unique'
+            );
         });
     }
 

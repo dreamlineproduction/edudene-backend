@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class CourseChapter extends Model
 {
     //
+    protected $appends = ['discount_percent'];
 
+    
     protected $fillable = [
         'course_id',
         'title',
@@ -23,5 +25,20 @@ class CourseChapter extends Model
 	public function courseLessons()
     {
         return $this->hasMany(CourseLesson::class);
+    }
+
+    public function getDiscountPercentAttribute()
+    {
+        if (
+            empty($this->price) ||
+            empty($this->discount_price) ||
+            $this->discount_price >= $this->price
+        ) {
+            return 0;
+        }
+
+        return round(
+            (($this->price - $this->discount_price) / $this->price) * 100
+        );
     }
 }
