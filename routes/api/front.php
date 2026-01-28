@@ -4,10 +4,10 @@ use App\Http\Controllers\Api\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\User\UserAuthController;
+use App\Http\Controllers\Api\TutorController;
 use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
 use App\Http\Controllers\Api\FaqController as FrontFaqController;
-use App\Http\Controllers\Api\School\SchoolController;
 use App\Http\Controllers\Api\SchoolController as FrontSchoolController;
 use App\Http\Controllers\Api\User\ChangeEmailRequestController as FrontChangeEmailRequestController;
 
@@ -21,7 +21,10 @@ Route::prefix('v1')->group(function () {
     
 
     Route::get('front/courses', [FrontCourseController::class, 'index']);
+    Route::get('front/popular/courses', [FrontCourseController::class, 'popularCourse']);
     Route::get('front/courses/{SLUG}', [FrontCourseController::class, 'show']);
+
+    Route::get('front/popular/tutors', [TutorController::class, 'popularTeacher']);
 
 
     Route::post('user/register', [UserAuthController::class, 'register']);
@@ -46,12 +49,13 @@ Route::prefix('v1')->group(function () {
     Route::get('user/email-change', [FrontChangeEmailRequestController::class, 'index']);
     Route::post('user/email-change', [FrontChangeEmailRequestController::class, 'store']);
 
-    Route::get('school/front', [SchoolController::class, 'index']);
-    Route::get('school/front/{SCHOOL_SLUG}', [FrontSchoolController::class, 'show']);
-    Route::get('school/front/classes/{CLASS_ID}/timeline', [FrontSchoolController::class, 'viewTimelineModal']);
-    Route::get('school/front/{SCHOOL_SLUG}/classes', [FrontSchoolController::class, 'classes']);
-    Route::get('school/front/{SCHOOL_SLUG}/courses', [FrontSchoolController::class, 'course']);
-    Route::get('school/front/{SCHOOL_SLUG}/teachers', [FrontSchoolController::class, 'teachers']);
+    Route::get('front/school', [FrontSchoolController::class, 'index']);
+    Route::get('front/popular/school', [FrontSchoolController::class, 'popularSchool']);
+    Route::get('front/school/{SCHOOL_SLUG}', [FrontSchoolController::class, 'show']);
+    Route::get('front/school/classes/{CLASS_ID}/timeline', [FrontSchoolController::class, 'viewTimelineModal']);
+    Route::get('front/school/{SCHOOL_SLUG}/classes', [FrontSchoolController::class, 'classes']);
+    Route::get('front/school/{SCHOOL_SLUG}/courses', [FrontSchoolController::class, 'course']);
+    Route::get('front/school/{SCHOOL_SLUG}/teachers', [FrontSchoolController::class, 'teachers']);
     
 
 

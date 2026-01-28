@@ -57,15 +57,22 @@ class CartController extends Controller
                 }                
             }
 
-            if($row->item_type === 'COURSE') {
+            if($row->item_type === 'SCHOOL_COURSE') {
                 $courseAsset = CourseAsset::where('course_id',$row->item_id)->first(); 
 
                 if(!empty($courseAsset) && !empty($courseAsset->poster)){
-                     $image = $courseAsset->poster_url;
+                    $image = $courseAsset->poster_url;
+                }
+            }
+            // Course Chapter Pu
+            if($row->item_type === "SCHOOL_COURSE_CHAPTER") {
+                $courseAsset = CourseAsset::where('course_id',$row->metadata['course_id'])->first(); 
+
+                if(!empty($courseAsset) && !empty($courseAsset->poster)){
+                    $image = $courseAsset->poster_url;
                 }
             }
 
-            $tutor = User::where('id',$row->item->tutor_id)->first();
 
             return [
                 'id'        => $row->id,
@@ -77,8 +84,7 @@ class CartController extends Controller
                 'model'     => $row->model_name,
                 'meta_data' => $row->metadata,
                 'image'     => $image,
-                'tutor'     => $tutor,
-                //'row' => $row
+                //'row' => $row->item
             ];
         });
 
@@ -129,10 +135,16 @@ class CartController extends Controller
             $message  = "Class added to cart successfully.";
         }
 
-        if($request->item_type === "COURSE"){
+        if($request->item_type === "SCHOOL_COURSE"){
             $modelName = 'App\Models\Course';
             $message = "Course added to cart successfully.";
         }
+
+        if($request->item_type === "SCHOOL_COURSE_CHAPTER"){
+            $modelName = 'App\Models\Course';
+            $message = "Course chapter added to cart successfully.";
+        }
+
 
         $item = CartItem::updateOrCreate($find,[
                 'title'    => $request->title,

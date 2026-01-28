@@ -13,27 +13,27 @@ use Illuminate\Support\Facades\Hash;
 
 class SchoolController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $schools  = School::where('status', 'Active')
-            ->with('user:id,full_name,email')
-            ->withCount('tutors')
-            ->withCount('courses')
-            ->withCount('classes')
-            ->get();
+    // /**
+    //  * Display a listing of the resource.
+    //  */
+    // public function index()
+    // {
+    //     $schools  = School::where('status', 'Active')
+    //         ->with('user:id,full_name,email')
+    //         ->withCount('tutors')
+    //         ->withCount('courses')
+    //         ->withCount('classes')
+    //         ->get();
 
-        $schools = $schools->map(function ($school) {
-            $school->short_description = shortDescription($school->about_us, 100);
-            return $school;
-        });
+    //     $schools = $schools->map(function ($school) {
+    //         $school->short_description = shortDescription($school->about_us, 100);
+    //         return $school;
+    //     });
 
 
-        $data['schools'] = $schools;
-        return jsonResponse(true, 'Schools', $data);
-    }
+    //     $data['schools'] = $schools;
+    //     return jsonResponse(true, 'Schools', $data);
+    // }
 
    
 
@@ -165,8 +165,6 @@ class SchoolController extends Controller
 
         return jsonResponse(true, 'School profile updated successfully', $data);
     }
-
-    
 
 
     public function changePassword(Request $request)

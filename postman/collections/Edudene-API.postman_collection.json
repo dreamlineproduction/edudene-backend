@@ -3512,6 +3512,25 @@
           "response": []
         },
         {
+          "name": "Popular Teachers",
+          "id": "6011a11f-2553-4177-afb3-983c0fb84be8",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/popular/tutors",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "popular",
+                "tutors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Courses",
           "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",
           "protocolProfileBehavior": {
@@ -3605,13 +3624,13 @@
               }
             },
             "url": {
-              "raw": "{{BASE_URL}}front/courses/the-complete-prompt-engineering-for-ai-bootcamp-(2026)-1",
+              "raw": "{{BASE_URL}}front/courses/ai-900:-azure-ai-fundamentals-+-20-practice-tests-(dec-2025)-1",
               "host": [
                 "{{BASE_URL}}front"
               ],
               "path": [
                 "courses",
-                "the-complete-prompt-engineering-for-ai-bootcamp-(2026)-1"
+                "ai-900:-azure-ai-fundamentals-+-20-practice-tests-(dec-2025)-1"
               ]
             }
           },
@@ -4069,6 +4088,54 @@
               "raw": "{{BASE_URL}}faqs",
               "host": [
                 "{{BASE_URL}}faqs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cart List",
+          "id": "01c983a6-5ae3-4b61-8246-ee105ce30a42",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "cart_token=39258a6d-df03-4f30-ab02-90e729fe2ae8",
+                "type": "text",
+                "uuid": "b0d8cea2-6814-43a4-a708-86ad56c26805"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/v1/cart",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "cart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Popular Course",
+          "id": "52a267c7-825f-49e4-bd71-50cc938107cd",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/popular/courses",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "popular",
+                "courses"
               ]
             }
           },

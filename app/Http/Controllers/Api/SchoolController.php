@@ -13,6 +13,46 @@ use App\Models\Course;
 
 class SchoolController extends Controller
 {
+  
+    public function index()
+    {
+        $schools  = School::where('status', 'Active')
+            ->with('user:id,full_name,email')
+            ->withCount('tutors')
+            ->withCount('courses')
+            ->withCount('classes')
+            ->get();
+
+        $schools = $schools->map(function ($school) {
+            $school->short_description = shortDescription($school->about_us, 100);
+            return $school;
+        });
+
+
+        $data['schools'] = $schools;
+        return jsonResponse(true, 'Schools', $data);
+    }
+
+    
+    public function popularSchool()
+    {
+        $schools  = School::where('status', 'Active')
+            ->with('user:id,full_name,email')
+            ->withCount('tutors')
+            ->withCount('courses')
+            ->withCount('classes')
+            ->get();
+
+        $schools = $schools->map(function ($school) {
+            $school->short_description = shortDescription($school->about_us, 100);
+            return $school;
+        });
+
+
+        $data['schools'] = $schools;
+        return jsonResponse(true, 'Schools', $data);
+    }
+
     public function show(string $id)
     {
         $q  = School::query();
@@ -59,8 +99,6 @@ class SchoolController extends Controller
         return jsonResponse(true, 'Schools', $data);
     }
 
-
-   
 
     public function viewTimelineModal(string $id)
     {
@@ -219,15 +257,9 @@ class SchoolController extends Controller
 
         $query = Course::query();
         $query->with([
-            'category:id,title',
-            'courseType',
-            'subCategory:id,title',
-            'subSubCategory:id,title',
-            'courseOutcomes',
-            'courseRequirements',
+            'user:id,full_name',
+            'school:id,school_name',           
             'courseAsset',
-            'courseSeo',
-            'courseChapters',
             'reviews'
         ])
         ->where(['school_id'=>$school->id,'status' => 'Active'])

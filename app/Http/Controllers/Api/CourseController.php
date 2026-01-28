@@ -58,16 +58,9 @@ class CourseController extends Controller
        
         // ---------- Relationships ----------
         $query->with([
-            'user',
-            'category',
-            'courseType',
-            'subCategory',
-            'subSubCategory',
-            'courseOutcomes',
-            'courseRequirements',
+            'user:id,full_name',
+            'school:id,school_name',
             'courseAsset',
-            'courseSeo',
-            'courseChapters',
             'reviews'
         ])
         ->withAvg('reviews', 'rating')
@@ -104,11 +97,67 @@ class CourseController extends Controller
         }
 
         $perPage = $request->get('per_page', 10);
-        $courses = $query->paginate($perPage);
+        $paginated = $query->paginate($perPage);
 
-        return jsonResponse(true, 'Course list', $courses);
+        $courses = collect($paginated->items())->map(function ($course) {
+            $course->avg_rating = 4.5;
+            $course->review_count = rand(1,5);
+            $course->enrollment_count = rand(100,500);
+
+            
+            return $course;
+        });
+
+        return jsonResponse(true, 'Course list', [
+            'courses' => $courses,
+            'total' => $paginated->total(),
+            'current_page' => $paginated->currentPage(),
+            'per_page' => $paginated->perPage(),
+        ]);
     }
 
+    public function popularCourse(Request $request)
+    {
+        $perPage = $request->get('per_page', 10);
+       
+
+        $query = Course::query();
+
+        // ---------- Relationships ----------
+        $query->with([
+            'user:id,full_name',
+            'school:id,school_name',
+            'courseAsset',
+            'reviews'
+        ])
+        ->withAvg('reviews', 'rating')
+        ->withCount('reviews');
+
+        
+        $query->orderByDesc('reviews_count')
+                    ->orderByDesc('reviews_avg_rating')
+                    ->orderByDesc('created_at');
+
+
+        $paginated = $query->paginate($perPage);
+
+        $courses = collect($paginated->items())->map(function ($course) {
+            $course->avg_rating = 4.5;
+            $course->review_count = rand(1,5);
+            $course->enrollment_count = rand(100,500);
+
+            
+            return $course;
+        });
+
+        return jsonResponse(true, 'Popular Course list', [
+            'courses' => $courses,
+            'total' => $paginated->total(),
+            'current_page' => $paginated->currentPage(),
+            'per_page' => $paginated->perPage(),
+        ]);
+
+    }
 
     /**
      * Display the specified resource.
@@ -156,7 +205,7 @@ class CourseController extends Controller
             $creator['slug'] = $course->school->school_slug;
             $creator['about_us'] = shortDescription($course->school->about_us,90);
 
-            $totalCourse = Course::where('school_id',$course->school->id)->count();
+            $totalCourse = Course::where(['school_id'=>$course->school->id,'status'=>'Active'])->count();
             $creator['total_course'] = $totalCourse;
 
             $totalClasses = Classes::where('school_id',$course->school->id)->count();
@@ -174,14 +223,14 @@ class CourseController extends Controller
             $creator['about_us'] = $course->user->about_us;
 
 
-            $totalCourse = Course::where('user_id',$course->user->id)->count();
+            $totalCourse = Course::where(['user_id'=>$course->user->id,'status'=>'Active'])->count();
             $creator['total_course'] = $totalCourse;
 
-            $totalClasses = Classes::where('user_id',$course->user->id)->count();
+            //$totalClasses = Classes::where('user_id',$course->user->id)->count();
             $creator['total_classes'] = 0;
 
-            $totalTutors = Course::where('user_id',$course->user->id)->count();
-            $creator['total_classes'] = $totalTutors;
+            //$totalTutors = Course::where('user_id',$course->user->id)->count();
+            $creator['total_classes'] = 0;
         }
 
 
@@ -203,19 +252,5 @@ class CourseController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
