@@ -95,11 +95,14 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
 	Route::get('categories-level-two', [CategoryController::class, 'subCategory']); // Get sub category
 	Route::get('categories-level-three', [CategoryController::class, 'subSubCategory']); // Get sub sub category
 	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category level four
+	Route::get('categories-hierarchical', [CategoryController::class, 'getHierarchicalCategories']); // Get all categories with hierarchy
 
     Route::get('tutors', [TutorController::class, 'index']); // Get all tutors
 
+    // Tutor Routes
     Route::apiResource('classes', ClassController::class);
     Route::get('classes/{classId}/sessions', [ClassSessionController::class, 'index']);
     Route::put('classes/{classId}/sessions', [ClassSessionController::class, 'update']);
+
 
 });

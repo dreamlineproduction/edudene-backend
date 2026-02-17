@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\DB;
 class OneOnOneClassSlotController extends Controller
 {
 	/**
-     *  Fetch slots of a specific tutor grouped by date with pagination
+     *  Fetch slots of a specific tutor grouped by date
     */ 
 	public function index(Request $request) {
-        $perPage = $request->get('per_page', 10);
         $tutorId = auth('sanctum')->user()->id;
 
         // Build base query for slots
@@ -33,19 +32,8 @@ class OneOnOneClassSlotController extends Controller
             $slotQuery = $slotQuery->whereDate('class_date', $request->date);
         }
 
-        // Get unique dates for pagination
-        $datesQuery = clone $slotQuery;
-        $datesPaginated = $datesQuery
-            ->select('class_date')
-            ->groupBy('class_date')
-            ->orderBy('class_date', 'asc')
-            ->paginate($perPage);
-
-        $dates = $datesPaginated->getCollection()->pluck('class_date')->toArray();
-
-        // Fetch all slots for these dates
-        $slots = OneOnOneClassSlot::where('tutor_id', $tutorId)
-            ->whereIn('class_date', $dates)
+        // Fetch all slots
+        $slots = $slotQuery
             ->orderBy('class_date', 'asc')
             ->orderBy('start_time', 'asc')
             ->get();
@@ -76,29 +64,24 @@ class OneOnOneClassSlotController extends Controller
         return jsonResponse(
             true,
             'Slots fetched successfully',
-            [
-                'slots' => $formattedSlots,
-                'pagination' => [
-                    'total' => $datesPaginated->total(),
-                    'per_page' => $datesPaginated->perPage(),
-                    'current_page' => $datesPaginated->currentPage(),
-                    'last_page' => $datesPaginated->lastPage(),
-                ]
-            ]
+            ['slots' => $formattedSlots]
         );
 	}
 
     /**
      * Create a new slot or multiple slots based on date range
+     * Can also copy slots from a specific date to destination date(s)
      */
     public function store(Request $request)
     {
         $data = $request->validate([
-            'from_date'    => ['required', 'date_format:Y-m-d'],
-            'to_date'      => ['nullable', 'date_format:Y-m-d'],
-            'start_time'   => ['required', 'date_format:H:i'],
-            'end_time'     => ['required', 'date_format:H:i', 'after:start_time'],
-            'is_free_trial'=> ['boolean'],
+            'from_date'      => ['required', 'date_format:Y-m-d'],
+            'to_date'        => ['nullable', 'date_format:Y-m-d'],
+            'start_time'     => ['nullable'],
+            'end_time'       => ['nullable'],
+            'is_free_trial'  => ['boolean'],
+            'timezone'       => ['nullable'],
+            'copy_from_date' => ['nullable', 'date_format:Y-m-d'],
         ]);
 
         $tutorId = auth('sanctum')->user()->id;
@@ -115,45 +98,149 @@ class OneOnOneClassSlotController extends Controller
             $dates = $this->getDateRange($fromDate, $toDate);
         }
 
-        // Check for overlaps on all dates before creating any slots
-        foreach ($dates as $date) {
-            $overlap = OneOnOneClassSlot::where('tutor_id', $tutorId)
-                ->where('class_date', $date)
-                ->where(function ($q) use ($data) {
-                    $q->where('start_time', '<', $data['end_time'])
-                      ->where('end_time', '>', $data['start_time']);
-                })
-                ->exists();
+        // Check if copying from a specific date
+        if ($data['copy_from_date']) {
+            // Get all slots from the source date
+            $sourceSlots = OneOnOneClassSlot::where('tutor_id', $tutorId)
+                ->where('class_date', $data['copy_from_date'])
+                ->orderBy('start_time', 'asc')
+                ->get();
 
-            if ($overlap) {
-               	return jsonResponse(
-					false, 
-					'Slot overlaps with an existing slot on ' . $date, 
-					[],
-					422
-				);
+            if ($sourceSlots->isEmpty()) {
+                return jsonResponse(
+                    false,
+                    'No slots found on ' . $data['copy_from_date'] . ' to copy',
+                    [],
+                    404
+                );
             }
-        }
 
-        // Create slots for all dates
-        $slots = [];
-        foreach ($dates as $date) {
-            $slot = OneOnOneClassSlot::create([
-                'tutor_id'      => $tutorId,
-                'class_date'    => $date,
-                'start_time'    => $data['start_time'],
-                'end_time'      => $data['end_time'],
-				'timezone'      => $request->timezone,
-                'is_free_trial' => $data['is_free_trial'] ?? false,
-            ]);
-            $slots[] = $slot;
-        }
+            // Check for overlaps on all destination dates before creating any slots
+            foreach ($dates as $destinationDate) {
+                foreach ($sourceSlots as $sourceSlot) {
+                    $overlap = OneOnOneClassSlot::where('tutor_id', $tutorId)
+                        ->where('class_date', $destinationDate)
+                        ->where(function ($q) use ($sourceSlot) {
+                            $q->where('start_time', '<', $sourceSlot->end_time)
+                              ->where('end_time', '>', $sourceSlot->start_time);
+                        })
+                        ->exists();
 
-		return jsonResponse(
-			true, 
-			count($slots) === 1 ? 'Slot created successfully' : count($slots) . ' slots created successfully',
-			['slots'   => $slots, 'count'   => count($slots)],
-		);
+                    if ($overlap) {
+                        return jsonResponse(
+                            false,
+                            'Slot overlaps with an existing slot on ' . $destinationDate,
+                            [],
+                            422
+                        );
+                    }
+                }
+            }
+
+            // Create slots by copying from source date
+            $slots = [];
+            foreach ($dates as $destinationDate) {
+                foreach ($sourceSlots as $sourceSlot) {
+                    $slot = OneOnOneClassSlot::create([
+                        'tutor_id'      => $tutorId,
+                        'class_date'    => $destinationDate,
+                        'start_time'    => $sourceSlot->start_time,
+                        'end_time'      => $sourceSlot->end_time,
+                        'timezone'      => $data['timezone'] ?? $sourceSlot->timezone,
+                        'is_free_trial' => $sourceSlot->is_free_trial,
+                    ]);
+                    $slots[] = $slot;
+                }
+            }
+
+            return jsonResponse(
+                true,
+                count($slots) === 1 ? 'Slot copied successfully' : count($slots) . ' slots copied successfully',
+                ['slots' => $slots, 'count' => count($slots)],
+            );
+        } else {
+            // Validate start_time and end_time are provided for manual creation
+            if (!$data['start_time'] || !$data['end_time']) {
+                return jsonResponse(
+                    false,
+                    'start_time and end_time are required when not copying from a date',
+                    [],
+                    422
+                );
+            }
+
+            // Convert 12-hour format to 24-hour H:i format if needed
+            $startTime = $this->convertTo24HourFormat($data['start_time']);
+            $endTime = $this->convertTo24HourFormat($data['end_time']);
+
+            if (!$startTime) {
+                return jsonResponse(
+                    false,
+                    'start_time must be in H:i or h:i A format',
+                    [],
+                    422
+                );
+            }
+
+            if (!$endTime) {
+                return jsonResponse(
+                    false,
+                    'end_time must be in H:i or h:i A format',
+                    [],
+                    422
+                );
+            }
+
+            // Check if end_time is after start_time
+            if (strtotime($endTime) <= strtotime($startTime)) {
+                return jsonResponse(
+                    false,
+                    'end_time must be after start_time',
+                    [],
+                    422
+                );
+            }
+
+            // Check for overlaps on all dates before creating any slots
+            foreach ($dates as $date) {
+                $overlap = OneOnOneClassSlot::where('tutor_id', $tutorId)
+                    ->where('class_date', $date)
+                    ->where(function ($q) use ($startTime, $endTime) {
+                        $q->where('start_time', '<', $endTime)
+                          ->where('end_time', '>', $startTime);
+                    })
+                    ->exists();
+
+                if ($overlap) {
+                    return jsonResponse(
+                        false, 
+                        'Slot overlaps with an existing slot on ' . $date, 
+                        [],
+                        422
+                    );
+                }
+            }
+
+            // Create slots for all dates
+            $slots = [];
+            foreach ($dates as $date) {
+                $slot = OneOnOneClassSlot::create([
+                    'tutor_id'      => $tutorId,
+                    'class_date'    => $date,
+                    'start_time'    => $startTime,
+                    'end_time'      => $endTime,
+                    'timezone'      => $data['timezone'] ?? null,
+                    'is_free_trial' => $data['is_free_trial'] ?? false,
+                ]);
+                $slots[] = $slot;
+            }
+
+            return jsonResponse(
+                true, 
+                count($slots) === 1 ? 'Slot created successfully' : count($slots) . ' slots created successfully',
+                ['slots'   => $slots, 'count'   => count($slots)],
+            );
+        }
     }
 
     /**
@@ -171,6 +258,32 @@ class OneOnOneClassSlotController extends Controller
         }
 
         return $dates;
+    }
+
+    /**
+     * Convert 12-hour or 24-hour format time to H:i format
+     */
+    private function convertTo24HourFormat($time)
+    {
+        // Try 24-hour format first (H:i or HH:mm)
+        $parsed = \DateTime::createFromFormat('H:i', $time);
+        if ($parsed) {
+            return $parsed->format('H:i');
+        }
+
+        // Try 12-hour format (h:i A)
+        $parsed = \DateTime::createFromFormat('h:i A', $time);
+        if ($parsed) {
+            return $parsed->format('H:i');
+        }
+
+        // Try other common 12-hour formats
+        $parsed = \DateTime::createFromFormat('g:i A', $time);
+        if ($parsed) {
+            return $parsed->format('H:i');
+        }
+
+        return null;
     }
 
     /**
