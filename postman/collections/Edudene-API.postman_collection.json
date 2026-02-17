@@ -3386,12 +3386,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}school/front",
+              "raw": "{{BASE_URL}}front/school",
               "host": [
-                "{{BASE_URL}}school"
+                "{{BASE_URL}}front"
               ],
               "path": [
-                "front"
+                "school"
               ]
             }
           },
@@ -5973,6 +5973,86 @@
               ],
               "path": [
                 "101"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categories",
+          "id": "d5e63625-d2e3-4362-b2ba-49555726ec1b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}categories",
+              "host": [
+                "{{BASE_URL}}categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categories Level Two",
+          "id": "f0374c45-81ef-437a-a6fd-fc426668247a",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}categories-level-two?category_id=1,2",
+              "host": [
+                "{{BASE_URL}}categories-level-two"
+              ],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "1,2",
+                  "uuid": "a2a5c9e3-3be1-4973-9a27-d7218f3c378f"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categories Level Three",
+          "id": "6e96059c-4e79-42ba-95aa-132759c5aaa9",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}categories-level-three?sub_category_id=1",
+              "host": [
+                "{{BASE_URL}}categories-level-three"
+              ],
+              "query": [
+                {
+                  "key": "sub_category_id",
+                  "value": "1",
+                  "uuid": "6efc4a6b-6006-4753-bb88-f6ffd1d27059"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categories Level Four",
+          "id": "44514fd5-5857-4f83-9680-1a1984ff6fd5",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}categories-level-four?sub_sub_category_id=1",
+              "host": [
+                "{{BASE_URL}}categories-level-four"
+              ],
+              "query": [
+                {
+                  "key": "sub_sub_category_id",
+                  "value": "1"
+                }
               ]
             }
           },

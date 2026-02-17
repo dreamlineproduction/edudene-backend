@@ -14,23 +14,122 @@ use App\Models\Course;
 class SchoolController extends Controller
 {
   
-    public function index()
+    public function index(Request $request)
     {
-        $schools  = School::where('status', 'Active')
-            ->with('user:id,full_name,email')
-            ->withCount('tutors')
-            ->withCount('courses')
-            ->withCount('classes')
-            ->get();
+        $hasFilter = false;
 
-        $schools = $schools->map(function ($school) {
+        $search = trim($request->search);
+
+        $categoryIds          = $request->category_id ? explode(',', $request->category_id) : [];
+        $subCategoryIds       = $request->sub_category_id  ? explode(',', $request->sub_category_id)   : [];
+        $subSubCategoryIds    = $request->sub_sub_category_id  ? explode(',', $request->sub_sub_category_id)  : [];
+        $levelFourCategoryIds = $request->sub_sub_sub_category_id  ? explode(',', $request->sub_sub_sub_category_id) : [];
+
+        
+        if(!empty($categoryIds) || 
+            !empty($subCategoryIds) || 
+            !empty($subSubCategoryIds) || 
+            !empty($levelFourCategoryIds)) {
+
+            $hasFilter = true;
+        }
+
+
+        $schools = School::where('status', 'Active')
+            ->with('user:id,full_name,email')
+            ->withCount(['tutors', 'courses', 'classes']);
+
+        if (!empty($search)) {
+
+               //$schools->where('school_name', 'LIKE', "%{$search}%"); 
+            
+            $schools->where(function ($q) use ($search) {
+                foreach (explode(' ', $search) as $word) {
+                    $q->where('school_name', 'LIKE', "%{$word}%");
+                }
+            });
+        }
+
+        $schools->when($hasFilter, function ($query) use (
+                $categoryIds,
+                $subCategoryIds,
+                $subSubCategoryIds,
+                $levelFourCategoryIds
+            ) {
+
+                $query->where(function ($query) use (
+                    $categoryIds,
+                    $subCategoryIds,
+                    $subSubCategoryIds,
+                    $levelFourCategoryIds
+                ) {
+
+                    $query->whereHas('classes', function ($q) use (
+                        $categoryIds,
+                        $subCategoryIds,
+                        $subSubCategoryIds,
+                        $levelFourCategoryIds
+                    ) {
+
+                        if ($categoryIds) {
+                            $q->whereIn('category_id', $categoryIds);
+                        }
+
+                        if ($subCategoryIds) {
+                            $q->whereIn('sub_category_id', $subCategoryIds);
+                        }
+
+                        if ($subSubCategoryIds) {
+                            $q->whereIn('sub_sub_category_id', $subSubCategoryIds);
+                        }
+
+                        if ($levelFourCategoryIds) {
+                            $q->whereIn('sub_sub_sub_category_id', $levelFourCategoryIds);
+                        }
+                    })
+
+                    ->orWhereHas('courses', function ($q) use (
+                        $categoryIds,
+                        $subCategoryIds,
+                        $subSubCategoryIds,
+                        $levelFourCategoryIds
+                    ) {
+
+                        if ($categoryIds) {
+                            $q->whereIn('category_id', $categoryIds);
+                        }
+
+                        if ($subCategoryIds) {
+                            $q->whereIn('sub_category_id', $subCategoryIds);
+                        }
+
+                        if ($subSubCategoryIds) {
+                            $q->whereIn('sub_sub_category_id', $subSubCategoryIds);
+                        }
+
+                        if ($levelFourCategoryIds) {
+                            $q->whereIn('sub_sub_sub_category_id', $levelFourCategoryIds);
+                        }
+                    });
+                });
+            });
+
+
+        
+        $schools = $schools->latest()->paginate(20);
+
+        $schools->getCollection()->transform(function ($school) {
             $school->short_description = shortDescription($school->about_us, 100);
             return $school;
         });
 
-
-        $data['schools'] = $schools;
-        return jsonResponse(true, 'Schools', $data);
+      
+        return jsonResponse(true, 'Categories fetched successfully', [
+            'schools' => $schools->items(),
+            'total' => $schools->total(),
+            'current_page' => $schools->currentPage(),
+            'per_page' => $schools->perPage(),
+        ]);
     }
 
     
@@ -165,6 +264,8 @@ class SchoolController extends Controller
 
     public function classes(Request $request, $id)
     {
+        $today = (new \DateTime())->format('Y-m-d');
+
         $q  = School::query();
 
         if(is_numeric($id)){
@@ -191,6 +292,7 @@ class SchoolController extends Controller
         ]);
 
         $query->where(['school_id'=>$school->id,'status' => 'Approved']);
+        //$query->whereDate('end_date', '>=', $today);
 
         $perPage = $request->get('per_page', 10);
         $classes = $query->paginate($perPage);
@@ -238,6 +340,7 @@ class SchoolController extends Controller
         $data['classes'] = $classes;
         return jsonResponse(true, 'Classes list', $data);
     }
+
 
     public function course(Request $request, $id)
     {

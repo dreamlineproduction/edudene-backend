@@ -21,34 +21,42 @@ class CategoryController extends Controller
 	}
 
 	public function subCategory(Request $request){
+		$categoryIds = @explode(',', $request->category_id);
+
+
 		$subCategories = SubCategory::where('status', 'Active')
-							->where('category_id', $request->category_id)
+							->whereIn('category_id', $categoryIds)
 							->get();
 		return jsonResponse(
 			true, 
-			'Category feteched successflly', 
+			'Category Level Two feteched successflly', 
 			['subCategories' => $subCategories]
 		);
 	}
 
 	public function subSubCategory(Request $request){
+
+		$subCategoryIds = @explode(',', $request->sub_category_id);
+
 		$subCategories = SubSubCategory::where('status', 'Active')
-							->where('sub_category_id', $request->sub_category_id)
+							->whereIn('sub_category_id', $subCategoryIds)
 							->get();
 		return jsonResponse(
 			true, 
-			'Category feteched successflly', 
+			'Category Level Three feteched successflly', 
 			['subCategories' => $subCategories]
 		);
 	}
 
 	public function categoryLevelFour(Request $request){
+		$subSubCategoryIds = @explode(',', $request->sub_sub_category_id);
+
 		$subCategories = CategoryLevelFour::where('status', 'Active')
-							->where('sub_sub_category_id', $request->sub_sub_category_id)
+							->whereIn('sub_sub_category_id', $subSubCategoryIds)
 							->get();
 		return jsonResponse(
 			true, 
-			'Category feteched successflly', 
+			'Category Level Four feteched successflly', 
 			['subCategories' => $subCategories]
 		);
 	}

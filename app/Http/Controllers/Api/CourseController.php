@@ -10,36 +10,44 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index(Request $request)
     {
         $query = Course::query();
 
-        // ------------Filter---------------
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
+        $categoryIds          = $request->category_id ? explode(',', $request->category_id) : [];
+        $subCategoryIds       = $request->sub_category_id ? explode(',', $request->sub_category_id) : [];
+        $subSubCategoryIds    = $request->sub_sub_category_id ? explode(',', $request->sub_sub_category_id) : [];
+        $levelFourCategoryIds = $request->sub_sub_sub_category_id ? explode(',', $request->sub_sub_sub_category_id) : [];
+
+        if (!empty($categoryIds)) {
+            $query->whereIn('category_id', $categoryIds);
         }
 
-        if ($request->filled('category_level_two_id')) {
-            $query->where('sub_category_id', $request->category_level_two_id);
+        if (!empty($subCategoryIds)) {
+            $query->whereIn('sub_category_id', $subCategoryIds);
         }
 
-        if ($request->filled('category_level_three_id')) {
-            $query->where('sub_sub_category_id', $request->category_level_three_id);
+        if (!empty($subSubCategoryIds)) {
+            $query->whereIn('sub_sub_category_id', $subSubCategoryIds);
         }
 
-        if ($request->filled('category_level_four_id')) {
-            $query->where('category_level_four_id', $request->category_level_four_id);
+        if (!empty($levelFourCategoryIds)) {
+            $query->whereIn('sub_sub_sub_category_id', $levelFourCategoryIds);
         }
 
         if ($request->filled('country_id')) {
             $query->where('country_id', $request->country_id);
         }
 
-        if ($request->filled('title')) {
-            $query->where('title', 'like', '%' . $request->title . '%');
+        // ---------- SEARCH ----------
+        $search = trim($request->search);
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                foreach (explode(' ', $search) as $word) {
+                    $q->where('title', 'LIKE', "%{$word}%");
+                }
+            });
         }
 
         if ($request->filled('min_price')) {
@@ -50,13 +58,14 @@ class CourseController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        // ---------- Rating Filter ----------
+        // ---------- RATING ----------
         if ($request->filled('rating')) {
-            $query->withAvg('reviews', 'rating')
-                ->having('reviews_avg_rating', '>=', $request->rating);
+            $query->whereHas('reviews', function ($q) use ($request) {
+                $q->havingRaw('AVG(rating) >= ?', [$request->rating]);
+            });
         }
-       
-        // ---------- Relationships ----------
+
+        // ---------- RELATIONSHIPS ----------
         $query->with([
             'user:id,full_name',
             'school:id,school_name',
@@ -66,46 +75,39 @@ class CourseController extends Controller
         ->withAvg('reviews', 'rating')
         ->withCount('reviews');
 
-        
-        // ---------- Sorting ----------
-        if ($request->filled('sort_by')) {
-            switch ($request->sort_by) {
-                case 'price_asc':
-                    $query->orderBy('price', 'asc');
-                    break;
-                case 'price_desc':
-                    $query->orderBy('price', 'desc');
-                    break;
-                case 'rating_desc':
-                    $query->orderBy('reviews_avg_rating', 'desc');
-                    break;
-                case 'latest':
-                    $query->orderBy('created_at', 'desc');
-                    break;
-                default:
-                    // fallback if an unknown sort is passed
-                    $query->orderByDesc('reviews_count')
-                            ->orderByDesc('reviews_avg_rating')
-                            ->orderByDesc('created_at');
-                    break;
-            }
-        } else {
-            // ---------- Default sort: Most popular ----------
-            $query->orderByDesc('reviews_count')
-                    ->orderByDesc('reviews_avg_rating')
-                    ->orderByDesc('created_at');
+        // ---------- SORT ----------
+        switch ($request->sort_by) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+
+            case 'rating_desc':
+                $query->orderBy('reviews_avg_rating', 'desc');
+                break;
+
+            case 'latest':
+                $query->latest();
+                break;
+
+            default:
+                $query->orderByDesc('reviews_count')
+                      ->orderByDesc('reviews_avg_rating')
+                      ->orderByDesc('created_at');
+                break;
         }
 
         $perPage = $request->get('per_page', 10);
         $paginated = $query->paginate($perPage);
 
-        $courses = collect($paginated->items())->map(function ($course) {
-            $course->avg_rating = 4.5;
-            $course->review_count = rand(1,5);
-            $course->enrollment_count = rand(100,500);
-
-            
-            return $course;
+        $courses = collect($paginated->items())->map(function ($course) { 
+            $course->avg_rating = 4.5; 
+            $course->review_count = rand(1,5); 
+            $course->enrollment_count = rand(100,500); 
+            return $course; 
         });
 
         return jsonResponse(true, 'Course list', [
@@ -115,6 +117,7 @@ class CourseController extends Controller
             'per_page' => $paginated->perPage(),
         ]);
     }
+
 
     public function popularCourse(Request $request)
     {

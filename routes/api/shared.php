@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\StateController;
 use App\Http\Controllers\Api\TutorController;
+use App\Http\Controllers\Api\CheckoutController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Tutor\CourseChapterController;
@@ -34,11 +35,19 @@ Route::prefix('v1')->group(function () {
     Route::get('settings', [SettingController::class, 'show']);
 
     
-
+    // Categories
+	Route::get('categories', [CategoryController::class, 'index']); // Get main category
+	Route::get('categories-level-two', [CategoryController::class, 'subCategory']); // Get sub category
+	Route::get('categories-level-three', [CategoryController::class, 'subSubCategory']); // Get sub sub category
+	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category level four
 });
 
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [UserAuthController::class, 'logout']);
+
+    // Create stripe
+    Route::post('/create-payment-intent', [CheckoutController::class, 'createPaymentIntent']);
+
 
     // Course Routes
     Route::get('course', [CourseController::class, 'index']);
@@ -89,12 +98,6 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     // Message Management
     Route::get('/chat/{chat}', [ChatController::class, 'getMessages']); // Get history for a chat
     Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage']); // Send a new message    
-
-	// Categories
-	Route::get('categories', [CategoryController::class, 'index']); // Get main category
-	Route::get('categories-level-two', [CategoryController::class, 'subCategory']); // Get sub category
-	Route::get('categories-level-three', [CategoryController::class, 'subSubCategory']); // Get sub sub category
-	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category level four
 	Route::get('categories-hierarchical', [CategoryController::class, 'getHierarchicalCategories']); // Get all categories with hierarchy
 
     Route::get('tutors', [TutorController::class, 'index']); // Get all tutors
@@ -103,6 +106,5 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('classes', ClassController::class);
     Route::get('classes/{classId}/sessions', [ClassSessionController::class, 'index']);
     Route::put('classes/{classId}/sessions', [ClassSessionController::class, 'update']);
-
 
 });

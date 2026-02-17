@@ -21,16 +21,21 @@ class CartController extends Controller
      */
     private function getCart(Request $request)
     {
+        if (auth('sanctum')->check()) {
+            return Cart::firstOrCreate(
+                ['user_id' => auth('sanctum')->id()],
+                ['cart_token' => null]
+            );
+        }
+
         $token = $request->cookie('cart_token');
 
         if (!$token) {
-            return null;
+            $token = bin2hex(random_bytes(16));
+            Cookie::queue('cart_token', $token, 60 * 24 * 7);
         }
 
-        return Cart::firstOrCreate(
-            ['cart_token' => $token],
-            ['user_id' => Auth::id()]
-        );
+        return Cart::firstOrCreate(['cart_token' => $token]);
     }
 
 
@@ -213,19 +218,12 @@ class CartController extends Controller
     }
 
 
-    public function mergeAfterLogin(Request $request,$userId = 0)
+    public function mergeAfterLogin(Request $request, $userId)
     {
-
         $token = $request->cookie('cart_token');
-        //$user  = auth('sanctum')->user();
 
-        //print_r($user);
+        if (!$token || !$userId) return;
 
-        if (!$token || $userId === 0) {
-            return;
-        }
-
-        echo 'He12';
         $guestCart = Cart::with('items')
             ->where('cart_token', $token)
             ->whereNull('user_id')
@@ -233,13 +231,13 @@ class CartController extends Controller
 
         if (!$guestCart) return;
 
+        // Find or create user's cart
         $userCart = Cart::firstOrCreate(
             ['user_id' => $userId],
             ['cart_token' => null]
         );
 
         foreach ($guestCart->items as $item) {
-
             $existing = CartItem::where('cart_id', $userCart->id)
                 ->where('item_type', $item->item_type)
                 ->where('item_id', $item->item_id)
@@ -249,18 +247,12 @@ class CartController extends Controller
                 $existing->qty += $item->qty;
                 $existing->save();
             } else {
-                CartItem::create([
-                    'cart_id'   => $userCart->id,
-                    'item_type' => $item->item_type,
-                    'item_id'   => $item->item_id,
-                    'title'     => $item->title,
-                    'price'     => $item->price,
-                    'qty'       => $item->qty,
-                    'metadata'  => $item->metadata,
-                ]);
+                $item->cart_id = $userCart->id;
+                $item->save();
             }
         }
 
+        // Delete guest cart
         $guestCart->delete();
 
         Cookie::queue(Cookie::forget('cart_token'));
