@@ -285,10 +285,12 @@ class SchoolController extends Controller
         $query->with([
             'class_type:id,title,status',
             'category:id,title',
-            'sub_category:id,title',
-            'sub_sub_category:id,title',
-            'category_level_four:id,title',
-            'tutor:id,full_name,email',   
+            'sub_category:id,title,category_id',
+            'sub_sub_category:id,title,sub_category_id',
+            'category_level_four:id,title,sub_sub_category_id',
+            'tutor:id,full_name,email',
+            'school:id,user_id,school_name,school_slug',
+            'school.user:id,full_name,avatar',
         ]);
 
         $query->where(['school_id'=>$school->id,'status' => 'Approved']);

@@ -81,6 +81,7 @@ class CartController extends Controller
 
             return [
                 'id'        => $row->id,
+                'item_id'        => $row->item_id,
                 'title'     => $row->title,
                 'price'     => $row->price,
                 'discount_price'     => $row->discount_price,
@@ -150,6 +151,11 @@ class CartController extends Controller
             $message = "Course chapter added to cart successfully.";
         }
 
+        if($request->item_type === "TUTOR_SLOT"){
+            $modelName = 'App\Models\OneOnOneClassSlot';
+            $message = "Slot added to cart successfully.";
+        }
+
 
         $item = CartItem::updateOrCreate($find,[
                 'title'    => $request->title,
@@ -197,6 +203,16 @@ class CartController extends Controller
 
         CartItem::where('cart_id', $cart->id)
             ->where('id', $id)
+            ->delete();
+
+        return response()->json([
+            'message' => 'Item removed'
+        ]);
+    }
+
+    public function removeViaItemId(Request $request, $itemId,$type)
+    {
+        CartItem::where(['item_id'=>$itemId,'item_type'=>$type])
             ->delete();
 
         return response()->json([

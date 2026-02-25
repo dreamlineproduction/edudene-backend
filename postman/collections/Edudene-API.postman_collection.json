@@ -3450,12 +3450,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1/classes",
+              "raw": "{{BASE_URL}}front/school/green-valley-public-school-1/classes",
               "host": [
-                "{{BASE_URL}}school"
+                "{{BASE_URL}}front"
               ],
               "path": [
-                "front",
+                "school",
                 "green-valley-public-school-1",
                 "classes"
               ]
@@ -4136,6 +4136,126 @@
               "path": [
                 "popular",
                 "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor Details",
+          "id": "15dc1a0a-c876-4269-8d90-0b453ee6cfe1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/tutors/kissa",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "tutors",
+                "kissa"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor Class List",
+          "id": "c67d4e51-b4c8-4b33-a3d3-1cec58b1cffa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/tutors/kissa/classes",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "tutors",
+                "kissa",
+                "classes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor Course List",
+          "id": "d2074a08-c349-4319-bdca-b31b89116d3f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/tutors/kissa/courses",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "tutors",
+                "kissa",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor One On One Slot",
+          "id": "2aabb04c-6be4-4714-8e7e-ad2f15ac3853",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/tutors/kissa/one-on-one",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "tutors",
+                "kissa",
+                "one-on-one"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor Month Wise Slot",
+          "id": "95859562-0cf3-4d67-8b58-3e4229661f8d",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/tutors/kissa/month-wise-slots",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "tutors",
+                "kissa",
+                "month-wise-slots"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor Date Slots",
+          "id": "1ecf279f-99e6-4aad-bc2d-9e48faaed869",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}front/tutors/kissa/one-on-one-slots/2026-03-31",
+              "host": [
+                "{{BASE_URL}}front"
+              ],
+              "path": [
+                "tutors",
+                "kissa",
+                "one-on-one-slots",
+                "2026-03-31"
               ]
             }
           },
@@ -6144,9 +6264,103 @@
       "id": "c7b54de4-b1aa-4ee6-b03a-b77158c38f88"
     },
     {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "id": "358a7735-b60c-4ccb-af3d-ec7bc4e661e6",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "249|edudene_token_9WWFDO1i9r00CktxPvKtHeKmghKlMgi5gluiB4sw2baf48e3",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "45c570d4-ebd0-4d08-a6d4-a111fcad34d5"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "13cf13c7-4471-49b8-811d-c41e9e4ed6f8"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cart_id\":42\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}orders",
+              "host": [
+                "{{BASE_URL}}orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Order",
+          "id": "0ae90a8d-3828-4c27-b14d-74f9571b9c56",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "249|edudene_token_9WWFDO1i9r00CktxPvKtHeKmghKlMgi5gluiB4sw2baf48e3",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "c42e21b2-20ec-4b8f-9964-73c36870c1e2"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "e9810fe6-c951-4093-b19c-a9f40d612743"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}orders/ORD-6W7ACLJ44L",
+              "host": [
+                "{{BASE_URL}}orders"
+              ],
+              "path": [
+                "ORD-6W7ACLJ44L"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "55db9599-f237-4366-9681-c76accb5fda6"
+    },
+    {
       "name": "New Folder",
       "item": [],
-      "id": "55db9599-f237-4366-9681-c76accb5fda6"
+      "id": "32480765-89ad-43c7-92be-f75481140477"
     },
     {
       "name": "Testing API For Image",
