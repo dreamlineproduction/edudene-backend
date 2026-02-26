@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\Api\CourseReviewController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\User\UserVerificationController as FrontUserVerificationController;
 
 Route::prefix('v1')->middleware(['auth:sanctum','role:1'])->group(function () {
@@ -26,4 +27,9 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:1'])->group(function () {
     // Course Review Routes
     Route::get('courses/review/{COURSE_ID}', [CourseReviewController::class, 'index']);
     Route::post('courses/review/{COURSE_ID}', [CourseReviewController::class, 'store']);
+
+
+    Route::post('orders', [OrderController::class, 'store']);
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::get('orders/{id}', [OrderController::class, 'show']);
 });

@@ -120,8 +120,6 @@ class UserAuthController extends Controller
         }
         
 
-      
-
         // Check if user is temporarily inactive due to too many failed login attempts
         if ($user->temporary_status === 'Inactive') {
             return jsonResponse(false, 'Your account is temporarily inactive due to too many failed login attempts.Please try again later or contact support.', [], 400);
@@ -148,6 +146,7 @@ class UserAuthController extends Controller
 
             // Log the failed login attempt
             $find = ['email' => $request->email];
+
             LoginAttempt::updateOrCreate($find, [
                 'user_id' => $user->id,
                 'ip_address' => $request->ip(),
@@ -163,18 +162,14 @@ class UserAuthController extends Controller
         // Clear login attempts on successful login
         LoginAttempt::where('email', $request->email)->delete();
 
-
-        
-
         // Generate token
         app(CartController::class)->mergeAfterLogin($request,$user->id);
         $token = $user->createToken('auth_token')->plainTextToken;
 
-       
-
+    
         $data['user'] = $user;
         $data['token'] = $token;
-        //return jsonResponse(true, 'Login successfully.', $data);
+        return jsonResponse(true, 'Login successfully.', $data);
     }
 
 

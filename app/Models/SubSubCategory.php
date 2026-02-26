@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SubSubCategory extends Model
 {
-    //
+    
     protected $fillable = [
         'category_id',
         'sub_category_id',
@@ -28,5 +28,10 @@ class SubSubCategory extends Model
     public function categoryLevelTwo()
     {
         return $this->belongsTo(SubCategory::class, 'sub_category_id');
+    }
+
+    public function categoryLevelFours()
+    {
+        return $this->hasMany(CategoryLevelFour::class, 'sub_sub_category_id');
     }
 }

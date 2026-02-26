@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class CategoryLevelFour extends Model
 {
 
+	protected $table = "category_level_fours";
+
     protected $fillable = [
         'category_id',
         'sub_category_id',

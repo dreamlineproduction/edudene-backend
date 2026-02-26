@@ -51,10 +51,36 @@ class Tutor extends Model
 		'trainer_hourly_rate'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function school()
+    {
+            return $this->hasOneThrough(
+                School::class,
+                SchoolUser::class,
+                'user_id',    // school_users.user_id
+                'id',         // schools.id
+                'user_id',    // tutors.user_id
+                'school_id'   // school_users.school_id
+            )->select([
+                'schools.id',
+                'schools.school_name',
+                'schools.school_slug',
+            ]);
+    }
 
     public function courses()
     {
-        return $this->hasMany(Course::class, 'user_id');
+        return $this->hasMany(Course::class, 'user_id', 'user_id'); 
+    }
+
+
+    public function classes()
+    {
+        return $this->hasMany(Classes::class, 'tutor_id', 'user_id');
     }
 
     protected $hidden = [ 
