@@ -113,7 +113,8 @@ class TutorController extends Controller
 
     public function show(Request $request, $id)
     {
-        $user = User::where('role_id', 2)->where('status', 'Active');
+        $user = User::whereIn('role_id', [2,4])->where('status', 'Active');
+        
         if(is_numeric($id)){
             $user->where('id', $id);
         } else {
@@ -167,7 +168,7 @@ class TutorController extends Controller
     {
         $today = (new \DateTime())->format('Y-m-d');
 
-        $user = User::where('role_id', 2)->where('status', 'Active');
+        $user = User::whereIn('role_id', [2,4])->where('status', 'Active');
         if(is_numeric($id)){
             $user->where('id', $id);
         } else {
@@ -246,7 +247,7 @@ class TutorController extends Controller
 
     public function course(Request $request, $id)
     {
-        $user = User::where('role_id', 2)->where('status', 'Active');
+        $user = User::whereIn('role_id', [2,4])->where('status', 'Active');
         if(is_numeric($id)){
             $user->where('id', $id);
         } else {
@@ -290,7 +291,7 @@ class TutorController extends Controller
 
     public function getMonthWiseSlots($id)
     {
-        $user = User::where('role_id', 2)->where('status', 'Active');
+        $user = User::whereIn('role_id', [2,4])->where('status', 'Active');
         if(is_numeric($id)){
             $user->where('id', $id);
         } else {
@@ -353,7 +354,7 @@ class TutorController extends Controller
 
     public function getOneOnOneCalendar(Request $request, $id) 
     {
-        $user = User::where('role_id', 2)->where('status', 'Active');
+        $user = User::whereIn('role_id', [2,4])->where('status', 'Active');
         if(is_numeric($id)){
             $user->where('id', $id);
         } else {
@@ -403,7 +404,7 @@ class TutorController extends Controller
 
     public function oneOnOneSlot(Request $request, $id,$classDate = null) 
     {
-        $user = User::where('role_id', 2)->where('status', 'Active');
+        $user = User::whereIn('role_id', [2,4])->where('status', 'Active');
         if(is_numeric($id)){
             $user->where('id', $id);
         } else {
