@@ -3372,6 +3372,34 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Profile",
+          "id": "616c2aa5-5821-40d8-bb94-56e2e4ebb986",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "261|edudene_token_5UqMjZ2SJQRUYy29ccLUWUIDAAXjLZLkB6OQWaBY9e48be82",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}tutor/profile",
+              "host": [
+                "{{BASE_URL}}tutor"
+              ],
+              "path": [
+                "profile"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "8b2ac66a-7501-4e4a-97c8-472c671876e8"
@@ -3624,13 +3652,13 @@
               }
             },
             "url": {
-              "raw": "{{BASE_URL}}front/courses/ai-900:-azure-ai-fundamentals-+-20-practice-tests-(dec-2025)-1",
+              "raw": "{{BASE_URL}}front/courses/ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents",
               "host": [
                 "{{BASE_URL}}front"
               ],
               "path": [
                 "courses",
-                "ai-900:-azure-ai-fundamentals-+-20-practice-tests-(dec-2025)-1"
+                "ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents"
               ]
             }
           },
@@ -4247,15 +4275,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}front/tutors/kissa/one-on-one-slots/2026-03-31",
+              "raw": "{{BASE_URL}}front/tutors/kissa/one-on-one-slots",
               "host": [
                 "{{BASE_URL}}front"
               ],
               "path": [
                 "tutors",
                 "kissa",
-                "one-on-one-slots",
-                "2026-03-31"
+                "one-on-one-slots"
               ]
             }
           },
@@ -6356,11 +6383,6 @@
         }
       ],
       "id": "55db9599-f237-4366-9681-c76accb5fda6"
-    },
-    {
-      "name": "New Folder",
-      "item": [],
-      "id": "32480765-89ad-43c7-92be-f75481140477"
     },
     {
       "name": "Testing API For Image",

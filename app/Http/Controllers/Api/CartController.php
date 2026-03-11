@@ -9,6 +9,8 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\CartItem;
 use App\Models\CourseAsset;
+use App\Models\CourseChapter;
+use App\Models\Tutor;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
@@ -62,26 +64,41 @@ class CartController extends Controller
                 }                
             }
 
-            if($row->item_type === 'SCHOOL_COURSE') {
+            // Show Course Image Any Course School,Tutor
+            if($row->item_type === 'SCHOOL_COURSE' || $row->item_type === 'TUTOR_COURSE') {
                 $courseAsset = CourseAsset::where('course_id',$row->item_id)->first(); 
 
                 if(!empty($courseAsset) && !empty($courseAsset->poster)){
                     $image = $courseAsset->poster_url;
                 }
             }
-            // Course Chapter Pu
-            if($row->item_type === "SCHOOL_COURSE_CHAPTER") {
-                $courseAsset = CourseAsset::where('course_id',$row->metadata['course_id'])->first(); 
+
+
+            // Show Course Image Any Course Chapter School,Tutor
+            if($row->item_type === 'SCHOOL_COURSE_CHAPTER' || $row->item_type === 'COURSE_CHAPTER') {
+               $courseAsset = CourseAsset::where('course_id',$row->metadata['course_id'])->first(); 
 
                 if(!empty($courseAsset) && !empty($courseAsset->poster)){
                     $image = $courseAsset->poster_url;
                 }
             }
 
+            // Show Course Image Any Course Chapter School,Tutor
+            if($row->item_type === 'SCHOOL_SLOT' || $row->item_type === 'TUTOR_SLOT') {
+               $imageAsset = Tutor::where('user_id',$row->metadata['author_id'])->first(); 
+
+                if(!empty($imageAsset) && !empty($imageAsset->avatar_url)){
+                    $image = $imageAsset->avatar_url;
+                }
+            }
+
+
+
 
             return [
                 'id'        => $row->id,
-                'item_id'        => $row->item_id,
+                'item_type'   => $row->item_type,
+                'item_id'   => $row->item_id,
                 'title'     => $row->title,
                 'price'     => $row->price,
                 'discount_price'     => $row->discount_price,
@@ -136,22 +153,22 @@ class CartController extends Controller
         $modelName = null;
         $message = 'Item added to cart';
 
-        if($request->item_type === 'SCHOOL_CLASS'){
+        if($request->item_type === 'SCHOOL_CLASS' || $request->item_type === 'TUTOR_CLASS'){
             $modelName = 'App\Models\Classes';
             $message  = "Class added to cart successfully.";
         }
 
-        if($request->item_type === "SCHOOL_COURSE"){
+        if($request->item_type === "SCHOOL_COURSE" || $request->item_type === "TUTOR_COURSE"){
             $modelName = 'App\Models\Course';
             $message = "Course added to cart successfully.";
         }
 
-        if($request->item_type === "SCHOOL_COURSE_CHAPTER"){
+        if($request->item_type === "SCHOOL_COURSE_CHAPTER" || $request->item_type === "TUTOR_COURSE_CHAPTER"){
             $modelName = 'App\Models\Course';
             $message = "Course chapter added to cart successfully.";
         }
 
-        if($request->item_type === "TUTOR_SLOT"){
+        if($request->item_type === "TUTOR_SLOT" || $request->item_type === "SCHOOL_SLOT"){
             $modelName = 'App\Models\OneOnOneClassSlot';
             $message = "Slot added to cart successfully.";
         }

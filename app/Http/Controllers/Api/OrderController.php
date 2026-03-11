@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\OneOnOneClassBooking;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
@@ -127,6 +128,17 @@ class OrderController extends Controller
 
                 if (in_array($item->item_type, ['SCHOOL_COURSE', 'SCHOOL_CLASS'])) {
                     $orderItemCreate['school_id'] = $metadata['school_id'] ?? null;
+                }
+
+
+                // 
+                if($item->item_type === 'TUTOR_SLOT') {
+                    OneOnOneClassBooking::create([
+                        'slot_id' => $item->item_id,
+                        'student_id' => $user->id,
+                        'booked_at' => $request->booked_at,
+                        'timezone' => getDefaultTimezone($request->timezone),
+                    ]);    
                 }
 
                 $order->items()->create($orderItemCreate);

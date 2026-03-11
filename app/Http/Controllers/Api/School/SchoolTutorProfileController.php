@@ -29,7 +29,7 @@ class SchoolTutorProfileController extends Controller
     public function show(string $id)
     {
         //
-         $loggedInUser = auth('sanctum')->user();
+        $loggedInUser = auth('sanctum')->user();
 
         $tutor = $loggedInUser
             ->school()

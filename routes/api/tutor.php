@@ -23,7 +23,10 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:2'])->group(function () {
 	Route::post('/tutor/enable-courses', [TutorAvailabilityController::class, 'updateEnableCourses']);
 	Route::post('/tutor/one-to-one-hourly-rate', [TutorPricingController::class, 'updateOneToOneHourlyRate']);
 	Route::post('/tutor/trainer-hourly-rate', [TutorPricingController::class, 'updateTrainerHourlyRate']);
+
 	Route::get('/tutor/profile', [TutorProfileController::class, 'show']);
+	Route::put('/tutor/{TUTOR_ID}', [TutorProfileController::class, 'update']);
+
 
 	// Tutor Settings
 	Route::post('tutor/expertise-subjects', [TutorController::class, 'saveTutorSubjects']); // Save tutor's selected subjects/categories
