@@ -28,6 +28,8 @@ class Tutor extends Model
         'x_url',
         'facebook_url',
         'linkedin_url',
+        'instagram_url',
+        'youtube_url',
         'avatar',
         'avatar_url',
         'police_certificate',

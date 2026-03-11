@@ -46,7 +46,7 @@ class TutorProfileController extends Controller
 		    'full_name' => 'required|string|max:200',
 		    'email' => 'required|email|max:200',
 
-		    'about_us' => 'required|string',
+		    'about' => 'required|string',
 
 		    'address_line_1' => 'required|string|max:200',
 		    'address_line_2' => 'nullable|string|max:200',
@@ -91,7 +91,7 @@ class TutorProfileController extends Controller
         // );
 
         $teacherData = $request->only([
-		    'about_us',
+		    'about',
 		    'address_line_1',
 		    'address_line_2',
 		    'phone_number',
@@ -116,13 +116,15 @@ class TutorProfileController extends Controller
         if ($request->filled('avatar')) {
 
             if ($user && $user->avatar) {
-                deleteS3File($user->logo);
+                deleteS3File($user->avatar);
             }
 
             $document = finalizeFile($request->avatar, 'tutors');
 
-            $schoolData['avtar'] = $document['path'];
-            $schoolData['avtar_url'] = $document['url'];
+            //dd($document);
+
+            $teacherData['avatar'] = $document['path'];
+            $teacherData['avatar_url'] = $document['url'];
         }
 
         /** Create or update school */
@@ -137,6 +139,6 @@ class TutorProfileController extends Controller
             $teacher->toArray()
         );
 
-        return jsonResponse(true, 'School profile updated successfully', $data);
+        return jsonResponse(true, 'Profile has been updated successfully', $data);
     }
 }
