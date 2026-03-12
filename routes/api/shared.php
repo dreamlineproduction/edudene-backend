@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Tutor\CourseLessonController;
 use App\Http\Controllers\Api\User\UserAuthController;
 use App\Http\Controllers\Api\School\ClassController;
 use App\Http\Controllers\Api\School\ClassSessionController;
+use App\Http\Controllers\Api\Tutor\CourseEditRequestController;
 use App\Http\Controllers\Api\Tutor\CourseOutcomeController;
 use App\Http\Controllers\Api\Tutor\CourseRequirmentController;
 
@@ -88,6 +89,11 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::put('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'update']);
     Route::get('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'show']);
     Route::delete('course/{COURSE_ID}/chapter/{CHAPTER_ID}/lesson/{LESSON_ID}', [CourseLessonController::class,'destroy']);    
+
+    // Course Edit Request
+    Route::post('course/{COURSE_ID}/send-edit-request', [CourseEditRequestController::class, 'sendEditRequest']);
+
+
 
     // Chat Contacts & Initialization
     Route::get('/chat/contacts', [ChatController::class, 'contacts']);

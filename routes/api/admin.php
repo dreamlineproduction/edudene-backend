@@ -93,11 +93,14 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::put('admin/schools/{ID}/send-warning', [AdminSchoolController::class, 'sendWarning']);
     Route::apiResource('admin/schools', AdminSchoolController::class);
 
-    // Tutor Routes
+    // Courses Routes
     Route::put('admin/courses/{ID}/change-status', [AdminCourseController::class, 'changeStatus']);
-    Route::apiResource('admin/courses', AdminCourseController::class);
+    Route::get('admin/courses', [AdminCourseController::class, 'index']);
+    Route::get('admin/courses/edit-request-courses', [AdminCourseController::class, 'editRequest']);
 
 	// Subject Requested
 	Route::get('admin/subject-requested', [SubjectRequestController::class, 'index']);
 
+    
+   
 });

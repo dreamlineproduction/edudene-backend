@@ -7,6 +7,7 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Mail\User\CourseDeclineMail;
 use App\Mail\User\CourseInactiveMail;
+use App\Mail\User\CourseEditRequest;
 
 use Illuminate\Support\Facades\Mail;
 
@@ -76,29 +77,60 @@ class CourseController extends Controller
 		]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function editRequest(Request $request) 
     {
         //
+        $courses = Course::query()
+        ->with([
+            'user:id,full_name,email',
+            'category',
+        ])
+        ->where(['is_edit'=>'YES','status' => 'Active']);
+
+        if (!empty($request->search)) {
+            $search = $request->search;
+
+            $courses->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                  ->orWhere('title', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($user) use ($search) {
+                       $user->where('full_name', 'like', "%{$search}%");
+                       $user->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $sortBy = $request->get('sort_by', 'title');
+        $sortDirection = $request->get('sort_direction', 'asc');
+
+        if (in_array($sortBy, ['id', 'title', 'full_name', 'email','created_at'])) {
+            $courses = $courses->orderBy($sortBy, $sortDirection);
+        } else {
+            $courses = $courses->orderBy('title', 'asc');
+        }
+
+        $perPage = (int) $request->get('per_page', 10);
+        $page = (int) $request->get('page', 1);
+
+        $paginated = $courses->paginate($perPage, ['*'], 'page', $page);
+
+        $courses = collect($paginated->items())->map(function ($course) {
+             $course->formatted_created_at = $course->created_at
+                ? formatDisplayDate($course->created_at, 'd-M-Y H:i:A')
+                : null;
+            
+            return $course;
+        });
+
+        return jsonResponse(true, 'User fetched successfully', [
+            'courses' => $courses,
+            'total' => $paginated->total(),
+            'current_page' => $paginated->currentPage(),
+            'per_page' => $paginated->perPage(),
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -186,9 +218,65 @@ class CourseController extends Controller
             
             $course->reason = $request->reason;
             $course->save();
-        }
-
+        }       
 
         return jsonResponse(true, 'Status changed successfully');
     }
+
+
+    public function editRequestStatus(Request $request, $id){
+        $validation = [
+            'status' => 'required', 
+        ];
+        
+
+        $request->validate($validation);
+
+        $course = Course::find($id);
+
+        if (empty($course)) {
+            return jsonResponse(false, 'Course not found in our database', null, 404);
+        }
+
+
+        // Send mail to user course de
+        if($request->status === 'Approved')
+        {
+            $course->status = 'Pending';
+            $course->is_edit = 'NO';
+
+            $course->save();
+
+           
+            $mailData = [
+                'fullName' => $course->user->full_name,
+                'status'   => 'Approved',
+            ];
+
+            Mail::to($course->user->email)->send(
+                new CourseEditRequest($mailData)
+            );
+
+            $course->save();
+        }
+
+       
+        if($request->status === 'Declined')
+        {
+            $mailData = [
+                'fullName' => $course->user->full_name,
+                'status'   => 'Declined',
+            ];
+            
+            Mail::to($course->user->email)->send(
+                new CourseEditRequest($mailData)
+            );
+            
+            $course->is_edit = 'NO';
+            $course->save();
+        }
+
+        return jsonResponse(true, 'Course edit request status has been updated successfully.');
+    }
+
 }
