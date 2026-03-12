@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\MyCourse;
+
 use App\Models\OneOnOneClassBooking;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
@@ -122,11 +124,11 @@ class OrderController extends Controller
                     'metadata' => $metadata,
                 ];
 
-                if (in_array($item->item_type, ['TUTOR_SLOT', 'TUTOR_COURSE'])) {
+                if (in_array($item->item_type, ['TUTOR_SLOT', 'TUTOR_COURSE','TUTOR_COURSE_CHAPTER'])) {
                     $orderItemCreate['tutor_id'] = $metadata['author_id'] ?? null;
                 }
 
-                if (in_array($item->item_type, ['SCHOOL_COURSE', 'SCHOOL_CLASS'])) {
+                if (in_array($item->item_type, ['SCHOOL_COURSE', 'SCHOOL_CLASS','SCHOOL_COURSE_CHAPTER'])) {
                     $orderItemCreate['school_id'] = $metadata['school_id'] ?? null;
                 }
 
@@ -139,6 +141,22 @@ class OrderController extends Controller
                         'booked_at' => $request->booked_at,
                         'timezone' => getDefaultTimezone($request->timezone),
                     ]);    
+                }
+
+                if($item->item_type === 'SCHOOL_COURSE' || $item->item_type === 'TUTOR_COURSE') {
+                    MyCourse::create([
+                        'course_id' => $item->item_id,
+                        'user_id' => $user->id,
+                    ]);    
+                }
+
+                // 
+                if($item->item_type === 'SCHOOL_COURSE_CHAPTER' || $item->item_type === 'TUTOR_COURSE_CHAPTER') {
+                        MyCourse::create([
+                            'user_id' => $user->id,
+                            'course_id' => $metadata['course_id'] ?? null,                        
+                            'chapter_id' => $item->item_id,
+                        ]);    
                 }
 
                 $order->items()->create($orderItemCreate);

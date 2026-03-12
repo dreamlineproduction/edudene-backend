@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\Admin\UserVerificationController;
 use App\Http\Controllers\Api\Admin\TutorController as AdminTutorController;
 use App\Http\Controllers\Api\Admin\SchoolController as AdminSchoolController;
 use App\Http\Controllers\Api\Admin\CourseController as AdminCourseController;
-use App\Http\Controllers\Api\Tutor\SubjectRequestController;
+use App\Http\Controllers\Api\Admin\SubjectRequestController;
 
 // Settings
 
@@ -97,9 +97,14 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::put('admin/courses/{ID}/change-status', [AdminCourseController::class, 'changeStatus']);
     Route::get('admin/courses', [AdminCourseController::class, 'index']);
     Route::get('admin/courses/edit-request-courses', [AdminCourseController::class, 'editRequest']);
+    
+    Route::put('admin/courses/{ID}/change-edit-request-status', [AdminCourseController::class, 'editRequestStatus']);
 
 	// Subject Requested
 	Route::get('admin/subject-requested', [SubjectRequestController::class, 'index']);
+    Route::put('admin/{ID}/subject-requested/approve', [SubjectRequestController::class, 'approve']);
+    Route::put('admin/{ID}/subject-requested/decline', [SubjectRequestController::class, 'decline']);
+
 
     
    

@@ -12,46 +12,6 @@ use Illuminate\Support\Facades\Mail;
 
 class SubjectRequestController extends Controller
 {
-	public function index(Request $request) {
-		$subjects = SubjectRequest::query();
-
-		if (!empty($request->search)) {
-			$subjects = $subjects->where('subject','like','%'.$request->search.'%');
-		}
-
-		$sortBy = $request->get('sort_by');
-    	$sortDirection = $request->get('sort_direction', 'asc');
-
-		if (in_array($sortBy, ['id', 'subject', 'status', 'created_at'])) {
-			$subjects = $subjects->orderBy($sortBy, $sortDirection);
-		} else {
-			$subjects = $subjects->orderBy('id', 'DESC');
-		}
-
-		$perPage = (int) $request->get('per_page', 10);
-    	$page = (int) $request->get('page', 1);
-
-// 		$paginated = $subjects->with(['category','subCategory','subSubCategory','user' => funnction () {
-// 			retrun 0;
-// 0		} ])->paginate($perPage, ['*'], 'page', $page);
-
-		$paginated = $subjects->with([
-			'category',
-			'subCategory',
-			'subSubCategory',
-			'user' => function ($query) {
-				return  $query->select('id', 'full_name', 'email');;
-			}
-		])->paginate($perPage, ['*'], 'page', $page);
-
-		return jsonResponse(true, 'Subjects fetched successfully', [
-			'subjects' => $paginated->items(),
-			'total' => $paginated->total(),
-			'current_page' => $paginated->currentPage(),
-			'per_page' => $paginated->perPage(),
-		]);
-	}
-
     public function store(Request $request) {
 		$validator = Validator::make($request->all(),[
 			'category_id' => 'required',
@@ -73,6 +33,7 @@ class SubjectRequestController extends Controller
 		$model->sub_sub_category_id = $request->sub_sub_category_id;
 		$model->subject = $request->subject;
 		$model->user_id = $userId;
+		$model->status = 'Pending';
 		$model->save();
 		
 		$setting = WebsiteSetting::find(1);
