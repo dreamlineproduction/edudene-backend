@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Tutor\OneOnOneClassSlotController;
+use App\Http\Controllers\Api\Tutor\SubjectRequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Tutor\TutorAuthController;
 use App\Http\Controllers\Api\Tutor\TutorAvailabilityController;
@@ -37,4 +38,7 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:2'])->group(function () {
 	Route::post('/tutor/slots', [OneOnOneClassSlotController::class, 'store']);
     Route::put('/tutor/slots/{slot}', [OneOnOneClassSlotController::class, 'update']);
     Route::delete('/tutor/slots/{slot}', [OneOnOneClassSlotController::class, 'destroy']);
+
+	// Subject Request Routes
+	Route::post('/tutor/request-subjects', [SubjectRequestController::class, 'store']);
 });

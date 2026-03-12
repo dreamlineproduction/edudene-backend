@@ -31,13 +31,13 @@ class TutorController extends Controller
             });
         }
 
-        $sortBy = $request->get('sort_by', 'full_name');
+        $sortBy = $request->get('sort_by');
         $sortDirection = $request->get('sort_direction', 'asc');
 
         if (in_array($sortBy, ['id', 'full_name', 'email', 'timezone', 'login_provider', 'created_at'])) {
             $users->orderBy($sortBy, $sortDirection);
         } else {
-            $users->orderBy('full_name', 'asc');
+            $users->orderBy('id', 'desc');
         }
 
         $perPage = (int) $request->get('per_page', 10);

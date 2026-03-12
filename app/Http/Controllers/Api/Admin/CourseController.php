@@ -46,13 +46,13 @@ class CourseController extends Controller
             });
         }
 
-		$sortBy = $request->get('sort_by', 'title');
+		$sortBy = $request->get('sort_by');
     	$sortDirection = $request->get('sort_direction', 'asc');
 
 		if (in_array($sortBy, ['id', 'title', 'full_name', 'email','created_at'])) {
 			$courses = $courses->orderBy($sortBy, $sortDirection);
 		} else {
-			$courses = $courses->orderBy('title', 'asc');
+			$courses = $courses->orderBy('id', 'DESC');
 		}
 
 		$perPage = (int) $request->get('per_page', 10);

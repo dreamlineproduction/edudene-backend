@@ -37,13 +37,13 @@ class SchoolController extends Controller
             });
         }
 
-        $sortBy = $request->get('sort_by', 'school_name');
+        $sortBy = $request->get('sort_by');
         $sortDirection = $request->get('sort_direction', 'asc');
 
         if (in_array($sortBy, ['id', 'full_name', 'email', 'timezone', 'login_provider', 'created_at'])) {
             $schools->orderBy($sortBy, $sortDirection);
         } else {
-            $schools->orderBy('school_name', 'asc');
+            $schools->orderBy('id', 'desc');
         }
 
         $perPage = (int) $request->get('per_page', 10);

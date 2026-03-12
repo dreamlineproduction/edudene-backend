@@ -19,13 +19,13 @@ class FaqController extends Controller
 			$faqs = $faqs->where('title','like','%'.$request->search.'%');
 		}
 
-		$sortBy = $request->get('sort_by', 'title');
+		$sortBy = $request->get('sort_by');
     	$sortDirection = $request->get('sort_direction', 'asc');
 
 		if (in_array($sortBy, ['id', 'title', 'status', 'created_at'])) {
 			$faqs = $faqs->orderBy($sortBy, $sortDirection);
 		} else {
-			$faqs = $faqs->orderBy('title', 'asc');
+			$faqs = $faqs->orderBy('id', 'DESC');
 		}
 
 		$perPage = (int) $request->get('per_page', 10);
