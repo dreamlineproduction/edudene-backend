@@ -30,7 +30,12 @@ Route::prefix('v1')->group(function () {
 
 
 Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {   
-    
+
+    // Admin Profile
+    Route::get('admin/profile', [AdminProfileController::class, 'show']);
+    Route::put('admin/profile', [AdminProfileController::class, 'update']);
+
+
     // Change Password Route
     Route::post('admin/change-password', [AdminProfileController::class, 'changePassword']);
 

@@ -77,7 +77,8 @@ class TutorProfileController extends Controller
 		    'profileImage' => 'nullable|integer'
 		]);
 
-        $teacher->update([
+        
+        $user->update([
             'full_name' => $request->full_name,
             //'email' => $request->email,
         ]);
@@ -115,8 +116,8 @@ class TutorProfileController extends Controller
         /** Handle logo upload */
         if ($request->filled('avatar')) {
 
-            if ($user && $user->avatar) {
-                deleteS3File($user->avatar);
+            if ($teacher && $teacher->avatar) {
+                deleteS3File($teacher->avatar);
             }
 
             $document = finalizeFile($request->avatar, 'tutors');

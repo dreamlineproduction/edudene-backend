@@ -2641,6 +2641,88 @@
           "id": "c41963b3-307a-4f91-954e-6928a18330a2"
         },
         {
+          "name": "Profile",
+          "item": [
+            {
+              "name": "Change Password",
+              "id": "2940ed16-80f8-4baa-bc04-317041d40273",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "26|edudene_token_CmB5WfozJMW2Hrm5NlvLxgUedJLywK8QYWxSgpu1cabc5a73",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"current_password\":\"\",\r\n    \"new_password\":\"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}admin/change-password",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "change-password"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "id": "fec6119a-58aa-46af-ab3e-8c13972eecca",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "300|edudene_token_f9ssETV29PDuRpDVaJXmglYhvzhyf31UL2NhVhpd6b0b7857",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}admin/profile",
+                  "host": [
+                    "{{BASE_URL}}admin"
+                  ],
+                  "path": [
+                    "profile"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "id": "8e7b06fc-6770-495e-8a5c-1a3cd72ca634"
+        },
+        {
           "name": "Login",
           "id": "ae6cb0c8-fe3a-4b61-93d7-be04034964af",
           "request": {
@@ -2673,54 +2755,6 @@
               ],
               "path": [
                 "login"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Change Password",
-          "id": "2940ed16-80f8-4baa-bc04-317041d40273",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "26|edudene_token_CmB5WfozJMW2Hrm5NlvLxgUedJLywK8QYWxSgpu1cabc5a73",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"current_password\":\"\",\r\n    \"new_password\":\"\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}admin/change-password",
-              "host": [
-                "{{BASE_URL}}admin"
-              ],
-              "path": [
-                "change-password"
               ]
             }
           },
