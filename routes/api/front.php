@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\PopularSubCategoryController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\User\UserAuthController;
@@ -9,6 +11,7 @@ use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
 use App\Http\Controllers\Api\FaqController as FrontFaqController;
 use App\Http\Controllers\Api\SchoolController as FrontSchoolController;
+use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 use App\Http\Controllers\Api\User\ChangeEmailRequestController as FrontChangeEmailRequestController;
 
 
@@ -65,9 +68,7 @@ Route::prefix('v1')->group(function () {
     Route::get('front/school/{SCHOOL_SLUG}/courses', [FrontSchoolController::class, 'course']);
     Route::get('front/school/{SCHOOL_SLUG}/teachers', [FrontSchoolController::class, 'teachers']);
     
-
-
-    Route::prefix('cart')->group(function () {
+	Route::prefix('cart')->group(function () {
         Route::get('/', [CartController::class, 'index']);
         Route::post('/add', [CartController::class, 'add']);
         Route::post('/update-qty', [CartController::class, 'updateQty']);
@@ -75,7 +76,15 @@ Route::prefix('v1')->group(function () {
         Route::delete('/remove-via-item-id/{ITEM_ID}/{TYPE}', [CartController::class, 'removeViaItemId']);
         Route::delete('/clear', [CartController::class, 'clear']);
     });
-    
+
+	// Popular Category Routes for courses
+	Route::get('/popular-sub-categories-frontend', [PopularSubCategoryController::class, 'getActiveFrontend']);
+
+	// Popular Category Routes for tutors
+	Route::get('/popular-tutor-sub-categories-frontend', [PopularTutorSubCategoryController::class, 'getActiveFrontend']);
+
+	Route::get('/menu-categories', [CategoryController::class, 'getHierarchicalCategories']);
+
 });
 
 

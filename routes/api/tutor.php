@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Tutor\TutorAuthController;
 use App\Http\Controllers\Api\Tutor\TutorAvailabilityController;
 use App\Http\Controllers\Api\Tutor\TutorPricingController;
 use App\Http\Controllers\Api\Tutor\TutorProfileController;
+use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 use App\Http\Controllers\Api\TutorController;
 
 Route::prefix('v1')->group(function () {   

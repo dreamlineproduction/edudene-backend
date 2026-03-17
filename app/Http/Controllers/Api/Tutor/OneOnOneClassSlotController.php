@@ -21,6 +21,7 @@ class OneOnOneClassSlotController extends Controller
         $slotQuery = OneOnOneClassSlot::where('tutor_id', $tutorId);
 
         if ($request->month) {
+			//echo $request->month;
             $month = $request->month;
             $date = Carbon::createFromFormat('Y-m', $month);
             $slotQuery = $slotQuery

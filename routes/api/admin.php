@@ -14,12 +14,14 @@ use App\Http\Controllers\Api\Admin\PageController;
 use App\Http\Controllers\Api\Admin\SettingController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\SubSubCategoryController;
+use App\Http\Controllers\Api\Admin\PopularSubCategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\UserVerificationController;
 use App\Http\Controllers\Api\Admin\TutorController as AdminTutorController;
 use App\Http\Controllers\Api\Admin\SchoolController as AdminSchoolController;
 use App\Http\Controllers\Api\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Api\Admin\SubjectRequestController;
+use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 
 // Settings
 
@@ -56,7 +58,13 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
 	
 	// Get Sub Sub Categories of a specific category
 	Route::get('/admin/get-sub-sub-categories/{id}', [SubSubCategoryController::class, 'getSubSubCategories']);
+
+    // Popular Sub-Categories Routes for courses
+    Route::apiResource('admin/popular-sub-categories', PopularSubCategoryController::class);
     
+	// Popular Sub-Categories Routes for tutors
+	Route::apiResource('/admin/popular-tutor-sub-categories', PopularTutorSubCategoryController::class);
+
     // Faq Sections Routes
     Route::apiResource('admin/sections/faqs', FaqSectionController::class);
 

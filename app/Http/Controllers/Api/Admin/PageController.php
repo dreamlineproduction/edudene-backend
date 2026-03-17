@@ -11,11 +11,38 @@ class PageController extends Controller
     //
 
     // Get all pages
-    public function index()
+    public function index(Request $request)
     {
-        $pages = Page::latest()->get();
+        // $pages = Page::latest()->get();
 
-        return jsonResponse(true, 'Page list', $pages);
+        // return jsonResponse(true, 'Page list', ['pages' => $pages]);
+
+		$pages = Page::query();
+
+		if (!empty($request->search)) {
+			$pages = $pages->where('title','like','%'.$request->search.'%');
+		}
+
+		$sortBy = $request->get('sort_by');
+    	$sortDirection = $request->get('sort_direction', 'asc');
+
+		if (in_array($sortBy, ['id', 'title', 'status', 'created_at'])) {
+			$pages = $pages->orderBy($sortBy, $sortDirection);
+		} else {
+			$pages = $pages->orderBy('id', 'DESC');
+		}
+
+		$perPage = (int) $request->get('per_page', 10);
+    	$page = (int) $request->get('page', 1);
+
+		$paginated = $pages->paginate($perPage, ['*'], 'page', $page);
+
+		return jsonResponse(true, 'Faqs fetched successfully', [
+			'pages' => $paginated->items(),
+			'total' => $paginated->total(),
+			'current_page' => $paginated->currentPage(),
+			'per_page' => $paginated->perPage(),
+		]);
     }
 
 
@@ -49,7 +76,7 @@ class PageController extends Controller
             return jsonResponse(true, 'Page not found in our database', null, 404);
         }
 
-        return jsonResponse(true, 'Page list', $data);
+        return jsonResponse(true, 'Page list', ['page' => $data]);
     }
 
     // Update page
