@@ -27,7 +27,13 @@ if (!function_exists('generateSlug')) {
      */
     function generateSlug(string $string, string $separator = '-'): string
     {
-        return Str::of($string)->lower()->replace(' ', $separator);
+        return Str::of($string)
+            ->lower()
+            ->replace('&', 'and')
+            ->replaceMatches('/[^a-z0-9\-\_\&\s]/', '')
+            ->replaceMatches('/\s+/', $separator)
+            ->replaceMatches('/[' . preg_quote($separator, '/') . ']+/', $separator)
+            ->trim($separator);
     }
 }
 

@@ -5,15 +5,38 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Faq;
+use App\Models\FaqSection;
 
 class FaqController extends Controller
 {
+    public function index($sectionID)
+    {
+        $faqs = Faq::query();
+        $faqs = $faqs->where(['status'=>'Active']);
+        $faqs = $faqs->get();
+
+        return jsonResponse(true, 'Faqs fetched successfully', [
+            'faqs' => $faqs,          
+        ]);
+    }
+
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function getFsqsSection()
     {
-        //
+        $faqSections = FaqSection::query();
+        $faqSections = $faqSections->where(['status'=>'Active'])->with('faqs');
+        $faqSections = $faqSections->get();
+
+        return jsonResponse(true, 'Faq Sections fetched successfully', [
+            'faq_sections' => $faqSections,          
+        ]);
+    }
+
+    public function getHomeFaqs()
+    {
         $faqs = Faq::query();
         $faqs = $faqs->where(['is_home'=>'Yes','status'=>'Active']);
         $faqs = $faqs->get();
@@ -23,35 +46,4 @@ class FaqController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

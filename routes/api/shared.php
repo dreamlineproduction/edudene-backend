@@ -40,7 +40,8 @@ Route::prefix('v1')->group(function () {
 	Route::get('categories', [CategoryController::class, 'index']); // Get main category
 	Route::get('categories-level-two', [CategoryController::class, 'subCategory']); // Get sub category
 	Route::get('categories-level-three', [CategoryController::class, 'subSubCategory']); // Get sub sub category
-	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category level four
+	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category 
+    Route::get('extra-categories', [CategoryController::class, 'showCategoryExtraInfo']); // Get category level four
 });
 
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {

@@ -22,6 +22,8 @@ use App\Http\Controllers\Api\Admin\SchoolController as AdminSchoolController;
 use App\Http\Controllers\Api\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Api\Admin\SubjectRequestController;
 use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
+use App\Http\Controllers\Api\Admin\LanguageController;
+
 
 // Settings
 
@@ -118,7 +120,8 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::put('admin/{ID}/subject-requested/approve', [SubjectRequestController::class, 'approve']);
     Route::put('admin/{ID}/subject-requested/decline', [SubjectRequestController::class, 'decline']);
 
-
+    // Language api
+    Route::apiResource('languages', LanguageController::class);
     
    
 });

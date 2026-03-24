@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\FaqController as FrontFaqController;
 use App\Http\Controllers\Api\SchoolController as FrontSchoolController;
 use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 use App\Http\Controllers\Api\User\ChangeEmailRequestController as FrontChangeEmailRequestController;
+use App\Http\Controllers\Api\LanguageController as FrontLanguageController;
 
 
 Route::prefix('v1')->group(function () {
@@ -22,9 +23,11 @@ Route::prefix('v1')->group(function () {
     Route::get('contact/topics', [ContactController::class, 'topics']);
     Route::post('contact', [ContactController::class, 'store']);
     
+    Route::get('front/languages', [FrontLanguageController::class, 'index']);
 
     Route::get('front/courses', [FrontCourseController::class, 'index']);
     Route::get('front/popular/courses', [FrontCourseController::class, 'popularCourse']);
+    Route::get('front/related/courses/{SLUG}', [FrontCourseController::class, 'relatedCourse']);
     Route::get('front/courses/{SLUG}', [FrontCourseController::class, 'show']);
 
     // Front Tutor Routes Define
@@ -52,8 +55,9 @@ Route::prefix('v1')->group(function () {
     
 
     // 
+    Route::get('faqs/sections', [FrontFaqController::class, 'getFsqsSection']);
+    Route::get('faqs/{SECTION_ID}', [FrontFaqController::class, 'getHomeFaqs']);
     Route::get('faqs', [FrontFaqController::class, 'index']);
-
 
     // 
     Route::get('user/email-change', [FrontChangeEmailRequestController::class, 'index']);
@@ -62,12 +66,14 @@ Route::prefix('v1')->group(function () {
     // Front School Routes Define
     Route::get('front/school', [FrontSchoolController::class, 'index']);
     Route::get('front/popular/school', [FrontSchoolController::class, 'popularSchool']);
+    Route::get('front/related/school', [FrontSchoolController::class, 'relatedSchool']);
     Route::get('front/school/{SCHOOL_SLUG}', [FrontSchoolController::class, 'show']);
     Route::get('front/school/classes/{CLASS_ID}/timeline', [FrontSchoolController::class, 'viewTimelineModal']);
     Route::get('front/school/{SCHOOL_SLUG}/classes', [FrontSchoolController::class, 'classes']);
     Route::get('front/school/{SCHOOL_SLUG}/courses', [FrontSchoolController::class, 'course']);
     Route::get('front/school/{SCHOOL_SLUG}/teachers', [FrontSchoolController::class, 'teachers']);
     
+
 	Route::prefix('cart')->group(function () {
         Route::get('/', [CartController::class, 'index']);
         Route::post('/add', [CartController::class, 'add']);
@@ -78,12 +84,12 @@ Route::prefix('v1')->group(function () {
     });
 
 	// Popular Category Routes for courses
-	Route::get('/popular-sub-categories-frontend', [PopularSubCategoryController::class, 'getActiveFrontend']);
+	Route::get('front/popular-courses-field', [PopularSubCategoryController::class, 'getActiveFrontend']);
 
 	// Popular Category Routes for tutors
-	Route::get('/popular-tutor-sub-categories-frontend', [PopularTutorSubCategoryController::class, 'getActiveFrontend']);
+	Route::get('front/popular-tutors-field', [PopularTutorSubCategoryController::class, 'getActiveFrontend']);
 
-	Route::get('/menu-categories', [CategoryController::class, 'getHierarchicalCategories']);
+	Route::get('front/menus', [CategoryController::class, 'getHierarchicalCategories']);
 
 });
 

@@ -106,7 +106,7 @@ class UserAuthController extends Controller
         $request->validate($validation);
 
 
-        $user = User::where(['email' => $request->email, 'role_id' => 1])->first();
+        $user = User::where(['email' => $request->email])->first();
 
         // Check if user exists
         if (!$user) {

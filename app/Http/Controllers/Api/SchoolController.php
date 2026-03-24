@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use DateTime;
 use App\Models\Tutor;
 use App\Models\User;
 use App\Models\School;
@@ -18,12 +19,17 @@ class SchoolController extends Controller
     {
         $hasFilter = false;
 
+        $perPage = (int) $request->get('per_page', 20);
         $search = trim($request->search);
+        $sortBy = trim($request->sort_by);
 
         $categoryIds          = $request->category_id ? explode(',', $request->category_id) : [];
         $subCategoryIds       = $request->sub_category_id  ? explode(',', $request->sub_category_id)   : [];
         $subSubCategoryIds    = $request->sub_sub_category_id  ? explode(',', $request->sub_sub_category_id)  : [];
         $levelFourCategoryIds = $request->sub_sub_sub_category_id  ? explode(',', $request->sub_sub_sub_category_id) : [];
+
+        $countryName        = $request->country_name ? $request->country_name : null;
+        $stateName          = $request->state_name ? $request->state_name : null;
 
         
         if(!empty($categoryIds) || 
@@ -39,16 +45,22 @@ class SchoolController extends Controller
             ->with('user:id,full_name,email')
             ->withCount(['tutors', 'courses', 'classes']);
 
-        if (!empty($search)) {
-
-               //$schools->where('school_name', 'LIKE', "%{$search}%"); 
-            
+        if (!empty($search)) {            
             $schools->where(function ($q) use ($search) {
                 foreach (explode(' ', $search) as $word) {
                     $q->where('school_name', 'LIKE', "%{$word}%");
                 }
             });
         }
+
+        if(!empty($countryName)) {
+            $schools->where('country',$countryName);
+        }
+
+        if(!empty($stateName)) {
+            $schools->where('state',$stateName);
+        }
+
 
         $schools->when($hasFilter, function ($query) use (
                 $categoryIds,
@@ -84,7 +96,7 @@ class SchoolController extends Controller
                         }
 
                         if ($levelFourCategoryIds) {
-                            $q->whereIn('sub_sub_sub_category_id', $levelFourCategoryIds);
+                            $q->whereIn('category_level_four_id', $levelFourCategoryIds);
                         }
                     })
 
@@ -93,7 +105,7 @@ class SchoolController extends Controller
                         $subCategoryIds,
                         $subSubCategoryIds,
                         $levelFourCategoryIds
-                    ) {
+                    ){
 
                         if ($categoryIds) {
                             $q->whereIn('category_id', $categoryIds);
@@ -108,15 +120,22 @@ class SchoolController extends Controller
                         }
 
                         if ($levelFourCategoryIds) {
-                            $q->whereIn('sub_sub_sub_category_id', $levelFourCategoryIds);
+                            $q->whereIn('category_level_four_id', $levelFourCategoryIds);
                         }
-                    });
                 });
             });
-
-
+        });
         
-        $schools = $schools->latest()->paginate(20);
+        // Sorting
+        if($sortBy === 'name_desc') {
+            $schools->orderBy('school_name','DESC');
+        } else if($sortBy === 'name_asc') {
+            $schools->orderBy('school_name','ASC');
+        } else {
+            $schools->latest();
+        }
+
+        $schools = $schools->paginate($perPage);
 
         $schools->getCollection()->transform(function ($school) {
             $school->short_description = shortDescription($school->about_us, 100);
@@ -129,6 +148,7 @@ class SchoolController extends Controller
             'total' => $schools->total(),
             'current_page' => $schools->currentPage(),
             'per_page' => $schools->perPage(),
+            'last_page' => $schools->lastPage(),
         ]);
     }
 
@@ -150,6 +170,51 @@ class SchoolController extends Controller
 
         $data['schools'] = $schools;
         return jsonResponse(true, 'Schools', $data);
+    }
+
+    public function relatedSchool(Request $request)
+    {
+        $slug = $request->get('slug');
+        $school = School::where('school_slug',$slug)->first();
+
+        if(!$school) {
+            return jsonResponse(false, 'School not found', [],404);
+        }
+
+        // $categoryIds = Classes::where('school_id', $school->id)
+        //     ->pluck('category_id')
+        //     ->unique()
+        //     ->toArray();
+
+        
+        $relatedSchools = School::where('school_slug', '!=', $slug)
+            ->where('status', 'Active')
+            // ->where(function($q) use ($school) {
+            //     $q->where('category_id', $school->category_id)
+            //       ->orWhere('country', $school->country)
+            //       ->orWhere('state', $school->state);
+            // })
+            ->limit(6)
+            ->get();
+
+        if ($relatedSchools->count() < 6) {
+            $extra = School::where('school_slug', '!=', $slug)
+                ->inRandomOrder()
+                ->limit(6 - $relatedSchools->count())
+                ->get();
+
+            $relatedSchools = $relatedSchools->merge($extra);
+        }
+
+        $relatedSchools = $relatedSchools->map(function ($school) {
+            $school->short_description = shortDescription($school->about_us, 100);
+            return $school;
+        });
+
+        return jsonResponse(true, 'Categories fetched successfully', [
+            'related_schools' => $relatedSchools,
+        ]);
+       
     }
 
     public function show(string $id)
@@ -189,8 +254,8 @@ class SchoolController extends Controller
         $school->short_description = shortDescription($school->about_us, 100);
         $school->profile_created = formatDisplayDate($school->created_at, 'Y');
 
-        $school->total_reviews = rand(100,1000);
-        $school->avg_rating = 4.9;
+        $school->total_reviews = 0;
+        $school->avg_rating =0;
 
         
 
@@ -264,7 +329,11 @@ class SchoolController extends Controller
 
     public function classes(Request $request, $id)
     {
-        $today = (new \DateTime())->format('Y-m-d');
+        $perPage = (int) $request->get('per_page', 20);
+        $sortBy = trim($request->sort_by);
+        $type = $request->get('type');
+
+        $today = (new DateTime())->format('Y-m-d');
 
         $q  = School::query();
 
@@ -290,16 +359,29 @@ class SchoolController extends Controller
             'category_level_four:id,title,sub_sub_category_id',
             'tutor:id,full_name,email',
             'school:id,user_id,school_name,school_slug',
-            'school.user:id,full_name,avatar',
+            'school.user:id,full_name',
         ]);
 
         $query->where(['school_id'=>$school->id,'status' => 'Approved']);
-        //$query->whereDate('end_date', '>=', $today);
 
-        $perPage = $request->get('per_page', 10);
+        if ($type === 'upcoming') {
+            $query->whereDate('start_date', '>', $today);
+        } elseif ($type === 'ongoing') {
+            $query->whereDate('start_date', '<=', $today)
+                  ->whereDate('end_date', '>=', $today);
+        } elseif ($type === 'past') {
+            $query->whereDate('end_date', '<', $today);
+        }
+
+       // $query->whereDate('end_date', '>=', $today);
+
+        if(!empty($sortBy)) {
+            $query->where(['class_type_id'=>$sortBy]);
+        }
+
         $classes = $query->paginate($perPage);
 
-        $classes = collect($classes->items())->map(function ($class) {
+        $classes->getCollection()->transform(function ($class) {
             $class->formatted_start_date = formatDisplayDate($class->start_date,'d/m/Y');
             $class->formatted_end_date = formatDisplayDate($class->end_date,'d/m/Y');
 
@@ -314,8 +396,6 @@ class SchoolController extends Controller
                 $class->tutor->avatar = $tutorInfo->avatar;
             }
            
-               
-
 
             $duration = calculateDuration($class->start_date,$class->end_date);
             if (!$duration) {
@@ -339,13 +419,20 @@ class SchoolController extends Controller
             return $class;
         });
 
-        $data['classes'] = $classes;
-        return jsonResponse(true, 'Classes list', $data);
+        return jsonResponse(true, 'User fetched successfully', [
+            'classes' => $classes->items(),
+            'total' => $classes->total(),
+            'current_page' => $classes->currentPage(),
+            'per_page' => $classes->perPage(),
+            'last_page' => $classes->lastPage(),
+        ]);
     }
-
 
     public function course(Request $request, $id)
     {
+        $perPage = (int) $request->get('per_page', 20);
+        $sortBy = trim($request->sort_by);
+
         $q  = School::query();
 
         if(is_numeric($id)){
@@ -371,34 +458,41 @@ class SchoolController extends Controller
         ->withAvg('reviews', 'rating')
         ->withCount('reviews');
 
-        $perPage = $request->get('per_page', 10);
+        if(!empty($sortBy)) {
+            $query->orderBy('title',$sortBy);
+        }
+
         $courses = $query->paginate($perPage);
 
-        $courses = collect($courses->items())->map(function ($course) {
-            $course->avg_rating = 4.5;
-            $course->review_count = rand(1,5);
-            $course->enrollment_count = rand(100,500);
-
-            
+        // $courses = collect($courses->items())->map(function ($course) {
+        $courses->getCollection()->transform(function ($course) {
+            $course->enrollment_count = 0;            
             return $course;
         });
 
-        $data['courses'] = $courses;
-        return jsonResponse(true, 'Course list', $data);
+        return jsonResponse(true, 'User fetched successfully', [
+            'courses' => $courses->items(),
+            'total' => $courses->total(),
+            'current_page' => $courses->currentPage(),
+            'per_page' => $courses->perPage(),
+            'last_page' => $courses->lastPage(),
+        ]);
     }
 
 
     public function teachers(Request $request, $id)
     {
-        $q  = School::query();
+        $perPage = (int) $request->get('per_page', 20);
+        $sortBy = trim($request->sort_by);
 
+        $schoolQuery  = School::query();
         if(is_numeric($id)){
-            $q->where('id', $id);
+            $schoolQuery->where('id', $id);
         } else {
-            $q->where('school_slug', $id);
+            $schoolQuery->where('school_slug', $id);
         }
 
-        $school = $q->where('status', 'Active')->first();
+        $school = $schoolQuery->where('status', 'Active')->first();
         if (!$school) {
             return jsonResponse(false, 'School not found in our database.', null, 404);
         }
@@ -406,28 +500,45 @@ class SchoolController extends Controller
 
         $schoolId = $school->id;
 
-        $perPage = $request->get('per_page', 10);
+        $query =  User::query()
+            ->select('users.*',
+                'tutors.id',
+                'tutors.user_id',
+                'tutors.avatar',
+                'tutors.avatar_url',
+                'tutors.country',
+                'tutors.state',
+                'tutors.one_to_one_hourly_rate',
+                'tutors.what_i_teach'
+            )
+            ->whereIn('role_id', [4,2])
+            ->leftJoin('tutors', 'users.id', '=', 'tutors.user_id')
+            ->whereHas('schoolAgreements', function ($query) use ($schoolId) {
+                $query->where('school_id', $schoolId);
+            });  
 
-        $query =  User::query();
-        $query->whereIn('role_id', [4,2])        
-        ->whereHas('schoolAgreements', function ($query) use ($schoolId) {
-            $query->where('school_id', $schoolId);
-        });        
+        if(!empty($sortBy)) {
+            $query->orderBy('users.full_name',$sortBy);
+        }
+
         $teachers = $query->paginate($perPage);
 
-        $teachers =collect($teachers->items())->map(function ($teacher) {
-            $teacher->total_reviews = 980;
-            $teacher->avg_rating = 4.8;
-            $teacher->hourly_rate = rand(50,250);
-
+        $teachers->getCollection()->transform(function ($teacher) {
+            $teacher->formatted_created_at = $teacher->created_at 
+                ? formatDisplayDate($teacher->created_at, 'd-M-Y H:i:A') 
+                : null;
             $teacher->total_courses = Course::where('user_id', $teacher->id)->count();
-            $teacher->total_classes = Classes::where('tutor_id', $teacher->id)->count();
+            $teacher->total_classes = Classes::where('tutor_id', $teacher->id)->count(); 
 
-            $teacher->tutor = Tutor::select('id','avatar','avatar_url')->where('user_id',$teacher->id)->first();
-            return $teacher;
+            return $teacher;           
         });
 
-        $data['teachers'] = $teachers;
-        return jsonResponse(true, 'Teachers list', $data);
+        return jsonResponse(true, 'User fetched successfully', [
+            'teachers' => $teachers->items(),
+            'total' => $teachers->total(),
+            'current_page' => $teachers->currentPage(),
+            'per_page' => $teachers->perPage(),
+            'last_page' => $teachers->lastPage(),
+        ]);
     }
 }

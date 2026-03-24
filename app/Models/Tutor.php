@@ -58,6 +58,57 @@ class Tutor extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function categories() {
+        return $this->belongsToMany(
+            Category::class,
+            'tutor_category',
+            'tutor_id',     // pivot
+            'category_id',  // pivot
+            'user_id',      // local key (Tutor)
+            'id'            // related key (Category)
+        );
+    }
+
+    public function subCategories() {       
+        return $this->belongsToMany(
+            SubCategory::class,
+            'tutor_sub_category',
+            'tutor_id',     // pivot
+            'category_id',  // pivot
+            'user_id',      // local key (Tutor)
+            'id'            // related key (Category)
+        );
+    }
+
+    public function subSubCategories() {     
+        return $this->belongsToMany(
+            SubSubCategory::class,
+            'tutor_sub_sub_category',
+            'tutor_id',     // pivot
+            'category_id',  // pivot
+            'user_id',      // local key (Tutor)
+            'id'            // related key (Category)
+        );
+    }
+
+    public function levelFourCategories() {
+        return $this->belongsToMany(
+            CategoryLevelFour::class,
+            'tutor_category_level_four',
+            'tutor_id',
+            'category_id'
+        );
+        return $this->belongsToMany(
+            CategoryLevelFour::class,
+            'tutor_category_level_four',
+            'tutor_id',     // pivot
+            'category_id',  // pivot
+            'user_id',      // local key (Tutor)
+            'id'            // related key (Category)
+        );
+    }
+
+
     public function school()
     {
             return $this->hasOneThrough(

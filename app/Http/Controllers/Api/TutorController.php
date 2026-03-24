@@ -24,50 +24,134 @@ class TutorController extends Controller
     public function index(Request $request)
     {
         $perPage = (int) $request->get('per_page', 20);
-        $page = (int) $request->get('page', 1);
+        $search = trim($request->search);
+        $sortBy = trim($request->sort_by);
 
         $categoryIds            = $request->category_id ? explode(',', $request->category_id) : [];
         $subCategoryIds         = $request->sub_category_id ? explode(',', $request->sub_category_id) : [];
         $subSubCategoryIds      = $request->sub_sub_category_id ? explode(',', $request->sub_sub_category_id) : [];
         $levelFourCategoryIds   = $request->sub_sub_sub_category_id ? explode(',', $request->sub_sub_sub_category_id) : [];
-        $search                 = trim($request->search);
 
+        $countryName = $request->country;
+        $stateName   = $request->state;
 
-        $query = User::query();
+        $startPrice = $request->start_price;
+        $endPrice   = $request->end_price;
 
+        $hasFilter = !empty($categoryIds) || !empty($subCategoryIds) || !empty($subSubCategoryIds) || !empty($levelFourCategoryIds);
+
+        $query = User::query()
+            ->select('users.*',
+                'tutors.id',
+                'tutors.user_id',
+                'tutors.avatar',
+                'tutors.avatar_url',
+                'tutors.country',
+                'tutors.state',
+                'tutors.one_to_one_hourly_rate',
+                'tutors.what_i_teach'
+            )
+            ->leftJoin('tutors', 'users.id', '=', 'tutors.user_id')
+
+            // Category joins
+            ->leftJoin('tutor_category', 'tutors.user_id', '=', 'tutor_category.tutor_id')
+            ->leftJoin('tutor_sub_category', 'tutors.user_id', '=', 'tutor_sub_category.tutor_id')
+            ->leftJoin('tutor_sub_sub_category', 'tutors.user_id', '=', 'tutor_sub_sub_category.tutor_id')
+            ->leftJoin('tutor_category_level_four', 'tutors.user_id', '=', 'tutor_category_level_four.tutor_id')
+
+            ->whereIn('users.role_id', [2, 4])
+            ->whereNotNull('tutors.id');
+
+        // Search
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 foreach (explode(' ', $search) as $word) {
-                    $q->where('full_name', 'LIKE', "%{$word}%");
+                    $q->where('users.full_name', 'LIKE', "%{$word}%");
                 }
             });
         }
 
-        $query->whereIn('role_id', [2, 4])
-            ->with('tutor:id,user_id,avatar,avatar_url')
-            ->withCount(['course'])
-            ->latest();
+        //Country & State filter
+        if (!empty($countryName)) {
+            $query->where('tutors.country', $countryName);
+        }
 
-        $paginated = $query->paginate($perPage, ['*'], 'page', $page);
+        if (!empty($stateName)) {
+            $query->where('tutors.state', $stateName);
+        }
 
-        $tutors = collect($paginated->items())->map(function ($teacher) {
-            $teacher->formatted_created_at = $teacher->created_at ? formatDisplayDate($teacher->created_at, 'd-M-Y H:i:A') : null;
+        if (!empty($startPrice)) {
+            $query->where('tutors.one_to_one_hourly_rate', '>=', $startPrice);
+        }
 
-            $teacher->total_reviews = 980;
-            $teacher->avg_rating = 4.8;
-            $teacher->hourly_rate = rand(50, 250);
+        if (!empty($endPrice)) {
+            $query->where('tutors.one_to_one_hourly_rate', '<=', $endPrice);
+        }
 
-            $teacher->total_courses = Course::where('user_id', $teacher->id)->count();
-            $teacher->total_classes = Classes::where('tutor_id', $teacher->id)->count();
+        //Category filters
+        if ($hasFilter) {
+            $query->where(function ($q) use (
+                $categoryIds,
+                $subCategoryIds,
+                $subSubCategoryIds,
+                $levelFourCategoryIds
+            ) {
 
+                if (!empty($levelFourCategoryIds)) {
+                    $q->whereIn('tutor_category_level_four.category_id', $levelFourCategoryIds);
+                } elseif (!empty($subSubCategoryIds)) {
+                    $q->whereIn('tutor_sub_sub_category.category_id', $subSubCategoryIds);
+                } elseif (!empty($subCategoryIds)) {
+                    $q->whereIn('tutor_sub_category.category_id', $subCategoryIds);
+                } elseif (!empty($categoryIds)) {
+                    $q->whereIn('tutor_category.category_id', $categoryIds);
+                }
+            });
+        }
+
+        // Course Count 
+        $query->addSelect([
+            'course_count' => Course::selectRaw('COUNT(*)')
+                ->where('status','Active')
+                ->whereColumn('courses.user_id', 'users.id')
+        ]);
+
+        // Course Count 
+        $query->addSelect([
+            'class_count' => Classes::selectRaw('COUNT(*)')
+                ->where('status','Active')
+                ->whereColumn('classes.tutor_id', 'users.id')
+        ]);
+
+        // Sorting
+        if ($sortBy === 'name_desc') {
+            $query->orderBy('users.full_name', 'DESC');
+        } elseif ($sortBy === 'name_asc') {
+            $query->orderBy('users.full_name', 'ASC');
+        } else {
+            $query->orderBy('users.created_at', 'DESC');
+        }
+
+        // Duplicate fix
+        $query->distinct('users.id');
+
+        // Pagination
+        $tutors = $query->paginate($perPage);
+
+        // Transform data
+        $tutors->getCollection()->transform(function ($teacher) {
+            $teacher->formatted_created_at = $teacher->created_at 
+                ? formatDisplayDate($teacher->created_at, 'd-M-Y H:i:A') 
+                : null;
             return $teacher;
         });
 
-        return jsonResponse(true, 'User fetched successfully', [
-            'tutors' => $tutors,
-            'total' => $paginated->total(),
-            'current_page' => $paginated->currentPage(),
-            'per_page' => $paginated->perPage(),
+        return jsonResponse(true, 'Tutor fetched successfully', [
+            'tutors' => $tutors->items(),
+            'total' => $tutors->total(),
+            'current_page' => $tutors->currentPage(),
+            'per_page' => $tutors->perPage(),
+            'last_page' => $tutors->lastPage(),
         ]);
     }
 
@@ -77,36 +161,78 @@ class TutorController extends Controller
      */
     public function popularTeacher(Request $request)
     {
-        $perPage = (int) $request->get('per_page', 50);
-        $page = (int) $request->get('page', 1);
+        $perPage        = (int) $request->get('per_page', 50);
+        $page           = (int) $request->get('page', 1);
 
+        $categoryIds    = $request->category_id ? explode(',', $request->category_id) : [];
+        $subCategoryIds = $request->sub_category_id ? explode(',', $request->sub_category_id) : [];
+        $hasFilter = !empty($categoryIds) || !empty($subCategoryIds);
 
-        $query = User::query();
-        $query->whereIn('role_id', [2, 4])
-            ->with('tutor:id,user_id,avatar,avatar_url')
+        $query = User::query()
+            ->select('users.*',
+                'tutors.id',
+                'tutors.user_id',
+                'tutors.avatar',
+                'tutors.avatar_url',
+                'tutors.country',
+                'tutors.state',
+                'tutors.one_to_one_hourly_rate',
+                'tutors.what_i_teach'
+            )
+            ->whereIn('role_id', [2, 4])
             ->withCount(['course'])
-            ->orderBy('full_name', 'asc');
+            ->leftJoin('tutors', 'users.id', '=', 'tutors.user_id')
 
-        $paginated = $query->paginate($perPage, ['*'], 'page', $page);
+            // Category joins
+            ->leftJoin('tutor_category', 'tutors.user_id', '=', 'tutor_category.tutor_id')
+            ->leftJoin('tutor_sub_category', 'tutors.user_id', '=', 'tutor_sub_category.tutor_id');
+           
+        //Category filters
+        if ($hasFilter) {
+            $query->where(function ($q) use (
+                $categoryIds,
+                $subCategoryIds,
+            ) {
+                if (!empty($subCategoryIds)) {
+                    $q->whereIn('tutor_sub_category.category_id', $subCategoryIds);
+                } else if (!empty($categoryIds)) {
+                    $q->whereIn('tutor_category.category_id', $categoryIds);
+                }
+            });
+        }
+        
+        // Course Count (optimized)
+        $query->addSelect([
+            'course_count' => Course::selectRaw('COUNT(*)')
+                ->where('status','Active')
+                ->whereColumn('courses.user_id', 'users.id')
+        ]);
 
-        $tutors = collect($paginated->items())->map(function ($teacher) {
-            $teacher->formatted_created_at = $teacher->created_at ? formatDisplayDate($teacher->created_at, 'd-M-Y H:i:A') : null;
+        // Duplicate fix
+        $query->distinct('users.id');
 
-            $teacher->total_reviews = 980;
-            $teacher->avg_rating = 4.8;
-            $teacher->hourly_rate = rand(50, 250);
+        // Pagination
+        $tutors = $query->paginate($perPage);
 
-            $teacher->total_courses = Course::where('user_id', $teacher->id)->count();
+        // Transform data
+        $tutors->getCollection()->transform(function ($teacher) {
+            $teacher->formatted_created_at = $teacher->created_at 
+                ? formatDisplayDate($teacher->created_at, 'd-M-Y H:i:A') 
+                : null;
+
+            // optimize if needed later
             $teacher->total_classes = Classes::where('tutor_id', $teacher->id)->count();
 
             return $teacher;
         });
 
+
         return jsonResponse(true, 'User fetched successfully', [
-            'tutors' => $tutors,
-            'total' => $paginated->total(),
-            'current_page' => $paginated->currentPage(),
-            'per_page' => $paginated->perPage(),
+            'tutors' => $tutors->items(),
+            'total' => $tutors->total(),
+            'current_page' => $tutors->currentPage(),
+            'per_page' => $tutors->perPage(),
+            'last_page' => $tutors->lastPage(),
         ]);
     }
 
@@ -128,37 +254,34 @@ class TutorController extends Controller
         }
 
 
-
         $teacher  = Tutor::where('user_id', $user->id);
 
         $teacher = $teacher->with([
             'user:id,full_name,email,user_name',
         ])
+        ->with('school')
 
-            ->with('school')
-            ->withCount([
-                'courses as courses_count' => function ($query) {
-                    $query->where('status', 'Active');
-                }
-            ])
-            ->withCount([
-                'classes as classes_count' => function ($query) {
-                    $query->where('status', 'Approved');
-                }
-            ])
-            ->first();
+        ->withCount([
+            'courses as courses_count' => function ($query) {
+                $query->where('status', 'Active');
+            }
+        ])
+        ->withCount([
+            'classes as classes_count' => function ($query) {
+                $query->where('status', 'Approved');
+            }
+        ])
+        ->first();
 
         if (!$teacher) {
             return jsonResponse(false, 'Tutor not found in our database.', null, 404);
         }
 
         $teacher->short_description = shortDescription($teacher->about_us, 100);
-        $teacher->profile_created = formatDisplayDate($teacher->created_at, 'Y');
+        $teacher->profile_created = formatDisplayDate($teacher->created_at, 'd M Y');
 
-        $teacher->total_reviews = 80;
-        $teacher->avg_rating = 4.9;
-
-
+        $teacher->total_reviews = 0;
+        $teacher->avg_rating = 0;
 
         $data['teacher'] = $teacher;
         return jsonResponse(true, 'Fetch teacher successfully', $data);
@@ -166,8 +289,11 @@ class TutorController extends Controller
 
 
     public function classes(Request $request, $id)
-    {
+    {        
+        $perPage = (int) $request->get('per_page', 20);
+        $sortBy = trim($request->sort_by);
         $today = (new \DateTime())->format('Y-m-d');
+        $type = $request->get('type');
 
         $user = User::whereIn('role_id', [2, 4])->where('status', 'Active');
         if (is_numeric($id)) {
@@ -177,6 +303,7 @@ class TutorController extends Controller
         }
 
         $user = $user->first();
+
 
         if (!$user) {
             return jsonResponse(false, 'Tutor not found in our database.', null, 404);
@@ -193,16 +320,25 @@ class TutorController extends Controller
             'category_level_four:id,title',
             'tutor:id,full_name,email',
             'school:id,user_id,school_name,school_slug',
-            'school.user:id,full_name,avatar',
+            'school.user:id,full_name',
         ]);
 
         $query->where(['tutor_id' => $user->id, 'status' => 'Approved']);
         //$query->whereDate('end_date', '>=', $today);
 
-        $perPage = $request->get('per_page', 10);
+        if ($type === 'upcoming') {
+            $query->whereDate('start_date', '>', $today);
+        } elseif ($type === 'ongoing') {
+            // $query->whereDate('start_date', '<=', $today)
+            //       ->whereDate('end_date', '>=', $today);
+        } elseif ($type === 'past') {
+            $query->whereDate('end_date', '<', $today);
+        }
+
         $classes = $query->paginate($perPage);
 
-        $classes = collect($classes->items())->map(function ($class) {
+
+        $classes->getCollection()->transform(function ($class) {
             $class->formatted_start_date = formatDisplayDate($class->start_date, 'd/m/Y');
             $class->formatted_end_date = formatDisplayDate($class->end_date, 'd/m/Y');
 
@@ -216,8 +352,6 @@ class TutorController extends Controller
             if (!empty($tutorInfo) && !empty($tutorInfo->avatar)) {
                 $class->tutor->avatar = $tutorInfo->avatar;
             }
-
-
 
 
             $duration = calculateDuration($class->start_date, $class->end_date);
@@ -242,8 +376,13 @@ class TutorController extends Controller
             return $class;
         });
 
-        $data['classes'] = $classes;
-        return jsonResponse(true, 'Tutor Classes list', $data);
+        return jsonResponse(true, 'Tutor classes fetched successfully', [
+            'classes' => $classes->items(),
+            'total' => $classes->total(),
+            'current_page' => $classes->currentPage(),
+            'per_page' => $classes->perPage(),
+            'last_page' => $classes->lastPage(),
+        ]);
     }
 
     public function course(Request $request, $id)
@@ -264,8 +403,8 @@ class TutorController extends Controller
 
         $query = Course::query();
         $query->with([
-            'user:id,full_name',
-            'school:id,school_name',
+            'user:id,full_name,user_name',
+            'school:id,school_name,school_slug',
             'courseAsset',
             'reviews'
         ])

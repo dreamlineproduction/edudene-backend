@@ -140,7 +140,25 @@ class PopularTutorSubCategoryController extends Controller
 
 		$data = $query->where('status', 'Active')
             ->orderBy('sort_order')
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'sub_category_id' => $item->sub_category_id,
+                    'sort_order' => $item->sort_order,
+                    'status' => $item->status,
+
+                    // Merge subCategory fields
+                    'category_id' => $item->subCategory->category_id,
+                    'title' => $item->subCategory->title,
+                    'slug' => $item->subCategory->slug,
+                    'is_popular' => $item->subCategory->is_popular,
+                    'popular_order' => $item->subCategory->popular_order,
+
+                    // Keep category nested
+                    'category' => $item->subCategory->category
+                ];
+            });
 
         return jsonResponse(true, 'Active popular sub-categories fetched successfully', ['popular_sub_categories' => $data]);
     }

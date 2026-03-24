@@ -14,4 +14,14 @@ class MyCourse extends Model
         'chapter_id',
         'is_partial',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    protected $hidden   = [
+        'created_at',
+        'updated_at',
+    ];
 }

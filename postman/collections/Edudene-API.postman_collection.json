@@ -3442,132 +3442,426 @@
       "name": "Frontend",
       "item": [
         {
-          "name": "School List",
-          "id": "25c7f980-2ea5-41da-9580-1895e6494fbc",
+          "name": "Faqs",
+          "item": [
+            {
+              "name": "Home Page Faqs",
+              "id": "be7085db-40cb-4ce9-9a57-10c7325e2822",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}faqs/home",
+                  "host": [
+                    "{{BASE_URL}}faqs"
+                  ],
+                  "path": [
+                    "home"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "id": "ab31d990-29d0-4502-8dd6-14dd92ecd2e3",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}faqs/sections",
+                  "host": [
+                    "{{BASE_URL}}faqs"
+                  ],
+                  "path": [
+                    "sections"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "id": "00afe5ec-208a-4d8f-9080-83b99a29d251",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "response": []
+            }
+          ],
+          "id": "10f13641-8a09-48db-be10-4d2d9f146bed"
+        },
+        {
+          "name": "Schools",
+          "item": [
+            {
+              "name": "School List",
+              "id": "25c7f980-2ea5-41da-9580-1895e6494fbc",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}front/school",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "school"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School Related",
+              "id": "2ed864c8-bba6-4f9c-a9b7-7062e8e2fd68",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}front/related/school?slug=green-valley-public-school-1",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "related",
+                    "school"
+                  ],
+                  "query": [
+                    {
+                      "key": "slug",
+                      "value": "green-valley-public-school-1",
+                      "uuid": "53b50943-903c-4d03-8568-43ff00ca88e1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School Details",
+              "id": "7a0e99ae-2849-4238-9f39-079ad90e4e30",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}front/school/green-valley-public-school-1",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "school",
+                    "green-valley-public-school-1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School Courses",
+              "id": "c64d2c2b-772c-496a-8159-5d96bf8dc029",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}front/school/green-valley-public-school-1/courses?page=1",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "school",
+                    "green-valley-public-school-1",
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "uuid": "aa58dc9d-8c5f-43b3-9a6a-113dcc6a1f49"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School Classes",
+              "id": "84417866-ed25-48e4-8cd6-c9098545f716",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}front/school/green-valley-public-school-1/classes",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "school",
+                    "green-valley-public-school-1",
+                    "classes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School Teacher",
+              "id": "2fc32e91-7b88-49ce-9cf7-ddb2dcc98c72",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}front/school/green-valley-public-school-1/teachers?per_page=6&sort_by=desc&page=1",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "school",
+                    "green-valley-public-school-1",
+                    "teachers"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "6",
+                      "uuid": "1e3f6573-7240-4304-a95d-6c02df96ed91"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "desc",
+                      "uuid": "1c8ba7bf-50ed-4af0-9a40-8b274a7c2c60"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "uuid": "9f9e5e1b-87d2-4d2d-bd0f-f948ba6af5dd"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List School Timeline",
+              "id": "7e01a384-2793-449f-bf68-1a90b0fdbd6c",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}school/front/classes/26/timeline",
+                  "host": [
+                    "{{BASE_URL}}school"
+                  ],
+                  "path": [
+                    "front",
+                    "classes",
+                    "26",
+                    "timeline"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "id": "8af5b5bc-f33b-488d-a15c-059f77afb10d"
+        },
+        {
+          "name": "Courses",
+          "item": [
+            {
+              "name": "Courses",
+              "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}front/courses",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "courses"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Course Review List",
+              "id": "fd5f76f5-87ae-4c2c-b06c-4497ae3efc29",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}courses/review/5",
+                  "host": [
+                    "{{BASE_URL}}courses"
+                  ],
+                  "path": [
+                    "review",
+                    "5"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Course Details",
+              "id": "446e6552-d2c6-435c-a9da-c3bccd65f8b6",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}front/courses/ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "courses",
+                    "ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Popular Course",
+              "id": "52a267c7-825f-49e4-bd71-50cc938107cd",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}front/popular/courses",
+                  "host": [
+                    "{{BASE_URL}}front"
+                  ],
+                  "path": [
+                    "popular",
+                    "courses"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "id": "17e3df37-f30a-46ee-96c2-5b3e3a5be7da"
+        },
+        {
+          "name": "Teacher List",
+          "id": "40758447-f3e7-40d9-b3d8-d45c3c58778f",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}front/school",
+              "raw": "{{BASE_URL}}front/tutors",
               "host": [
                 "{{BASE_URL}}front"
               ],
               "path": [
-                "school"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "School Details",
-          "id": "7a0e99ae-2849-4238-9f39-079ad90e4e30",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1",
-              "host": [
-                "{{BASE_URL}}school"
-              ],
-              "path": [
-                "front",
-                "green-valley-public-school-1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "School Courses",
-          "id": "c64d2c2b-772c-496a-8159-5d96bf8dc029",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1/courses?page=1",
-              "host": [
-                "{{BASE_URL}}school"
-              ],
-              "path": [
-                "front",
-                "green-valley-public-school-1",
-                "courses"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1",
-                  "uuid": "aa58dc9d-8c5f-43b3-9a6a-113dcc6a1f49"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "School Classes",
-          "id": "84417866-ed25-48e4-8cd6-c9098545f716",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}front/school/green-valley-public-school-1/classes",
-              "host": [
-                "{{BASE_URL}}front"
-              ],
-              "path": [
-                "school",
-                "green-valley-public-school-1",
-                "classes"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "School Teacher",
-          "id": "2fc32e91-7b88-49ce-9cf7-ddb2dcc98c72",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}school/front/green-valley-public-school-1/teachers?page=1",
-              "host": [
-                "{{BASE_URL}}school"
-              ],
-              "path": [
-                "front",
-                "green-valley-public-school-1",
-                "teachers"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1",
-                  "uuid": "99b7c452-8a42-4355-bcba-a30108aee90a"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "List School Timeline",
-          "id": "7e01a384-2793-449f-bf68-1a90b0fdbd6c",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}school/front/classes/26/timeline",
-              "host": [
-                "{{BASE_URL}}school"
-              ],
-              "path": [
-                "front",
-                "classes",
-                "26",
-                "timeline"
+                "tutors"
               ]
             }
           },
@@ -3587,164 +3881,6 @@
               "path": [
                 "popular",
                 "tutors"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Courses",
-          "id": "fbbf75f1-4d95-4daa-812b-4ed2e8d3c02a",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}courses?category_id=6",
-              "host": [
-                "{{BASE_URL}}courses"
-              ],
-              "query": [
-                {
-                  "key": "category_id",
-                  "value": "6"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Course Details",
-          "id": "446e6552-d2c6-435c-a9da-c3bccd65f8b6",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}front/courses/ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents",
-              "host": [
-                "{{BASE_URL}}front"
-              ],
-              "path": [
-                "courses",
-                "ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Course Review List",
-          "id": "fd5f76f5-87ae-4c2c-b06c-4497ae3efc29",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "7|edudene_token_AgIeWBaxEMNGVnR5MIM75Lp5Jw4A46AED17d2ZrUebb4b061",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"rating\":\"4\",\r\n    \"review\": \"Excellent course! The instructor explained Laravel and React integration very clearly.\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}courses/review/5",
-              "host": [
-                "{{BASE_URL}}courses"
-              ],
-              "path": [
-                "review",
-                "5"
               ]
             }
           },
@@ -4185,25 +4321,6 @@
           "response": []
         },
         {
-          "name": "Popular Course",
-          "id": "52a267c7-825f-49e4-bd71-50cc938107cd",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}front/popular/courses",
-              "host": [
-                "{{BASE_URL}}front"
-              ],
-              "path": [
-                "popular",
-                "courses"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Tutor Details",
           "id": "15dc1a0a-c876-4269-8d90-0b453ee6cfe1",
           "request": {
@@ -4318,6 +4435,18 @@
                 "kissa",
                 "one-on-one-slots"
               ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "id": "d1d471eb-5aaa-47f0-bf2e-a18a1c60e604",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
             }
           },
           "response": []

@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FaqSection extends Model
+class Language extends Model
 {
     //
-
     protected $fillable = [
-        'title',
+        'name',
+        'code',
         'status',
     ];
 
-    public function faqs(){
-        return $this->hasMany(Faq::class);
-    }
+    
+
 }

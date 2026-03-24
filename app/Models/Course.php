@@ -33,6 +33,11 @@ class Course extends Model
         'updated_at',
     ];
     
+     public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -106,6 +111,12 @@ class Course extends Model
         return $this->hasMany(CourseReview::class);
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(MyCourse::class, 'course_id')
+                    ->where('is_partial', 'No')
+                    ->whereNull('chapter_id');
+    }
 
     public function getReviewsAvgRatingAttribute($value)
     {

@@ -21,12 +21,23 @@ class CategoryController extends Controller
 	}
 
 	public function subCategory(Request $request){
+		$offset = $request->offset ? $request->offset : 0;
+		$limit = $request->limit ? $request->limit : 0;
+
 		$categoryIds = @explode(',', $request->category_id);
 
+		$query = SubCategory::query();
+		$query = $query->where('status', 'Active')
+				->whereIn('category_id', $categoryIds);
 
-		$subCategories = SubCategory::where('status', 'Active')
-							->whereIn('category_id', $categoryIds)
-							->get();
+		if($limit > 0)	{
+			$query = $query->offset($offset)->limit($limit);
+		}
+
+
+		$subCategories	=	$query->get();
+
+
 		return jsonResponse(
 			true, 
 			'Category Level Two feteched successflly', 
@@ -54,37 +65,58 @@ class CategoryController extends Controller
 		$subCategories = CategoryLevelFour::where('status', 'Active')
 							->whereIn('sub_sub_category_id', $subSubCategoryIds)
 							->get();
-		return jsonResponse(
-			true, 
+		return jsonResponse(true, 
 			'Category Level Four feteched successflly', 
 			['subCategories' => $subCategories]
 		);
 	}
 
+	public function showCategoryExtraInfo(Request $request){
+		$categories = CategoryLevelFour::where('status', 'Active')
+							->inRandomOrder()
+    						->limit(20)
+							->get();
+
+		return jsonResponse(true,'Category Level Four feteched successflly', [
+			'categories' => $categories
+		]);
+	}
+
 	public function getHierarchicalCategories()
 	{
-		$categories = Category::where('status', 'Active')
-			->with([
-				'subCategories' => function($query) {
-					$query->where('status', 'Active')
-						->with([
-							'subSubCategories' => function($subQuery) {
-								$subQuery->where('status', 'Active')
-									->with([
-										'categoryLevelFours' => function($levelFourQuery) {
-											$levelFourQuery->where('status', 'Active');
-										}
-									]);
-							}
-						]);
-				}
-			])
-			->get();
+	    $categories = Category::where('status', 'Active')
+	        ->with([
+	            'subCategories' => function($query) {
+	                $query->where('status', 'Active')
+	                    ->with([
+	                        'subSubCategories' => function($subQuery) {
+	                            $subQuery->where('status', 'Active');
+	                        }
+	                    ]);
+	            }
+	        ])
+        ->get();
 
-		return jsonResponse(
-			true,
-			'Hierarchical categories fetched successfully',
-			['categories' => $categories]
-		);
+	    $menu = $categories->map(function ($category) {
+	        return [
+	            'title' => $category->title,
+	            'children' => $category->subCategories->map(function ($sub) {
+	                return [
+	                    'title' => $sub->title,
+	                    'children' => $sub->subSubCategories->map(function ($subSub) {
+	                        return [
+	                            'title' => $subSub->title
+	                        ];
+	                    })->values()
+	                ];
+	            })->values()
+	        ];
+	    });
+
+	    return jsonResponse(
+	        true,
+	        'Hierarchical categories fetched successfully',
+	        ['menu' => $menu]
+	    );
 	}
 }

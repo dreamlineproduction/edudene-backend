@@ -21,7 +21,7 @@ class StateController extends Controller
             return jsonResponse(false,'Country id is required');
         }
 
-        if (is_int($id)) {
+        if (is_numeric($id)) {
             $states->where('country_id',$id);
             $country = Country::find($id);
         } else{
