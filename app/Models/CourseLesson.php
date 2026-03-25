@@ -12,6 +12,7 @@ class CourseLesson extends Model
 		'summary',
         'course_id',
         'course_chapter_id',
+        'is_free_lesson',
         'title',
         'type',
         'video_url',

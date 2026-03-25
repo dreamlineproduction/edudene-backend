@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api\Tutor;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Admin\CourseApprovalRequestEmail;
+use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseAsset;
 use App\Models\CourseOutcome;
 use App\Models\CourseSeo;
 use App\Models\SchoolCourse;
 use App\Models\SchoolUser;
+use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class CourseController extends Controller
 {
@@ -135,18 +139,18 @@ class CourseController extends Controller
         try{
             //
             $validation =[
-                'title' => 'required|string|max:190',
+                'title' => 'required|string|max:255',
                 'short_description' => 'required|string|max:255',
                 'description' => 'nullable|string',
+				'language_id' => 'required',
                 'level' => 'required|string|in:Beginner,Advanced,Intermediate',
-                //'course_type_id' => 'required|integer|exists:course_types,id',
                 'category_id' => 'required|integer|exists:categories,id',
                 'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
                 'sub_sub_category_id' => 'nullable|integer|exists:sub_sub_categories,id',
 				'category_level_four_id' => 'nullable|integer|exists:category_level_fours,id',
             ];
 
-            if($request->has('type') && $request->type == 1){
+            if ($request->has('type') && $request->type == 1){
                 $validation['country_id'] = 'required|integer|exists:countries,id';
                 $validation['state_id'] = 'required|integer|exists:states,id';
             }
@@ -164,10 +168,7 @@ class CourseController extends Controller
             return jsonResponse(true, 'Course basic info saved successfully.', $course);
         } catch(\Exception $e){
             return jsonResponse(false, $e->getMessage(), null,500);
-        }
-        
-        
-        
+        }        
     }
 
     /**
@@ -346,7 +347,18 @@ class CourseController extends Controller
 			'status'    => 'required|in:Active,Inactive,Draft,Pending,Decline',
 		]);
 
-		$course = Course::find($request->course_id);
+		$course = Course::with([
+				'user',
+				'courseType',
+				'category',
+				'subCategory',
+				'subSubCategory',
+            	'courseOutcomes',
+				'courseRequirements',
+				'courseAsset',
+				'courseSeo',
+				'courseChapters.courseLessons'
+            ])->find($request->course_id);
 
 		if (!$course) {
 			return response()->json([
@@ -359,6 +371,11 @@ class CourseController extends Controller
 		if ($request->status === 'Pending') {
 			$course->status = 'Pending';
 			$course->save();
+
+			$setting = WebsiteSetting::find(1);
+			
+			// Send email to all admins
+			Mail::to($setting->system_email)->send(new CourseApprovalRequestEmail($course, $course->user));			
 
 			return response()->json([
 				'status' => true,

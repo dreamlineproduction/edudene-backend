@@ -22,6 +22,7 @@ class AdminProfileController extends Controller
             ->admin()
             ->first();
 
+
         if (!$admin) {
             return jsonResponse(false, 'Admin not found in our database.', null, 404);
         }

@@ -24,6 +24,8 @@ use App\Http\Controllers\Api\Admin\SubjectRequestController;
 use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 use App\Http\Controllers\Api\Admin\LanguageController;
 
+use App\Http\Controllers\Api\Admin\FeatureController;
+use App\Http\Controllers\Api\Admin\MembershipPlanController;
 
 // Settings
 
@@ -60,6 +62,12 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
 	
 	// Get Sub Sub Categories of a specific category
 	Route::get('/admin/get-sub-sub-categories/{id}', [SubSubCategoryController::class, 'getSubSubCategories']);
+
+    // Features Routes
+    Route::apiResource('admin/features', FeatureController::class);
+
+    // Membership Plans Routes
+    Route::apiResource('admin/membership-plans', MembershipPlanController::class);
 
     // Popular Sub-Categories Routes for courses
     Route::apiResource('admin/popular-sub-categories', PopularSubCategoryController::class);
@@ -121,7 +129,6 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     Route::put('admin/{ID}/subject-requested/decline', [SubjectRequestController::class, 'decline']);
 
     // Language api
-    Route::apiResource('languages', LanguageController::class);
-    
+    Route::apiResource('admin/languages', LanguageController::class);
    
 });

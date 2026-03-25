@@ -8,7 +8,7 @@ class Language extends Model
 {
     //
     protected $fillable = [
-        'name',
+        'title',
         'code',
         'status',
     ];

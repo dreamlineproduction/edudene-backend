@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\StateController;
 use App\Http\Controllers\Api\TutorController;
 use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\Api\Admin\FeatureController;
+use App\Http\Controllers\Api\Admin\MembershipPlanController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Tutor\CourseChapterController;
@@ -42,6 +44,15 @@ Route::prefix('v1')->group(function () {
 	Route::get('categories-level-three', [CategoryController::class, 'subSubCategory']); // Get sub sub category
 	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category 
     Route::get('extra-categories', [CategoryController::class, 'showCategoryExtraInfo']); // Get category level four
+	Route::get('categories-level-four', [CategoryController::class, 'categoryLevelFour']); // Get category level four
+	
+	// Features
+	Route::get('features', [FeatureController::class, 'index']); // Get all features
+	Route::get('features/{id}', [FeatureController::class, 'show']); // Get single feature
+	
+	// Membership Plans
+	Route::get('membership-plans', [MembershipPlanController::class, 'index']); // Get all membership plans
+	Route::get('membership-plans/{id}', [MembershipPlanController::class, 'show']); // Get single membership plan
 });
 
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {

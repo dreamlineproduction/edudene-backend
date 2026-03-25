@@ -64,11 +64,13 @@ class CourseLessonController extends Controller
             'course_id' => $course->id,
         ]);
 
+		
 		$insertData['summary'] = $request->summary;
 		$insertData['title'] = $request->title;
         $insertData['course_id'] = $courseId;
         $insertData['course_chapter_id'] = $courseChapterId;
         $insertData['type'] = $request->type;
+        $insertData['is_free_lesson'] = $request->is_free_lesson ? 'yes' : 'no';
         
         $newPath = 'courses/course-'.$courseId;
 
@@ -153,6 +155,7 @@ class CourseLessonController extends Controller
         $updateData['course_id'] = $courseId;
         $updateData['course_chapter_id'] = $courseChaper->id;
         $updateData['type'] = $request->type;
+	 	$updateData['is_free_lesson'] = $request->is_free_lesson ? 'yes' : 'no';
 
         $newPath = 'courses/course-'.$courseId;
 

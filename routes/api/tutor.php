@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\LanguageController;
 use App\Http\Controllers\Api\Tutor\OneOnOneClassSlotController;
 use App\Http\Controllers\Api\Tutor\SubjectRequestController;
 use Illuminate\Support\Facades\Route;
@@ -42,4 +43,6 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:2'])->group(function () {
 
 	// Subject Request Routes
 	Route::post('/tutor/request-subjects', [SubjectRequestController::class, 'store']);
+
+	Route::get('/tutor/languages', [LanguageController::class,'index']);
 });
