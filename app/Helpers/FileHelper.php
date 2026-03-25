@@ -142,66 +142,94 @@ if(!function_exists('videoUploadS3'))
     {
         try {
             $file = $request->file('file');
+
+            if (!$file) {
+                return jsonResponse(false, 'No file uploaded', null, 400);
+            }
+
             $mime = $file->getMimeType();
             $extension = $file->getClientOriginalExtension();
 
+            // Create DB record first
             $model = new File;
             $model->save();
 
             $time = time();
             $strRandom20 = Str::random(20);
-            $fileName = $strRandom20. '-' . $time . '-video-' . $model->id . '.' . $extension;
+
+            $fileName = $strRandom20 . '-' . $time . '-video-' . $model->id . '.' . $extension;
             $path = 'temp/videos/' . $fileName;
 
             // Upload video to S3
             Storage::disk('s3')->put($path, file_get_contents($file));
             $url = Storage::disk('s3')->url($path);
 
-            // Generate video thumbnail using FFmpeg (if available)
-            $posterUrl = null;
-            $tempVideoPath = storage_path('app/temp/' . $fileName);
-            $file->move(storage_path('app/temp/'), $fileName);
+            // Move video to local temp for processing
+            $tempDir = storage_path('app/temp/');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
 
-            $thumbnailPath = storage_path('app/temp/' . pathinfo($fileName, PATHINFO_FILENAME) . '.jpg');
+            $tempVideoPath = $tempDir . $fileName;
+            $file->move($tempDir, $fileName);
+
+          
+            $durationCommand = "ffprobe -i {$tempVideoPath} -show_entries format=duration -v quiet -of csv=\"p=0\"";
+            $duration = exec($durationCommand);
+
+            $durationInSeconds = (float) $duration;
+            //$formattedDuration = gmdate("H:i:s", (int)$durationInSeconds);
+          
+            $thumbnailPath = $tempDir . pathinfo($fileName, PATHINFO_FILENAME) . '.jpg';
+
             $command = "ffmpeg -i {$tempVideoPath} -ss 00:00:02 -vframes 1 {$thumbnailPath}";
             exec($command);
 
+            $posterUrl = null;
+            $posterPath = null;
+            $posterName = null;
+
             if (file_exists($thumbnailPath)) {
                 $thumbContent = file_get_contents($thumbnailPath);
-               // $thumbName = 'thumbnails/' . Str::random(10) . '-' . time() . '.jpg';
+
                 $posterName = $strRandom20 . '-' . $time . '-video-' . $model->id . '.jpg';
-                $posterPath = 'temp/videos/thumbnails/'.$posterName;
+                $posterPath = 'temp/videos/thumbnails/' . $posterName;
 
                 Storage::disk('s3')->put($posterPath, $thumbContent);
                 $posterUrl = Storage::disk('s3')->url($posterPath);
             }
 
-            // Save file record
+         
             $model->name = $fileName;
             $model->path = $path;
             $model->url = $url;
             $model->type = 'video';
             $model->mime_type = $mime;
+
             $model->poster_url = $posterUrl;
             $model->poster_path = $posterPath;
             $model->poster_name = $posterName;
-            
+
+            // Duration
+            $model->duration_seconds = $durationInSeconds;
+            //$model->duration = $formattedDuration;
+
             $model->save();
 
-            // Cleanup
             @unlink($tempVideoPath);
             @unlink($thumbnailPath);
-
-            $data = [
+          
+            return [
                 'file_id' => $model->id,
                 'path' => $path,
                 'video_url' => $url,
+
                 'poster_path' => $posterPath,
                 'poster_url' => $posterUrl,
             ];
-            return $data;
+
         } catch (\Exception $e) {
-            return jsonResponse(false,'Exception: ' . $e->getMessage(),null,500);
+            return jsonResponse(false, 'Exception: ' . $e->getMessage(), null, 500);
         }
     }
 }
@@ -245,6 +273,8 @@ if(!function_exists('finalizeFile'))
                 $return['video_url'] =  $newVideoUrl;
                 $return['poster_path'] = $newOriginalPosterPath;
                 $return['poster_url'] = $newVideoPosterUrl;
+                $return['duration'] = $file->duration_seconds;
+                
             } else {
                 throw new \Exception('Original file not found on S3.');
             }

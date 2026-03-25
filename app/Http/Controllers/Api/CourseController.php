@@ -62,7 +62,7 @@ class CourseController extends Controller
         }
 
         if (!empty($levelFourCategoryIds)) {
-            $query->whereIn('sub_sub_sub_category_id', $levelFourCategoryIds);
+            $query->whereIn('category_level_four_id', $levelFourCategoryIds);
         }
 
         if ($request->filled('language')) {

@@ -11,6 +11,7 @@ class CourseLesson extends Model
     protected $fillable = [
 		'summary',
         'course_id',
+        'duration',
         'course_chapter_id',
         'is_free_lesson',
         'title',

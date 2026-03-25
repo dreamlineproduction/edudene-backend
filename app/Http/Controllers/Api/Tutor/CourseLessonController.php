@@ -90,6 +90,7 @@ class CourseLessonController extends Controller
             $insertData['video_url'] = $finalizeVideo['video_url'];
             $insertData['image'] = $finalizeVideo['poster_path'];
             $insertData['image_url'] = $finalizeVideo['poster_url'];
+            $insertData['duration'] = $finalizeVideo['duration'];
         }
 
         $data = CourseLesson::create($insertData);
@@ -187,6 +188,7 @@ class CourseLessonController extends Controller
             $updateData['video_url'] = $finalizeVideo['video_url'];
             $updateData['image'] = $finalizeVideo['poster_path'];
             $updateData['image_url'] = $finalizeVideo['poster_url'];
+            $updateData['duration'] = $finalizeVideo['duration'];
         }
 
         $courseLesson = $courseLesson->update($updateData);
