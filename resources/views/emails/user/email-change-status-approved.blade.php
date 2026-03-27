@@ -90,14 +90,14 @@
             <p>If you did not request this change or notice any issue, please contact our support team immediately.</p>
 
             <div class="button-outer">
-                <a href="{{ env('WEBSITE_URL') }}/login" class="button">
+                <a href="{{ env('FRONTEND_URL') }}/login" class="button">
                     Login to Your Account
                 </a>
             </div>
 
             <p>Best regards,</p>
             <p>
-                <a href="{{ env('WEBSITE_URL') }}">
+                <a href="{{ env('FRONTEND_URL') }}">
                     {{ env('WEBSITE_NAME') }} Team
                 </a>
             </p>

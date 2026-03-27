@@ -13,30 +13,6 @@ use Illuminate\Support\Facades\Hash;
 
 class SchoolController extends Controller
 {
-    // /**
-    //  * Display a listing of the resource.
-    //  */
-    // public function index()
-    // {
-    //     $schools  = School::where('status', 'Active')
-    //         ->with('user:id,full_name,email')
-    //         ->withCount('tutors')
-    //         ->withCount('courses')
-    //         ->withCount('classes')
-    //         ->get();
-
-    //     $schools = $schools->map(function ($school) {
-    //         $school->short_description = shortDescription($school->about_us, 100);
-    //         return $school;
-    //     });
-
-
-    //     $data['schools'] = $schools;
-    //     return jsonResponse(true, 'Schools', $data);
-    // }
-
-   
-
     /**
      * Display the specified resource.
      */
@@ -51,7 +27,7 @@ class SchoolController extends Controller
         if (!$school) {
             return jsonResponse(false, 'School not found in our database.', null, 404);
         }
-
+        
         $data['school'] =  array_merge(
             $loggedInUser->only(['id', 'role_id', 'full_name','email','user_name']),
             $school->toArray()

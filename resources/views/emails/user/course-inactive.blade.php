@@ -105,7 +105,7 @@
 
         <p>Regards,</p>
         <p>
-            <a href="{{ env('WEBSITE_URL') }}" title="{{ env('WEBSITE_URL') }}">
+            <a href="{{ env('FRONTEND_URL') }}" title="{{ env('FRONTEND_URL') }}">
                 {{ env('WEBSITE_NAME') }} Administration Team
             </a>
         </p>

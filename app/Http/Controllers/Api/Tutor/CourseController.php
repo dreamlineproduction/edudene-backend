@@ -14,6 +14,7 @@ use App\Models\SchoolUser;
 use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 
 class CourseController extends Controller
@@ -44,11 +45,14 @@ class CourseController extends Controller
 			
 			if (!empty($schoolUserInfo)) {
 				$courses = $courses->where('school_id', $schoolUserInfo->school_id);
-			}
+			} else {
+                $courses = $courses->where('user_id', $user->id);    
+            }
 		} else {
 			$courses = $courses->where('user_id', $user->id);
 		}
 		
+
 
 		if (!empty($request->search)) {
 			$courses = $courses->where('title','like','%'.$request->search.'%');
@@ -76,7 +80,7 @@ class CourseController extends Controller
 		});
 
 
-		return jsonResponse(true, 'Categories fetched successfully', [
+		return jsonResponse(true, 'Courses fetched successfully', [
 			'courses' => $coursesWithLessonCount,
 			'total' => $paginated->total(),
 			'current_page' => $paginated->currentPage(),
@@ -110,7 +114,10 @@ class CourseController extends Controller
 			$course = new Course();
 			$course->title = $request->title;
 			$course->user_id = $user->id;
+            $course->preview_token = Str::random(55);
 			$course->slug = generateUniqueSlug($request->title, 'App\Models\Course');
+
+
 
 			// if course created by school user
 			if ($user->role_id === 3) {
@@ -425,37 +432,6 @@ class CourseController extends Controller
         $course->delete();
         return jsonResponse(true, 'Course deleted successfully', null);
 
-    }
-
-    private function getYoutubeVideoPoster($videoId,$size = 'MAX'){
-        $thumbUrls = [
-            "https://i.ytimg.com/vi/{$videoId}/maxresdefault.jpg",
-            "https://i.ytimg.com/vi/{$videoId}/sddefault.jpg",
-            "https://i.ytimg.com/vi/{$videoId}/hqdefault.jpg",
-        ];
-        if($size === 'SD') {
-            return $thumbUrls[1];
-        } 
-        if($size === 'HQ') {
-            return $thumbUrls[2];
-        }
-
-        return $thumbUrls[0];
-
-    }
-
-    private function getViemoVideoPoster($videoUrl)
-    {
-        $oembedUrl = 'https://vimeo.com/api/oembed.json?url=' . urlencode($videoUrl);
-        $res = Http::get($oembedUrl);
-        if (! $res->successful()) {  
-            return jsonResponse(false,'Unable to get Vimeo oEmbed info. Video may be private or URL invalid.',422);
-        }
-        $data = $res->json();
-        if(notEmpty($data['thumbnail_url'])){
-            return $data['thumbnail_url'];
-        }
-        return;
     }
 
     // No Need

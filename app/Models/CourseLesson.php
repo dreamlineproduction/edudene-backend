@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class CourseLesson extends Model
 {
     //
-
+    protected $appends = ['duration_formatted'];
+    
     protected $fillable = [
 		'summary',
         'course_id',
@@ -33,6 +34,21 @@ class CourseLesson extends Model
     public function courseChapter()
     {
         return $this->belongsTo(CourseChapter::class);
+    }
+
+    public function getDurationFormattedAttribute()
+    {
+        $seconds = (int) $this->duration;
+
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $secs = $seconds % 60;
+
+        if ($hours > 0) {
+            return "{$hours}h {$minutes}m";
+        }
+
+        return "{$minutes}m {$secs}s";
     }
 
     protected $hidden = [

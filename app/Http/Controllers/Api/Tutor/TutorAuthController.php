@@ -216,7 +216,7 @@ class TutorAuthController extends Controller
 
         $mailData = [
             'fullName' => $user->full_name,
-            'loginLink' => env('WEBSITE_URL') . '/tutor/login',
+            'loginLink' => env('FRONTEND_URL') . '/tutor/login',
         ];
 
         try{

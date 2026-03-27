@@ -161,7 +161,7 @@ class SchoolTutorController extends Controller
                 'email' => $request->email,
                 'password' => $request->password, // temporary password
                 'schoolName' => $loggedInUser->school->school_name,
-                'loginLink' => env('WEBSITE_URL') . '/school/login',
+                'loginLink' => env('FRONTEND_URL') . '/school/login',
             ];
 
             Mail::to($request->email)->send(new TutorCreation($mailData));
@@ -259,6 +259,8 @@ class SchoolTutorController extends Controller
     {
         //
         $loggedInUser = auth('sanctum')->user();
+        
+        
         $user = User::where('id', $id)
             ->where('role_id', 4)
             ->whereIn('id', function ($query) use ($loggedInUser) {
@@ -267,6 +269,7 @@ class SchoolTutorController extends Controller
                     ->where('school_id', $loggedInUser->id);
             })
             ->first();
+
         if (empty($user)) {
             return jsonResponse(false, 'Tutor not found in our database', null, 404);
         }

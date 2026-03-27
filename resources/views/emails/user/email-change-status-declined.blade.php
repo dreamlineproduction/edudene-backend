@@ -95,14 +95,14 @@
             <p>You may submit a new request with the correct details or contact support for assistance.</p>
 
             <div class="button-outer">
-                <a href="{{ env('WEBSITE_URL') }}/support" class="button">
+                <a href="{{ env('FRONTEND_URL') }}/support" class="button">
                     Contact Support
                 </a>
             </div>
 
             <p>Best regards,</p>
             <p>
-                <a href="{{ env('WEBSITE_URL') }}">
+                <a href="{{ env('FRONTEND_URL') }}">
                     {{ env('WEBSITE_NAME') }} Team
                 </a>
             </p>

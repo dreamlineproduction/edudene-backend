@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Psy\Output\Theme;
 
 class School extends Model
 {
@@ -59,5 +60,10 @@ class School extends Model
     public function classes()
     {
         return $this->hasMany(Classes::class, 'school_id');
+    }
+
+    public function theme()
+    {
+        return $this->hasOne(SchoolTheme::class, 'school_id');
     }
 }

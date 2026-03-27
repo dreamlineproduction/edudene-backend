@@ -95,7 +95,7 @@
             <p>You can resubmit your KYC documents by logging into your account and updating the required information.</p>
 
             <div class="button-outer">
-                <a href="{{ env('WEBSITE_URL') }}/account/kyc" class="button">
+                <a href="{{ env('FRONTEND_URL') }}/account/kyc" class="button">
                     Resubmit KYC
                 </a>
             </div>
@@ -104,7 +104,7 @@
 
             <p>Best regards,</p>
             <p>
-                <a href="{{ env('WEBSITE_URL') }}">
+                <a href="{{ env('FRONTEND_URL') }}">
                     {{ env('WEBSITE_NAME') }} Team
                 </a>
             </p>

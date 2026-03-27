@@ -27,6 +27,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('front/courses', [FrontCourseController::class, 'index']);
     Route::get('front/popular/courses', [FrontCourseController::class, 'popularCourse']);
+    Route::get('front/courses/{SLUG}/lessons', [FrontCourseController::class, 'freeLesson']);
     Route::get('front/related/courses/{SLUG}', [FrontCourseController::class, 'relatedCourse']);
     Route::get('front/courses/{SLUG}', [FrontCourseController::class, 'show']);
 

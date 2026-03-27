@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\Tutor\ClassStatus;
 use App\Mail\User\EmailChangeRequestStatus;
 use App\Models\Classes;
+use App\Models\User;
+
 use App\Models\ClassSessions;
 use App\Models\School;
 use DateInterval,DatePeriod,DateTime;
@@ -114,7 +116,6 @@ class ClassController extends Controller
             'per_page' => $paginated->perPage(),
         ]);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -338,5 +339,118 @@ class ClassController extends Controller
 
         $data->delete();
         return jsonResponse(true, 'Class deleted successfully');
+    }
+
+
+    public function teacher(Request $request)
+    {
+        $loggedInUser = auth('sanctum')->user();
+        $school = $loggedInUser->school()->first();
+        $schoolId = $school->id;
+
+        $query = User::whereIn('role_id', [2, 4])
+        ->where('users.status', 'Active')
+        ->select(
+            'users.id',
+            'users.role_id',
+            'users.user_name',
+            'users.full_name',
+            'users.email',
+            'users.status',
+            'users.created_at',
+            'school_invitations.status as invited_status'
+        )
+        ->with([
+            'schoolAgreements:school_id,user_id,is_freelancer',
+            'tutor:user_id,what_i_teach,address_line_1,address_line_2,city,state,zip,country'
+        ])
+
+        ->leftJoin('school_invitations', function ($join) use ($schoolId) {
+            $join->on('users.id', '=', 'school_invitations.user_id')
+                 ->orOn('users.email', '=', 'school_invitations.email')
+                 ->where('school_invitations.school_id', $schoolId);
+        })
+
+        ->where(function ($q) use ($schoolId) {
+            $q->whereHas('schoolAgreements', function ($sub) use ($schoolId) {
+                    $sub->where('school_id', $schoolId);
+                })
+                ->orWhere(function ($sub) {
+                    $sub->whereNotNull('school_invitations.id')
+                        ->where('school_invitations.status', 'Accepted');  
+                });
+        })->orderBy('users.created_at', 'desc');
+
+        $teachers = $query->get();
+
+        return jsonResponse(true, 'Teacher fetched successfully', [
+            'teachers' => $teachers,
+        ]);
+    }
+
+    public function freelancerTeacher(Request $request)
+    {
+        $loggedInUser = auth('sanctum')->user();
+        $school = $loggedInUser->school()->first();
+        $schoolId = $school->id;
+
+
+        $perPage = (int) $request->get('per_page', 20);
+        $search = $request->search;
+        $sortBy = $request->get('sort_by', 'full_name');
+        $sortDirection = $request->get('sort_direction', 'asc');
+
+        
+        // Only tutor and school tutor list 
+        $query = User::whereIn('role_id', [2, 4])
+            ->where('users.status','Active')
+            ->where(function ($q) {
+                $q->whereDoesntHave('schoolAgreements')
+                      ->orWhereHas('schoolAgreements', function ($qu) {
+                          $qu->where('is_freelancer', 'Yes');
+                      });
+            })           
+            ->select(
+                'users.id',
+                'users.role_id',
+                'users.user_name', 
+                'users.full_name',
+                'users.email',
+                'users.status',
+                'users.created_at',
+                'school_invitations.status as invited_status'
+            )
+            ->with('schoolAgreements:school_id,user_id,is_freelancer')
+            ->with('tutor:user_id,what_i_teach,address_line_1,address_line_2,city,state,zip,country')            
+            ->leftJoin('school_invitations', function ($join) use ($schoolId) {
+                $join->where('school_invitations.school_id', $schoolId)
+                     ->where(function ($q) {
+                         $q->on('users.id', '=', 'school_invitations.user_id')
+                           ->orOn('users.email', '=', 'school_invitations.email');
+                     });
+            });
+
+
+         if ($request->filled('search')) {        
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");                   
+            });
+        }
+        
+        if (in_array($sortBy, ['id', 'full_name', 'email', 'status', 'created_at'])) {
+            $query->orderBy($sortBy, $sortDirection);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+
+        $teacher = $query->paginate($perPage);
+        return jsonResponse(true, 'Teacher fetched successfully', [
+            'teachers' => $teacher->items(),
+            'total' => $teacher->total(),
+            'current_page' => $teacher->currentPage(),
+            'per_page' => $teacher->perPage(),
+        ]);           
     }
 }

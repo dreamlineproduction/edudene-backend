@@ -91,7 +91,7 @@
             </p>
 
             <div class="button-outer">
-                <a href="{{ env('WEBSITE_URL') }}/#" class="button">
+                <a href="{{ env('FRONTEND_URL') }}/#" class="button">
                     View Class
                 </a>
             </div>
@@ -101,7 +101,7 @@
             </p>
             <p>Best regards,</p>
             <p>
-                <a href="{{ env('WEBSITE_URL') }}">
+                <a href="{{ env('FRONTEND_URL') }}">
                     {{ env('WEBSITE_NAME') }} Team
                 </a>
             </p>

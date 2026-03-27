@@ -43,6 +43,7 @@ class SchoolController extends Controller
 
         $schools = School::where('status', 'Active')
             ->with('user:id,full_name,email')
+            ->with('theme:id,school_id,banner_image,banner_image_url,logo_image,logo_image_url')
             ->withCount(['tutors', 'courses', 'classes']);
 
         if (!empty($search)) {            
@@ -143,7 +144,7 @@ class SchoolController extends Controller
         });
 
       
-        return jsonResponse(true, 'Categories fetched successfully', [
+        return jsonResponse(true, 'Schools fetched successfully', [
             'schools' => $schools->items(),
             'total' => $schools->total(),
             'current_page' => $schools->currentPage(),
@@ -157,6 +158,7 @@ class SchoolController extends Controller
     {
         $schools  = School::where('status', 'Active')
             ->with('user:id,full_name,email')
+            ->with('theme:id,school_id,banner_image,banner_image_url,logo_image,logo_image_url')
             ->withCount('tutors')
             ->withCount('courses')
             ->withCount('classes')
@@ -175,6 +177,7 @@ class SchoolController extends Controller
     public function relatedSchool(Request $request)
     {
         $slug = $request->get('slug');
+
         $school = School::where('school_slug',$slug)->first();
 
         if(!$school) {
@@ -194,12 +197,14 @@ class SchoolController extends Controller
             //       ->orWhere('country', $school->country)
             //       ->orWhere('state', $school->state);
             // })
+            ->with('theme:id,school_id,banner_image,banner_image_url,logo_image,logo_image_url')
             ->limit(6)
             ->get();
 
         if ($relatedSchools->count() < 6) {
             $extra = School::where('school_slug', '!=', $slug)
                 ->inRandomOrder()
+                ->with('theme:id,school_id,banner_image,banner_image_url,logo_image,logo_image_url')
                 ->limit(6 - $relatedSchools->count())
                 ->get();
 
@@ -211,7 +216,7 @@ class SchoolController extends Controller
             return $school;
         });
 
-        return jsonResponse(true, 'Categories fetched successfully', [
+        return jsonResponse(true, 'Related schools fetched successfully', [
             'related_schools' => $relatedSchools,
         ]);
        
@@ -242,14 +247,12 @@ class SchoolController extends Controller
                 $query->where('status', 'Approved');
             }
         ])
+        ->with('theme')
         ->first();
 
         if (!$school) {
             return jsonResponse(false, 'School not found in our database.', null, 404);
-        }
-
-       
-        
+        }        
 
         $school->short_description = shortDescription($school->about_us, 100);
         $school->profile_created = formatDisplayDate($school->created_at, 'Y');
@@ -364,16 +367,15 @@ class SchoolController extends Controller
 
         $query->where(['school_id'=>$school->id,'status' => 'Approved']);
 
-        if ($type === 'upcoming') {
-            $query->whereDate('start_date', '>', $today);
-        } elseif ($type === 'ongoing') {
-            $query->whereDate('start_date', '<=', $today)
-                  ->whereDate('end_date', '>=', $today);
-        } elseif ($type === 'past') {
-            $query->whereDate('end_date', '<', $today);
-        }
+        // if ($type === 'upcoming') {
+        //     $query->whereDate('start_date', '>', $today);
+        // } elseif ($type === 'ongoing') {
+        //     $query->whereDate('start_date', '<=', $today)
+        //           ->whereDate('end_date', '>=', $today);
+        // } elseif ($type === 'past') {
+        //     $query->whereDate('end_date', '<', $today);
+        // }
 
-       // $query->whereDate('end_date', '>=', $today);
 
         if(!empty($sortBy)) {
             $query->where(['class_type_id'=>$sortBy]);
@@ -456,19 +458,14 @@ class SchoolController extends Controller
         ])
         ->where(['school_id'=>$school->id,'status' => 'Active'])
         ->withAvg('reviews', 'rating')
-        ->withCount('reviews');
+        ->withCount('reviews')
+        ->withCount(['enrollments as total_enrollments']);
 
         if(!empty($sortBy)) {
             $query->orderBy('title',$sortBy);
         }
 
-        $courses = $query->paginate($perPage);
-
-        // $courses = collect($courses->items())->map(function ($course) {
-        $courses->getCollection()->transform(function ($course) {
-            $course->enrollment_count = 0;            
-            return $course;
-        });
+        $courses = $query->paginate($perPage);       
 
         return jsonResponse(true, 'User fetched successfully', [
             'courses' => $courses->items(),

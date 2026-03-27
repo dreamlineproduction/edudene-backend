@@ -8,6 +8,7 @@ use App\Mail\User\UserEmailVerificationMail;
 use App\Models\LoginAttempt;
 use App\Models\School;
 use App\Models\User;
+use App\Models\SchoolUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -176,6 +177,7 @@ class SchoolAuthController extends Controller
             'full_name' => $request->owner_name,
             'user_name' => $userName,
             'password' => Hash::make($request->password),
+            'status' => 'Inactive',            
             'profile_step'=>0,
             'is_profile_complete'=>1
         ]);
@@ -186,7 +188,8 @@ class SchoolAuthController extends Controller
         // Update other profile information
         $request->merge([
             'user_id' => $user->id,
-            'school_slug' => $schoolSlug
+            'school_slug' => $schoolSlug,
+            'status' => 'Inactive'
         ]);
 
         $newPath = 'schools';
@@ -204,12 +207,21 @@ class SchoolAuthController extends Controller
 
         $school = School::updateOrCreate(['user_id' => $user->id], $request->toArray());
 
+
+        // School User Data Save
+        SchoolUser::updateOrCreate(['user_id' => $user->id],[
+            'user_id' => $user->id,
+            'school_id' => $school->id
+        ]);
+
+
         $mailData = [
             "fullName" => $user->full_name,
             "schoolName" => $school->school_name,
-            "loginLink" => env('WEBSITE_URL').'/'.$school->school_slug.'/login',
+            "loginLink" => env('FRONTEND_URL').'/'.$school->school_slug.'/login',
         ];
 
+        
         try{
             // Send activation email
             Mail::to($user->email)->send(new ConfirmationSchoolRegistration($mailData));

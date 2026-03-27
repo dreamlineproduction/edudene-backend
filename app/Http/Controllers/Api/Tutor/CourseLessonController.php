@@ -74,9 +74,20 @@ class CourseLessonController extends Controller
         
         $newPath = 'courses/course-'.$courseId;
 
-        if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
+        if($request->type == 'VideoUrl'){
             $insertData['video_url'] = $request->video_url;
         }
+
+        if($request->type == 'Youtube')
+        {
+            $insertData['video_url'] = $request->video_url;            
+        }
+
+        if($request->type == 'Vimeo')
+        {
+            $insertData['video_url'] = $request->video_url;           
+        }
+         
 
         if($request->type == 'Document' || $request->type == 'Image'){
             $finalize = finalizeFile($request->file_id,$newPath);
@@ -133,6 +144,12 @@ class CourseLessonController extends Controller
             return jsonResponse(false, 'Course or Course chapter not found in our database.', null, 404);
         }
 
+        $courseLesson =  CourseLesson::where(['course_id' => $courseId, 'course_chapter_id' => $courseChapterId, 'id' => $id])->first();
+
+        if (!$courseLesson) {
+            return jsonResponse(false, 'Course lesson not found.', null, 404);
+        }
+
         //'Youtube','Vimeo','Video','Image','Document','VideoUrl'
         $validation =[
             'type' => 'required|in:Youtube,Vimeo,VideoUrl,Video,Image,Document',
@@ -141,16 +158,18 @@ class CourseLessonController extends Controller
         if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
             $validation['video_url'] = 'required|url|max:255';
         } 
-        if($request->type == 'Video' || $request->type == 'Document'){
+
+        if($request->type == 'Video' && empty($courseLesson->video)){
             $validation['file_id'] = 'required|exists:files,id';
         } 
 
-        $request->validate($validation);
+         if($request->type == 'Document'){
+            $validation['file_id'] = 'required|exists:files,id';
+        } 
 
-        $courseLesson =  CourseLesson::where(['course_id' => $courseId, 'course_chapter_id' => $courseChapterId, 'id' => $id])->first();
-        if (!$courseLesson) {
-            return jsonResponse(false, 'Course lesson not found.', null, 404);
-        }
+
+
+        $request->validate($validation);
 
 		$updateData['summary'] = $request->summary;
         $updateData['course_id'] = $courseId;
@@ -160,11 +179,22 @@ class CourseLessonController extends Controller
 
         $newPath = 'courses/course-'.$courseId;
 
-        if($request->type == 'Youtube' || $request->type == 'Vimeo' || $request->type == 'VideoUrl'){
+        if($request->type == 'VideoUrl'){
             $updateData['video_url'] = $request->video_url;
         }
 
-        if($request->type == 'Document' || $request->type == 'Image'){
+        if($request->type == 'Youtube')
+        {
+            $updateData['video_url'] = $request->video_url;                    
+        }
+
+        if($request->type == 'Vimeo')
+        {
+            $updateData['video_url'] = $request->video_url;           
+        }
+
+
+        if(($request->type == 'Document' || $request->type == 'Image')  && $request->file_id > 0){
             // Delete Old Document or image
             if(notEmpty($courseLesson->image)){
                 deleteS3File($courseLesson->image);
@@ -175,7 +205,7 @@ class CourseLessonController extends Controller
             $updateData['image_url'] = $finalize['url'];
         }
 
-         if($request->type == 'Video'){
+        if($request->type == 'Video' && $request->file_id > 0){
 
             // Delete Old Video and poster
             if(notEmpty($courseLesson->video) && notEmpty($courseLesson->image)){

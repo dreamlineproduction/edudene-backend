@@ -10,6 +10,7 @@ use Illuminate\Testing\Fluent\Concerns\Has;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\SchoolAggrement;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -62,7 +63,7 @@ class User extends Authenticatable
 
     public function school()
     {
-        return $this->hasOne(School::class);
+        return $this->hasOne(School::class)->with('theme');
     }
 
     public function schoolUser()
@@ -73,6 +74,11 @@ class User extends Authenticatable
     public function schoolAgreements()
     {
         return $this->hasMany(SchoolAggrement::class, 'user_id');
+    }
+
+    public function schoolInvitations()
+    {
+        return $this->hasMany(SchoolInvitation::class, 'user_id', 'id');
     }
 
     public function qualification()

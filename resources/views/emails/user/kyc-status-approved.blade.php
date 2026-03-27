@@ -88,7 +88,7 @@
             <p>You now have full access to all features and services available on {{ env('WEBSITE_NAME') }}.</p>
 
             <div class="button-outer">
-                <a href="{{ env('WEBSITE_URL') }}/account/setting" class="button">
+                <a href="{{ env('FRONTEND_URL') }}/account/setting" class="button">
                     Account
                 </a>
             </div>
@@ -96,7 +96,7 @@
             <p>If you have any questions or need assistance, feel free to contact our support team.</p>
             <p>Best regards,</p>
             <p>
-                <a href="{{ env('WEBSITE_URL') }}">
+                <a href="{{ env('FRONTEND_URL') }}">
                     {{ env('WEBSITE_NAME') }} Team
                 </a>
             </p>

@@ -119,6 +119,7 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
     // Courses Routes
     Route::put('admin/courses/{ID}/change-status', [AdminCourseController::class, 'changeStatus']);
     Route::get('admin/courses', [AdminCourseController::class, 'index']);
+    Route::delete('admin/courses/{COURSE_ID}', [AdminCourseController::class, 'destroy']);
     Route::get('admin/courses/edit-request-courses', [AdminCourseController::class, 'editRequest']);
     
     Route::put('admin/courses/{ID}/change-edit-request-status', [AdminCourseController::class, 'editRequestStatus']);

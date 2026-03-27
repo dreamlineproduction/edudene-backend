@@ -59,6 +59,35 @@ class FileController extends Controller
         return jsonResponse(true,'Document uploaded successfully', $responseArray);
     }
 
+
+    public function showVideoPoster(Request $request)
+    {
+        $videoUrl = $request->video_url;
+        $remoteThumb = null;
+        
+        if(empty($videoUrl) || empty($request->type)) {
+            return jsonResponse(false,'Video url or type is empty.',null,422);           
+        }
+
+        if($request->type === 'Youtube'){
+            $videoId = getYouTubeId($videoUrl);
+            if (! $videoId) {
+                return jsonResponse(false,'Invalid YouTube URL/ID',null,422);                
+            }
+
+            $remoteThumb = getYoutubeVideoPoster($videoId);           
+        }
+
+        if($request->type === 'Vimeo'){
+            $remoteThumb =  getViemoVideoPoster($videoUrl);
+        }
+        
+        return jsonResponse(true,'',[
+            'type' => $request->type,
+            'poster' => $remoteThumb,
+        ]);
+    }
+
     // public function imageTesting($fileId)
     // {
     //     $finalizeImage =  finalizeFile($fileId, 'profile');

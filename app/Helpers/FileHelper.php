@@ -397,4 +397,20 @@ if(!function_exists('getViemoVideoPoster'))
 
 
 
+if (!function_exists('getYoutubeDuration')) {
+    function getYoutubeDuration($videoId) {
+        $apiKey = env('YOUTUBE_API_KEY');
+
+        $url = "https://www.googleapis.com/youtube/v3/videos?id=$videoId&part=contentDetails&key=$apiKey";
+
+        $response = json_decode(file_get_contents($url), true);
+
+        if (!empty($response['items'][0]['contentDetails']['duration'])) {
+            return $response['items'][0]['contentDetails']['duration'];
+        }
+
+        return null;
+    }
+}
+
 ?>

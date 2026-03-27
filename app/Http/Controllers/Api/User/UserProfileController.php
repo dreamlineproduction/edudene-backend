@@ -243,7 +243,7 @@ class UserProfileController extends Controller
 
         $mailData = [
             'fullName' => $user->full_name,
-            'loginLink' => env('WEBSITE_URL').'/login',
+            'loginLink' => env('FRONTEND_URL').'/login',
         ];
 
         try{

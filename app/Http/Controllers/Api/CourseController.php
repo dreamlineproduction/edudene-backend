@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Course;
 use App\Models\SchoolAggrement;
 use App\Models\Classes;
+use App\Models\CourseLesson;
+
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -77,7 +80,8 @@ class CourseController extends Controller
         ])
         ->where('status','Active')
         ->withAvg('reviews', 'rating')
-        ->withCount('reviews');
+        ->withCount('reviews')
+        ->withCount(['enrollments as total_enrollments']);
 
         // Sorting
         if ($sortBy === 'name_desc') {
@@ -116,7 +120,6 @@ class CourseController extends Controller
 
         $query = Course::query();
 
-        // ---------- Relationships ----------
         $query->with([
             'user:id,full_name,user_name',
             'school:id,school_name,school_slug',
@@ -125,7 +128,9 @@ class CourseController extends Controller
         ])
         ->where('status','Active')
         ->withAvg('reviews', 'rating')
-        ->withCount('reviews');
+        ->withCount('reviews')
+        ->withCount(['enrollments as total_enrollments']);
+
 
         // 
         if (!empty($categoryIds)) {
@@ -146,12 +151,11 @@ class CourseController extends Controller
 
         $courses = collect($paginated->items())->map(function ($course) {
             $course->avg_rating = 0.0;
-            $course->review_count = 0;
-            $course->enrollment_count = 0;
-
-            
+            $course->review_count = 0;            
             return $course;
         });
+
+
 
         return jsonResponse(true, 'Popular Course list', [
             'courses' => $courses,
@@ -165,8 +169,8 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
-    {
+    public function show(Request $request, string $slug)
+    {        
         $query = Course::query();
 
         $query->with([
@@ -183,7 +187,12 @@ class CourseController extends Controller
             'courseAsset',
             'courseSeo',
             'language:id,title',
-            'courseChapters.courseLessons',                       
+            //'courseChapters.courseLessons',       
+            'courseChapters' => function ($q) {
+                $q->whereHas('courseLessons') 
+                  ->withCount('courseLessons')
+                  ->with('courseLessons');
+            },                
             'enrollments' => function ($q) {
                 $q->select('id','course_id','user_id')
                 ->latest()
@@ -193,9 +202,6 @@ class CourseController extends Controller
                   'user.information:avatar,user_id,avatar_url'
                 ]);
             },
-            'courseChapters' => function ($q) {
-                $q->withCount('courseLessons');
-            },                        
             'reviews'
         ])
        
@@ -206,11 +212,32 @@ class CourseController extends Controller
 
         $course = $query->where('slug', $slug)->first();
 
-       // dd($course);
 
         if(!$course){
-            return jsonResponse(false, 'Course not found', null, 404);
+            return jsonResponse(false, 'Course not available', null, 404);
         }
+
+        if ($course->status !== 'Active') {
+            if ($request->get('preview_token') !== $course->preview_token) {
+                return jsonResponse(false, 'Course not available',null,404);
+            }
+        }
+
+        // Calculation total time
+        $totalSeconds = CourseLesson::where('course_id', $course->id)->sum('duration');
+        $seconds = (int) $totalSeconds;
+
+        $hours = @floor($seconds / 3600);
+        $minutes = @floor(($seconds % 3600) / 60);
+        $secs = $seconds % 60;
+
+        if ($hours > 0) {
+            $formatted = "{$hours}h {$minutes}m";
+        } else {
+            $formatted = "{$minutes}m {$secs}s";
+        }
+
+        $course->total_duration = $formatted;
 
         if($course->school_id > 0)
         {
@@ -255,16 +282,45 @@ class CourseController extends Controller
         $course->formatted_created_at = formatDisplayDate($course->created_at,'d/m/Y');
         $course->formatted_updated_at = formatDisplayDate($course->updated_at,'d/m/Y');
 
-        $course->avg_rating = "0.0";
-
-        
+        $course->avg_rating = "0.0";        
         $course->total_lessons = $course->courseChapters->sum('course_lessons_count');
             
         
 
         $data['course'] = $course;
         return jsonResponse(true, 'Course details', $data);
+    }
 
+
+    public function freeLesson(string $slug)
+    {
+        $course = Course::where('slug', $slug)->first();
+
+        if (!$course) {
+            return jsonResponse(false, 'Course not found');
+        }
+
+        $courseLessons = CourseLesson::select(
+                'id','title','duration','type','video_url','video','image','image_url'
+            )
+            ->where([
+                'course_id' => $course->id,
+                'is_free_lesson' => 'yes'
+            ])
+            ->get()
+            ->transform(function ($lesson) {
+                if($lesson->duration) {
+                    $lesson->duration_formatted = gmdate("H:i:s", $lesson->duration);    
+                } else {
+                    $lesson->duration_formatted = null;    
+                }
+                
+                return $lesson;
+            });
+
+        return jsonResponse(true, 'Free lessons list', [
+            'free_lessons' => $courseLessons,
+        ]);
     }
 
 
@@ -294,7 +350,7 @@ class CourseController extends Controller
             ])
             ->withAvg('reviews', 'rating')
             ->withCount('reviews')
-
+            ->withCount(['enrollments as total_enrollments'])
             ->latest()
             ->take(6)
             ->get();

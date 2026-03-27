@@ -29,6 +29,7 @@ Route::prefix('v1')->group(function () {
     Route::post('file/upload-image', [FileController::class, 'uploadImage']);
     Route::post('file/upload-video', [FileController::class, 'uploadVideo']);
     Route::post('file/upload-document', [FileController::class, 'uploadDocument']);
+    Route::post('file/video-poster', [FileController::class, 'showVideoPoster']);
     Route::post('testing/{FILE_ID}', [FileController::class, 'imageTesting']);
 
 

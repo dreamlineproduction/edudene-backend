@@ -371,7 +371,7 @@ class UserAuthController extends Controller
             ]);
 
             //$resetLink = url('/user/reset-password?token=' . $resetToken);
-            $resetLink = env('WEBSITE_URL');
+            $resetLink = env('FRONTEND_URL');
             $resetLink .= '/user/reset-password?token=' . $resetToken;
 
             $mailData = [

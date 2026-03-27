@@ -3301,6 +3301,163 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "School Theme",
+          "id": "35eea325-4fa1-418f-becc-91bc2df54458",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "323|edudene_token_FCALu9ajsBwhC1TKZjRMxulVlTYhWEFiRSt4mxFw05acb9f3",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "173b7bbe-2989-44ce-b65d-195733fa384f"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "6d23945e-64e9-4e40-aaac-dfc00e785b1b"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}school/theme",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "theme"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Invitation",
+          "id": "6c39c84c-6aee-433e-89d1-0060f216b339",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "323|edudene_token_FCALu9ajsBwhC1TKZjRMxulVlTYhWEFiRSt4mxFw05acb9f3",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "328a67aa-fb74-4d57-bbb2-850585c2429d"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "86a1ce83-6b17-4d74-a4f0-b10b5152d729"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"teacher_id\":128\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/v1/school/send-invitation",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "school",
+                "send-invitation"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "School Invited Teachers",
+          "id": "f707235e-4e1b-4c5c-88ee-21abc23a0bc4",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "332|edudene_token_6QuMoftnJP6gXahubkjHQrGRrS0pUUyiB9Lv8dpD95f3e663",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}school/classes/teachers?is_pagination=Yes&page=1&per_page=10&search=&sort_by=title&sort_direction=asc",
+              "host": [
+                "{{BASE_URL}}school"
+              ],
+              "path": [
+                "classes",
+                "teachers"
+              ],
+              "query": [
+                {
+                  "key": "is_pagination",
+                  "value": "Yes",
+                  "uuid": "f428bcb1-48eb-4da0-b33f-93b51b5d681a"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "uuid": "ef3cdd77-fb5d-4f1f-b2b2-009969b9d1fc"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "uuid": "f3c1a3e2-5277-49f0-ab36-7870fccaeea4"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "uuid": "7ba4bb3a-6830-4cd7-87ea-c812e00d8f1e"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "title",
+                  "uuid": "35c9b86a-77cc-4c35-a70e-abd69295e1d9"
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "asc",
+                  "uuid": "5471bc26-ab05-4e92-aeab-d3dd79720256"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "d58c3c94-5a2c-4c7e-b8b1-f830ba135e66"
@@ -3783,14 +3940,7 @@
               },
               "request": {
                 "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "24|edudene_token_9F0Hm6PuJB2xn8wRDhN8rnCzn3QbG9RtmOoa0oCd2e0c0895",
-                      "type": "string"
-                    }
-                  ]
+                  "type": "noauth"
                 },
                 "method": "GET",
                 "header": [
@@ -3815,13 +3965,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{BASE_URL}}front/courses/ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents",
+                  "raw": "{{BASE_URL}}front/courses/dsa-fsafsdf-brfgbsdfbhfb-1",
                   "host": [
                     "{{BASE_URL}}front"
                   ],
                   "path": [
                     "courses",
-                    "ai-engineer-core-track:-llm-engineering,-rag,-qlora,-agents"
+                    "dsa-fsafsdf-brfgbsdfbhfb-1"
                   ]
                 }
               },

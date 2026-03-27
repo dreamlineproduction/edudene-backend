@@ -408,24 +408,21 @@ class TutorController extends Controller
             'courseAsset',
             'reviews'
         ])
-            ->where(['user_id' => $user->id, 'status' => 'Active'])
-            ->withAvg('reviews', 'rating')
-            ->withCount('reviews');
+        ->where(['user_id' => $user->id, 'status' => 'Active'])
+        ->withAvg('reviews', 'rating')
+        ->withCount('reviews')
+        ->withCount(['enrollments as total_enrollments']);
 
         $perPage = $request->get('per_page', 10);
         $courses = $query->paginate($perPage);
 
-        $courses = collect($courses->items())->map(function ($course) {
-            $course->avg_rating = 4.5;
-            $course->review_count = rand(1, 5);
-            $course->enrollment_count = rand(100, 500);
-
-
-            return $course;
-        });
-
-        $data['courses'] = $courses;
-        return jsonResponse(true, 'Course list', $data);
+        return jsonResponse(true, 'Courses fetched successfully', [
+            'courses' => $courses->items(),
+            'total' => $courses->total(),
+            'current_page' => $courses->currentPage(),
+            'per_page' => $courses->perPage(),
+            'last_page' => $courses->lastPage(),
+        ]);
     }
 
 
@@ -613,7 +610,6 @@ class TutorController extends Controller
             'slots'           => $slots
         ]);
     }
-
 
 
     public function saveTutorSubjects(Request $request)

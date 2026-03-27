@@ -85,7 +85,7 @@
             <br>
             <p>Thank you</p>
             <p>
-                <a href="{{ env('WEBSITE_URL') }}" title="{{ env('WEBSITE_URL') }}" style="color: #6c2bd9; text-decoration: none;">
+                <a href="{{ env('FRONTEND_URL') }}" title="{{ env('FRONTEND_URL') }}" style="color: #6c2bd9; text-decoration: none;">
                     {{ env('WEBSITE_NAME') }} 
                     Team
                 </a> 

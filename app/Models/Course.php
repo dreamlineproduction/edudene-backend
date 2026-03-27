@@ -15,6 +15,7 @@ class Course extends Model
         'user_id',
         'title',
         'slug',
+        'preview_token',
         'short_description',
         'description',
 		'language_id',

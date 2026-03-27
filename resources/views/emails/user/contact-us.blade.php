@@ -84,7 +84,7 @@
             <p>Thank you for reaching out to us. We have received your message and will get back to you as soon as possible.</p>
             <p>Best regards,</p>
             <p>
-                <a href="{{ env('WEBSITE_URL') }}" title="{{ env('WEBSITE_URL') }}">
+                <a href="{{ env('FRONTEND_URL') }}" title="{{ env('FRONTEND_URL') }}">
                     {{ env('WEBSITE_NAME') }} Team
                 </a>
             </p>
