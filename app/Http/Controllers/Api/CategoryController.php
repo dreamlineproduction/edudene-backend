@@ -119,4 +119,31 @@ class CategoryController extends Controller
 	        ['menu' => $menu]
 	    );
 	}
+
+	public function getHierarchicalCategoriesInterest()
+	{
+		$categories = Category::where('status', 'Active')
+		->with([
+			'subCategories' => function($query) {
+				$query->where('status', 'Active')
+					->with([
+						'subSubCategories' => function($subQuery) {
+							$subQuery->where('status', 'Active')
+								->with([
+									'categoryLevelFours' => function($levelFourQuery) {
+										$levelFourQuery->where('status', 'Active');
+									}
+								]);
+						}
+					]);
+			}
+		])
+		->get();
+
+		return jsonResponse(
+			true,
+			'Hierarchical categories fetched successfully',
+			['categories' => $categories]
+		);
+	}
 }

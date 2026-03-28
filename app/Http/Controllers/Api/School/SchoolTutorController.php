@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Api\School;
 
 use App\Http\Controllers\Controller;
 use App\Mail\School\TutorCreation;
+use App\Models\CategoryLevelFour;
 use App\Models\School;
 use App\Models\SchoolAggrement;
+use App\Models\SchoolCategory;
+use App\Models\SchoolCategoryLevelFour;
+use App\Models\SchoolSubCategory;
+use App\Models\SchoolSubSubCategory;
+use App\Models\SchoolUser;
 use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -384,5 +390,155 @@ class SchoolTutorController extends Controller
 
 
         return jsonResponse(true, 'Tutor updated successfully.', $data);
+    }
+
+	public function saveSchoolSubjects(Request $request)
+    {
+        try {
+            $tutorId = auth('sanctum')->user()->id;
+
+			$schoolInfo = SchoolUser::where('user_id', $tutorId)->first();
+
+			if (!empty($schoolInfo)) {
+				$schoolId = $schoolInfo->school_id;
+			} else {
+				 return jsonResponse(
+					false,
+					'Error saving tutor subjects',
+					['error' => '']
+				);
+			}
+
+            // Validate request
+            $request->validate([
+                'subjects' => 'required|array',
+                'subjects.*.id' => 'required|integer|exists:category_level_fours,id',
+            ]);
+
+            $subjectIds = collect($request->subjects)->pluck('id')->toArray();
+
+            // Delete existing records for this tutor
+            SchoolCategory::where('school_id', $tutorId)->delete();
+            SchoolSubCategory::where('school_id', $tutorId)->delete();
+            SchoolSubSubCategory::where('school_id', $tutorId)->delete();
+            SchoolCategoryLevelFour::where('school_id', $tutorId)->delete();
+
+            // Get all unique parent IDs
+            $categoryLevelFours = CategoryLevelFour::whereIn('id', $subjectIds)
+                ->select('id', 'category_id', 'sub_category_id', 'sub_sub_category_id')
+                ->get();
+
+            // Track unique parent IDs to avoid duplicates
+            $uniqueCategories = collect();
+            $uniqueSubCategories = collect();
+            $uniqueSubSubCategories = collect();
+
+            foreach ($categoryLevelFours as $levelFour) {
+                // Save to level 4 table
+                SchoolCategoryLevelFour::create([
+                    'school_id' => $schoolId,
+                    'category_id' => $levelFour->id,
+                ]);
+
+                // Collect unique parent IDs
+                $uniqueCategories->push($levelFour->category_id);
+                $uniqueSubCategories->push($levelFour->sub_category_id);
+                $uniqueSubSubCategories->push($levelFour->sub_sub_category_id);
+            }
+
+            // Save unique parent categories
+            foreach ($uniqueCategories->unique() as $categoryId) {
+                SchoolCategory::firstOrCreate(
+                    [
+                        'school_id' => $schoolId,
+                        'category_id' => $categoryId,
+                    ]
+                );
+            }
+
+            foreach ($uniqueSubCategories->unique() as $subCategoryId) {
+                SchoolSubCategory::firstOrCreate(
+                    [
+                        'school_id' => $schoolId,
+                        'category_id' => $subCategoryId,
+                    ]
+                );
+            }
+
+            foreach ($uniqueSubSubCategories->unique() as $subSubCategoryId) {
+                SchoolSubSubCategory::firstOrCreate(
+                    [
+                        'school_id' => $schoolId,
+                        'category_id' => $subSubCategoryId,
+                    ]
+                );
+            }
+
+            return jsonResponse(
+                true,
+                'School subjects saved successfully',
+                [
+                    'school_id' => $schoolId,
+                    'subjects_count' => count($subjectIds),
+                    'saved_subjects' => $subjectIds,
+                ]
+            );
+        } catch (\Exception $e) {
+            return jsonResponse(
+                false,
+                'Error saving tutor subjects',
+                ['error' => $e->getMessage()]
+            );
+        }
+    }
+
+    /**
+     * Fetch tutor's expertise subjects
+     */
+    public function getTutorSubjects()
+    {
+        try {
+            $tutorId = auth('sanctum')->user()->id;
+
+			$schoolInfo = SchoolUser::where('user_id', $tutorId)->first();
+
+			if (!empty($schoolInfo)) {
+				$schoolId = $schoolInfo->school_id;
+			} else {
+				 return jsonResponse(
+					false,
+					'Error saving tutor subjects',
+					['error' => '']
+				);
+			}
+
+            // Fetch tutor's subjects with category level four details
+            $subjects = SchoolCategoryLevelFour::where('school_id', $schoolId)
+                ->with('categoryLevelFour:id,title,category_id,sub_category_id,sub_sub_category_id')
+                ->get()
+                ->map(function ($tutorSubject) {
+                    $levelFour = $tutorSubject->categoryLevelFour;
+                    return [
+                        'id' => $levelFour->id,
+                        'title' => $levelFour->title,
+                        'category_id' => $levelFour->category_id,
+                        'sub_category_id' => $levelFour->sub_category_id,
+                        'sub_sub_category_id' => $levelFour->sub_sub_category_id,
+                    ];
+                })
+                ->values();
+
+            return jsonResponse(
+                true,
+                'Expertise subjects fetched successfully',
+                ['subjects' => $subjects]
+            );
+        } catch (\Exception $e) {
+            return jsonResponse(
+                false,
+                'Error fetching tutor subjects',
+                ['error' => $e->getMessage()]
+            );
+        }
     }
 }

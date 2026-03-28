@@ -17,6 +17,9 @@ class SchoolUser extends Model
         return $this->belongsTo(User::class);
     }
 
+	public function school() {
+		return $this->belongsTo(School::class);
+	}
 
     protected $hidden = [
         'created_at',

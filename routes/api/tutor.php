@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\LanguageController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Tutor\OneOnOneClassSlotController;
 use App\Http\Controllers\Api\Tutor\SubjectRequestController;
+use App\Http\Controllers\Api\Tutor\CourseBulkDiscountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Tutor\TutorAuthController;
 use App\Http\Controllers\Api\Tutor\TutorAvailabilityController;
@@ -10,6 +12,7 @@ use App\Http\Controllers\Api\Tutor\TutorPricingController;
 use App\Http\Controllers\Api\Tutor\TutorProfileController;
 use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 use App\Http\Controllers\Api\TutorController;
+use App\Http\Controllers\Api\Tutor\ClassBulkDiscountController;
 
 Route::prefix('v1')->group(function () {   
 	Route::post('tutor/login', [TutorAuthController::class, 'login']);
@@ -44,5 +47,15 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:2'])->group(function () {
 	// Subject Request Routes
 	Route::post('/tutor/request-subjects', [SubjectRequestController::class, 'store']);
 
+	// Course Bulk Discounts Routes
+	Route::apiResource('/tutor/course-bulk-discounts', CourseBulkDiscountController::class);	
+
+	// Class Bulk Discounts Routes
+	Route::apiResource('/tutor/class-bulk-discounts', ClassBulkDiscountController::class);	
+
+	// language api
 	Route::get('/tutor/languages', [LanguageController::class,'index']);
+
+	Route::get('/tutor/categories-hierarchical', [CategoryController::class, 'getHierarchicalCategoriesInterest']); // Get all categories with hierarchy
+
 });

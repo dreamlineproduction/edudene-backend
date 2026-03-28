@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Admin\UserVerificationController;
 use App\Http\Controllers\Api\Admin\TutorController as AdminTutorController;
 use App\Http\Controllers\Api\Admin\SchoolController as AdminSchoolController;
 use App\Http\Controllers\Api\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Api\Admin\EmailTemplateController;
 use App\Http\Controllers\Api\Admin\SubjectRequestController;
 use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 use App\Http\Controllers\Api\Admin\LanguageController;
@@ -131,5 +132,10 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:5'])->group(function () {
 
     // Language api
     Route::apiResource('admin/languages', LanguageController::class);
+
+	// Email Template
+    Route::get('admin/email-templates', [EmailTemplateController::class,'index']);
+    Route::get('admin/email-templates/{id}', [EmailTemplateController::class,'show']);
+    Route::put('admin/email-templates/{id}', [EmailTemplateController::class,'update']);
    
 });
