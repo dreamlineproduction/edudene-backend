@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\PageController as FrontPageController;
 use App\Http\Controllers\Api\CourseController as FrontCourseController;
 use App\Http\Controllers\Api\FaqController as FrontFaqController;
 use App\Http\Controllers\Api\SchoolController as FrontSchoolController;
+use App\Http\Controllers\Api\SchoolInvitationController as FrontSchoolInvitationController;
 use App\Http\Controllers\Api\Tutor\PopularTutorSubCategoryController;
 use App\Http\Controllers\Api\User\ChangeEmailRequestController as FrontChangeEmailRequestController;
 use App\Http\Controllers\Api\LanguageController as FrontLanguageController;
@@ -74,6 +75,11 @@ Route::prefix('v1')->group(function () {
     Route::get('front/school/{SCHOOL_SLUG}/courses', [FrontSchoolController::class, 'course']);
     Route::get('front/school/{SCHOOL_SLUG}/teachers', [FrontSchoolController::class, 'teachers']);
     
+
+    // School Invitation
+    Route::get('front/school/invitation/{INVITE_ID}', [FrontSchoolInvitationController::class, 'show']);
+    Route::put('front/school/invitation/{INVITE_ID}', [FrontSchoolInvitationController::class, 'update']);
+
 
 	Route::prefix('cart')->group(function () {
         Route::get('/', [CartController::class, 'index']);

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
 
             $table->string('email')->nullable();
-            $table->string('token')->unique();
+            $table->string('token')->unique()->nullable();
 
             $table->enum('status', ['Invited', 'Accepted', 'Rejected'])->nullable();
             $table->timestamp('accepted_at')->nullable();

@@ -40,7 +40,7 @@
         .button {
             display: inline-block;
             padding: 12px 24px;
-            background-color: #f59e0b; /* 🔥 yellow/amber */
+            background-color: #007bff;
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;

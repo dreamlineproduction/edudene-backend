@@ -36,7 +36,7 @@ class SchoolInvitationController extends Controller
             return jsonResponse(false, 'Invitation already sent to this email');
         }
 
-        $token = Str::random(55);
+        $token = Str::random(100);
 
         DB::beginTransaction();
         try {

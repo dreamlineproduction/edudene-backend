@@ -15,4 +15,22 @@ class SchoolInvitation extends Model
         'token',
         'status'
     ];
+
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
+    protected $hidden =[
+        'created_at',
+        'updated_at'
+    ];
 }
