@@ -70,4 +70,9 @@ class Classes extends Model
     {
         return $this->hasMany(ClassSessions::class, 'class_id');
     }
+
+    public function exam()
+    {
+        return $this->hasOne(Exam::class,'class_id');
+    }
 }

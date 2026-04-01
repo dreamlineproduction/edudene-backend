@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\School\ClassController;
 use App\Http\Controllers\Api\School\ClassSessionController;
 use App\Http\Controllers\Api\School\CourseBulkDiscountController;
 use App\Http\Controllers\Api\School\ClassBulkDiscountController;
+use App\Http\Controllers\Api\School\ExamController;
 use App\Http\Controllers\Api\School\SchoolController;
 use App\Http\Controllers\Api\School\SchoolThemeController;
 use App\Http\Controllers\Api\School\SchoolInvitationController;
@@ -53,6 +54,10 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:3'])->group(function () {
 	// School Theme
     Route::put('school/{SCHOOL_ID}/theme', [SchoolThemeController::class, 'update']);
     Route::get('school/{SCHOOL_ID}/theme', [SchoolThemeController::class, 'show']);
+
+    // Exam Routes
+    Route::apiResource('/school/exams', ExamController::class)->only(['index','store','show']); 
+    Route::get('school/exam-classes', [ExamController::class,'getClasses']);
 	
     // Change Password Route
     Route::post('school/change-password', [SchoolController::class, 'changePassword']);
@@ -62,7 +67,10 @@ Route::prefix('v1')->middleware(['auth:sanctum','role:3'])->group(function () {
     // // Change Password Route
     // Route::post('school/change-password', [SchoolController::class, 'changePassword']);
     // Route::get('school/{SCHOOL_ID}', [SchoolController::class, 'show']);
-    // Route::put('school/{SCHOOL_ID}', [SchoolController::class, 'update']);   
+    // Route::put('school/{SCHOOL_ID}', [SchoolController::class, 'update']);  
+	
+	
+
 
 });
 
