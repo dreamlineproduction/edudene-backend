@@ -8,12 +8,15 @@ use App\Mail\User\UserEmailVerificationMail;
 use App\Mail\User\UserPasswordResetMail;
 use App\Models\LoginAttempt;
 use App\Models\User;
+use App\Models\Cart;
+use App\Models\DirectCheckout;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\DirectCheckoutController;
 
 use Google\Client as GoogleClient;
 
@@ -164,6 +167,7 @@ class UserAuthController extends Controller
 
         // Generate token
         app(CartController::class)->mergeAfterLogin($request,$user->id);
+        
         $token = $user->createToken('auth_token')->plainTextToken;
 
     
@@ -444,6 +448,12 @@ class UserAuthController extends Controller
                 ], 401);
             }
 
+
+            // Delete direct check out dataif user logout
+            $cart =  Cart::where('user_id',$user->id)->first();
+            if($cart) {
+                DirectCheckout::where('cart_id',$cart->id)->delete();
+            }
 
             $user->currentAccessToken()->delete();
 

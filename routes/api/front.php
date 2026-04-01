@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\PopularSubCategoryController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\DirectCheckoutController;
 use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContactController;
@@ -89,6 +90,10 @@ Route::prefix('v1')->group(function () {
         Route::delete('/remove-via-item-id/{ITEM_ID}/{TYPE}', [CartController::class, 'removeViaItemId']);
         Route::delete('/clear', [CartController::class, 'clear']);
     });
+    
+    Route::get('direct/checkout', [DirectCheckoutController::class, 'show']);
+    Route::post('direct/checkout', [DirectCheckoutController::class, 'add']);
+
 
 	// Popular Category Routes for courses
 	Route::get('front/popular-courses-field', [PopularSubCategoryController::class, 'getActiveFrontend']);

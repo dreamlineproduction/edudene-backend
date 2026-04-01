@@ -13,4 +13,10 @@ class Cart extends Model
     {
         return $this->hasMany(CartItem::class);
     }
+
+
+    public function directCheckout()
+    {
+        return $this->hasMany(DirectCheckout::class);
+    }
 }

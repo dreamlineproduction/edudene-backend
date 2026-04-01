@@ -4,44 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\User;
-use App\Models\CartItem;
 use App\Models\DirectCheckout;
-
 use App\Models\CourseAsset;
 use App\Models\CourseChapter;
 use App\Models\Tutor;
 use App\Models\CourseBulkDiscount;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cookie;
-
-class CartController extends Controller
+class DirectCheckoutController extends Controller
 {
-    
-    private function getCart(Request $request)
-    {
-        if (auth('sanctum')->check()) {
-            return Cart::firstOrCreate(
-                ['user_id' => auth('sanctum')->id()],
-                ['cart_token' => null]
-            );
-        }
 
-        $token = $request->cookie('cart_token');
-
-        if (!$token) {
-            $token = bin2hex(random_bytes(16));
-            Cookie::queue('cart_token', $token, 60 * 24 * 7);
-        }
-
-        return Cart::firstOrCreate(['cart_token' => $token]);
-    }
-
-
-    public function index(Request $request)
+    public function show(Request $request)
     {
         $cart = $this->getCart($request);
 
@@ -52,7 +26,7 @@ class CartController extends Controller
             ]);
         }
 
-        $items = $cart->items()->with('item')->get();
+        $items = $cart->directCheckout()->with('item')->get();
 
         $data = $items->map(function ($row) {
 
@@ -146,7 +120,7 @@ class CartController extends Controller
                 'price'     => $row->price,
                 'discount_price' => $row->discount_price,
                 'qty'       => $row->qty,
-                'total'     => $row->discount_price * $row->qty,
+                'total'     => $row->discount_price,
                 'model'     => $row->model_name,
                 'meta_data' => $row->metadata,
 
@@ -156,7 +130,7 @@ class CartController extends Controller
             ];
         });
 
-        return jsonResponse(true, 'fetch cart data', [
+        return jsonResponse(true, 'fetch direct cart data', [
             'cart_id' => $cart->id,
             'items'   => $data,
             'total'   => $data->sum('total')
@@ -167,24 +141,48 @@ class CartController extends Controller
     public function add(Request $request)
     {
         $request->validate([
+            'school_id' => 'required|integer|exists:schools,id',
             'is_group' => 'required|boolean',
             'cartItem' => 'nullable|array',
             'cartGroupItem' => 'nullable|array',
         ]);
 
         $cart = $this->getCart($request);
+        $schoolId = $request->school_id
+;
+
+
         if (!$cart) {
             return jsonResponse(false, 'Cart token missing', null, 400);
         }
 
         if ($request->is_group) {
-            return $this->handleGroupItem($request->cartGroupItem, $cart);
+            return $this->handleGroupItem($request->cartGroupItem, $cart,$schoolId);
         }
 
-        return $this->handleSingleItem($request->cartItem, $cart);
+        return $this->handleSingleItem($request->cartItem, $cart,$schoolId);
     }
 
-    private function handleGroupItem($groupItemData, $cart)
+    private function getCart(Request $request)
+    {
+        if (auth('sanctum')->check()) {
+            return Cart::firstOrCreate(
+                ['user_id' => auth('sanctum')->id()],
+                ['cart_token' => null]
+            );
+        }
+
+        $token = $request->cookie('cart_token');
+
+        if (!$token) {
+            $token = bin2hex(random_bytes(16));
+            Cookie::queue('cart_token', $token, 60 * 24 * 7);
+        }
+
+        return Cart::firstOrCreate(['cart_token' => $token]);
+    }
+       
+    private function handleGroupItem($groupItemData, $cart,$schoolId)
     {
         validator($groupItemData, [
             'item_type' => 'required|string',
@@ -195,16 +193,11 @@ class CartController extends Controller
             'metadata.products' => 'required|array|min:1',
         ])->validate();
 
-        // Duplicate check
-        $exists = CartItem::where([
-            'cart_id' => $cart->id,
-            'item_type' => $groupItemData['item_type'],
-            'item_id' => $groupItemData['item_id'],
-        ])->exists();
 
-        if ($exists) {
-            return jsonResponse(false, 'This package is already in your cart', null, 400);
-        }
+        // Duplicate check
+        DirectCheckout::where([
+            'cart_id' => $cart->id,
+        ])->delete();       
 
         // Min quantity check
         $package = CourseBulkDiscount::find($groupItemData['item_id']);
@@ -213,8 +206,9 @@ class CartController extends Controller
             return jsonResponse(false, "Minimum {$package->min_quantity} courses required", null, 400);
         }
 
-        $item = CartItem::create([
+        $item = DirectCheckout::create([
             'cart_id' => $cart->id,
+            'school_id' => $schoolId,
             'item_type' => $groupItemData['item_type'],
             'item_id' => $groupItemData['item_id'],
             'title' => $groupItemData['title'],
@@ -233,7 +227,7 @@ class CartController extends Controller
         ]);
     }
 
-    private function handleSingleItem($itemData, $cart)
+    private function handleSingleItem($itemData, $cart,$schoolId)
     {
         validator($itemData, [
             'item_type' => 'required|string',
@@ -243,24 +237,17 @@ class CartController extends Controller
             'discount_price' => 'required|numeric|min:0',
             'metadata'  => 'nullable|array'
         ])->validate();
-
-        $find = [
-            'cart_id'   => $cart->id,
-            'item_type' => $itemData['item_type'],
-            'item_id'   => $itemData['item_id'],
-        ];
-
-        $exists = CartItem::where($find)->exists();
-
-        if ($exists) {
-            return jsonResponse(false, 'This item is already in your cart', null, 400);
-        }
+        
+        DirectCheckout::where([
+            'cart_id' => $cart->id,
+        ])->delete();   
 
         // Model resolve
         $modelName = $this->resolveModel($itemData['item_type']);
 
-        $item = CartItem::create([
+        $item = DirectCheckout::create([
             'cart_id' => $cart->id,
+            'school_id' => $schoolId,
             'item_type' => $itemData['item_type'],
             'item_id' => $itemData['item_id'],
             'title' => $itemData['title'],
@@ -288,192 +275,5 @@ class CartController extends Controller
             'TUTOR_SLOT', 'SCHOOL_SLOT' => 'App\Models\OneOnOneClassSlot',
             default => null,
         };
-    }
-
-
-
-    // public function addOLD(Request $request)
-    // {
-    //     $request->validate([
-    //         'item_type' => 'required|string',
-    //         'item_id'   => 'required|integer',
-    //         'title'     => 'required|string',
-    //         'price'     => 'required|numeric|min:0',
-    //         'discount_price'     => 'required|numeric|min:0',
-    //         'qty'       => 'nullable|integer|min:1',
-    //         'metadata'  => 'nullable|array'
-    //     ]);
-
-    //     $cart = $this->getCart($request);
-
-    //     if (!$cart) {
-    //         return jsonResponse(false,'Cart token missing',null,400);
-    //     }
-
-    //     $find =  [
-    //         'cart_id'   => $cart->id,
-    //         'item_type' => $request->item_type,
-    //         'item_id'   => $request->item_id,
-    //     ];
-
-    //     $count = CartItem::where($find)->count();
-
-    //     if($count > 0) {
-    //         return jsonResponse(false,'This item is already in your cart',null,400);
-    //     }
-
-    //     $modelName = null;
-    //     $message = 'Item added to cart';
-
-    //     if($request->item_type === 'SCHOOL_CLASS' || $request->item_type === 'TUTOR_CLASS'){
-    //         $modelName = 'App\Models\Classes';
-    //         $message  = "Class added to cart successfully.";
-    //     }
-
-    //     if($request->item_type === "SCHOOL_COURSE" || $request->item_type === "TUTOR_COURSE"){
-    //         $modelName = 'App\Models\Course';
-    //         $message = "Course added to cart successfully.";
-    //     }
-
-    //     if($request->item_type === "SCHOOL_COURSE_CHAPTER" || $request->item_type === "TUTOR_COURSE_CHAPTER"){
-    //         $modelName = 'App\Models\Course';
-    //         $message = "Course chapter added to cart successfully.";
-    //     }
-
-    //     if($request->item_type === "TUTOR_SLOT" || $request->item_type === "SCHOOL_SLOT"){
-    //         $modelName = 'App\Models\OneOnOneClassSlot';
-    //         $message = "Slot added to cart successfully.";
-    //     }
-
-
-    //     $item = CartItem::updateOrCreate($find,[
-    //             'title'    => $request->title,
-    //             'price'    => $request->price,
-    //             'discount_price'    => $request->discount_price,
-    //             //'qty'      => DB::raw('qty + ' . ($request->qty ?? 1)),
-    //             'qty'      => 1,
-    //             'model_name' => $modelName,
-    //             'metadata' => $request->metadata
-    //         ]
-    //     );
-
-    //     return response()->json([
-    //         'message' => $message,
-    //         'item'    => $item
-    //     ]);
-    // }
-
-    public function updateQty(Request $request)
-    {
-        $request->validate([
-            'item_id' => 'required|integer',
-            'qty'     => 'required|integer|min:1'
-        ]);
-
-        $cart = $this->getCart($request);
-
-        $item = CartItem::where('cart_id', $cart->id)
-            ->where('id', $request->item_id)
-            ->firstOrFail();
-
-        $item->update([
-            'qty' => $request->qty
-        ]);
-
-        return response()->json([
-            'message' => 'Quantity updated'
-        ]);
-    }
-
-
-    public function remove(Request $request, $id)
-    {
-        $cart = $this->getCart($request);
-
-        CartItem::where('cart_id', $cart->id)
-            ->where('id', $id)
-            ->delete();
-
-        return response()->json([
-            'message' => 'Item removed'
-        ]);
-    }
-
-    public function removeViaItemId(Request $request, $itemId,$type)
-    {
-        CartItem::where(['item_id'=>$itemId,'item_type'=>$type])
-            ->delete();
-
-        return response()->json([
-            'message' => 'Item removed'
-        ]);
-    }
-
-
-   
-    public function clear(Request $request)
-    {
-        $cart = $this->getCart($request);
-
-        $cart->items()->delete();
-
-        return response()->json([
-            'message' => 'Cart cleared'
-        ]);
-    }
-
-
-    public function mergeAfterLogin(Request $request, $userId)
-    {
-        $token = $request->cookie('cart_token');
-
-        if (!$token || !$userId) return;
-
-        $guestCart = Cart::with(['items','directCheckout'])
-            ->where('cart_token', $token)
-            ->whereNull('user_id')
-            ->first();
-
-        if (!$guestCart) return;
-
-        // Find or create user's cart
-        $userCart = Cart::firstOrCreate(
-            ['user_id' => $userId],
-            ['cart_token' => null]
-        );
-
-        foreach ($guestCart->items as $item) {
-            $existing = CartItem::where('cart_id', $userCart->id)
-                ->where('item_type', $item->item_type)
-                ->where('item_id', $item->item_id)
-                ->first();
-
-            if ($existing) {
-                $existing->qty += $item->qty;
-                $existing->save();
-            } else {
-                $item->cart_id = $userCart->id;
-                $item->save();
-            }           
-        }
-
-        foreach ($guestCart->directCheckout as $item) {
-            $dcExisting = DirectCheckout::where('cart_id', $userCart->id)
-                ->where('item_type', $item->item_type)
-                ->where('item_id', $item->item_id)
-                ->first();
-
-            if ($dcExisting) {
-                $dcExisting->delete();
-            } else {
-                $item->cart_id = $userCart->id;
-                $item->save();
-            }           
-        }
-
-        // Delete guest cart
-        $guestCart->delete();
-
-        Cookie::queue(Cookie::forget('cart_token'));
-    }
+    }    
 }
