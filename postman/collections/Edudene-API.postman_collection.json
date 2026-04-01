@@ -4449,7 +4449,7 @@
             "header": [
               {
                 "key": "Cookie",
-                "value": "cart_token=39258a6d-df03-4f30-ab02-90e729fe2ae8",
+                "value": "_ga=GA1.1.1046031385.1770030204; __stripe_mid=03da920e-7459-4fdd-8a34-c0ac65d14cdbc04b36; cc_cookie=%7B%22categories%22%3A%5B%22necessary%22%2C%22analytics%22%2C%22ads%22%5D%2C%22revision%22%3A0%2C%22data%22%3Anull%2C%22consentTimestamp%22%3A%222026-02-02T11%3A54%3A11.263Z%22%2C%22consentId%22%3A%22a9c0fdd1-3052-4716-8dc1-1b80331baf10%22%2C%22services%22%3A%7B%22necessary%22%3A%5B%5D%2C%22analytics%22%3A%5B%22youtube%22%2C%22vimeo%22%5D%2C%22ads%22%3A%5B%5D%7D%2C%22lastConsentTimestamp%22%3A%222026-02-02T11%3A54%3A11.263Z%22%7D; im_youtube=1; im_vimeo=1; _ga_K2ZGVWZB3C=GS2.1.s1770035574$o3$g0$t1770035574$j60$l0$h0; cart_token=eyJpdiI6Inl5ak94SVRuY21vK3dJR1BuUUNYeVE9PSIsInZhbHVlIjoiU3BJTVRRbDA4QnNTVU9QZWdoTUprdm1DUVZ1WTBVeFNEZWN5SHVzQ09GdjhaRStBQzZnTi9oYkFTY2l1eTZ3Uy9PUUhCR0thRWtIMzZvS1NBNmUwNzQrR0QralhtbFdQTHhhblRNdlFReHM9IiwibWFjIjoiNGE2NzZhZDk5ODBiMjcxMWU5Y2QyY2EyNzk2NGM0ZTQ4OWQ1MThjMDg1Yjk5MjA1NDRkMGY4NmRhNTNhYjE0YiIsInRhZyI6IiJ9; __next_hmr_refresh_hash__=1112",
                 "type": "text",
                 "uuid": "b0d8cea2-6814-43a4-a708-86ad56c26805"
               }

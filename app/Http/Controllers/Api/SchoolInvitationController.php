@@ -82,7 +82,7 @@ class SchoolInvitationController extends Controller
         //
         $invitation = SchoolInvitation::where('token',$token)
             ->where('status','Invited')
-           ->with([
+            ->with([
                 'school:id,school_name,school_slug,address_line_1,address_line_2,city,state,zip,country',
                 'school.theme:school_id,logo_image,logo_image_url'   
             ])

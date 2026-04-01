@@ -258,7 +258,6 @@ class SchoolController extends Controller
         $school->profile_created = formatDisplayDate($school->created_at, 'Y');
 
         $school->total_reviews = 0;
-        $school->avg_rating =0;
 
         
 
@@ -452,7 +451,8 @@ class SchoolController extends Controller
         $query = Course::query();
         $query->with([
             'user:id,full_name',
-            'school:id,school_name',           
+            'school:id,school_name,school_slug',
+            'school.theme:school_id,logo_image,logo_image_url',            
             'courseAsset',
             'reviews'
         ])
@@ -461,9 +461,16 @@ class SchoolController extends Controller
         ->withCount('reviews')
         ->withCount(['enrollments as total_enrollments']);
 
+        if($request->get('current_id')) 
+        {
+            $query->where('id','!=',$request->get('current_id'));
+        }
+
         if(!empty($sortBy)) {
             $query->orderBy('title',$sortBy);
         }
+
+
 
         $courses = $query->paginate($perPage);       
 

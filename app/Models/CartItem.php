@@ -12,12 +12,15 @@ class CartItem extends Model
         'cart_id',
         'item_type',
         'item_id',
+        'is_group',
+        'slug',
         'model_name',
         'title',
         'price',
         'discount_price',
         'qty',
         'metadata'
+
     ];
 
     protected $casts = [

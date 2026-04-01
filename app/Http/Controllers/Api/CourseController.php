@@ -8,6 +8,8 @@ use App\Models\Course;
 use App\Models\SchoolAggrement;
 use App\Models\Classes;
 use App\Models\CourseLesson;
+use App\Models\SchoolTheme;
+use App\Models\CourseBulkDiscount;
 
 use Illuminate\Http\Request;
 
@@ -163,7 +165,6 @@ class CourseController extends Controller
             'current_page' => $paginated->currentPage(),
             'per_page' => $paginated->perPage(),
         ]);
-
     }
 
     /**
@@ -176,7 +177,6 @@ class CourseController extends Controller
         $query->with([
             'user:id,full_name,user_name',
             'user.tutor:id,avatar,user_id,avatar_url,about',
-            'school:id,school_name,logo,logo_url,about_us,school_slug',            
             'courseType',
             'category:id,title',
             'subCategory:id,title',
@@ -187,7 +187,6 @@ class CourseController extends Controller
             'courseAsset',
             'courseSeo',
             'language:id,title',
-            //'courseChapters.courseLessons',       
             'courseChapters' => function ($q) {
                 $q->whereHas('courseLessons') 
                   ->withCount('courseLessons')
@@ -204,7 +203,10 @@ class CourseController extends Controller
             },
             'reviews'
         ])
-       
+        ->with([
+            'school:id,school_name,school_slug,about_us',
+            'school.theme:school_id,logo_image,logo_image_url as logo_image_url',        
+        ])
         ->withAvg('reviews', 'rating')
         ->withCount('reviews')
         ->withCount('courseChapters')
@@ -239,11 +241,24 @@ class CourseController extends Controller
 
         $course->total_duration = $formatted;
 
+        $packages = [];
         if($course->school_id > 0)
         {
+            $theme = SchoolTheme::select('logo_image','logo_image_url')
+                ->where('school_id',$course->school->id)
+                ->first();
+
+            if($theme && !empty($theme->logo_image)) 
+            {
+                $creator['image_url'] = $theme->logo_image_url;
+            } else {
+                $creator['image_url'] = null;
+            }
+
+
             $creator['id'] = $course->school->id;
             $creator['name'] = $course->school->school_name;
-            $creator['image_url'] = $course->school->logo_url;
+            
             $creator['slug'] = $course->school->school_slug;
             $creator['about_us'] = shortDescription($course->school->about_us,90);
 
@@ -256,6 +271,18 @@ class CourseController extends Controller
             $totalTutors = SchoolAggrement::where('school_id',$course->school->id)->count();
             $creator['total_tutors'] = $totalTutors;
 
+
+            // Select Schools Packages
+            $packages = CourseBulkDiscount::select('id','owner_id','title',
+                'owner_type','min_quantity','discount_percentage','text'
+                )->where([
+                    'owner_id'=>$course->school->id,
+                    'owner_type'=>'school',
+                    'status' => 'Active'
+                ])
+                ->where('min_quantity', '<=', $totalCourse)
+                ->orderBy('min_quantity', 'desc')
+                ->get();
         } else {
             $creator['id'] = $course->user->id;
             $creator['name'] = $course->user->full_name;
@@ -273,6 +300,18 @@ class CourseController extends Controller
 
             //$totalTutors = Course::where('user_id',$course->user->id)->count();
             $creator['total_tutors'] = 0;
+
+            // Select Schools Packages
+           $packages = CourseBulkDiscount::select('id','owner_id','title',
+                'owner_type','min_quantity','discount_percentage','text'
+                )->where([
+                    'owner_id'=>$course->user->id,
+                    'owner_type'=>'tutor',
+                    'status' => 'Active'
+                ])
+                ->where('min_quantity', '<=', $totalCourse)
+                ->orderBy('min_quantity', 'desc')
+                ->get();
         }
 
 
@@ -287,8 +326,10 @@ class CourseController extends Controller
             
         
 
-        $data['course'] = $course;
-        return jsonResponse(true, 'Course details', $data);
+        return jsonResponse(true, 'Course details',[
+            'course' => $course,
+            'packages' => $packages,
+        ]);
     }
 
 

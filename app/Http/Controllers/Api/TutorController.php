@@ -387,6 +387,8 @@ class TutorController extends Controller
 
     public function course(Request $request, $id)
     {
+        $perPage = $request->get('per_page', 20);
+
         $user = User::whereIn('role_id', [2, 4])->where('status', 'Active');
         if (is_numeric($id)) {
             $user->where('id', $id);
@@ -413,7 +415,11 @@ class TutorController extends Controller
         ->withCount('reviews')
         ->withCount(['enrollments as total_enrollments']);
 
-        $perPage = $request->get('per_page', 10);
+        if($request->get('current_id')) 
+        {
+            $query->where('id','!=',$request->get('current_id'));
+        }
+
         $courses = $query->paginate($perPage);
 
         return jsonResponse(true, 'Courses fetched successfully', [
