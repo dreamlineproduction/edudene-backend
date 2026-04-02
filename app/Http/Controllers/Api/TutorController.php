@@ -549,71 +549,59 @@ class TutorController extends Controller
 
         $startDate = new \DateTime("$year-$month-01");
         $endDate   = clone $startDate;
-        $endDate->modify('+14 days'); // 15 days
+        $endDate->modify('+1 months'); 
 
-
-
-        $dates = [];
-
-        $loopDate = clone $startDate;
-
-        while ($loopDate <= $endDate) {
-
-            $dates[] = $loopDate->format('Y-m-d');
-
-            $loopDate->modify('+1 day');
-        }
-
-
-        $slots = OneOnOneClassSlot::where('tutor_id', $tutor->id)
+        $slotsCollection = OneOnOneClassSlot::where('tutor_id', $tutor->id)
             ->where('is_active', 1)
             ->whereBetween('class_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
             ->orderBy('class_date')
             ->orderBy('start_time')
-            ->get()
-            ->map(function ($slot) {
+            ->get();
+       
+        $availableDates  = $slotsCollection->pluck('class_date')->unique()->values();
 
-                $classDateObj = new \DateTime($slot->class_date);
-                $startTime    = new \DateTime($slot->start_time);
-                $endTime      = new \DateTime($slot->end_time);
+       
 
-                $interval = $startTime->diff($endTime);
+        $slotsCollection = $slotsCollection->map(function ($slot) {
+            $classDateObj = new \DateTime($slot->class_date);
+            $startTime    = new \DateTime($slot->start_time);
+            $endTime      = new \DateTime($slot->end_time);
 
-                $totalHours = ($interval->days * 24) + $interval->h + ($interval->i / 60);
+            $interval = $startTime->diff($endTime);
 
-                return [
+            $totalHours = ($interval->days * 24) + $interval->h + ($interval->i / 60);
 
-                    "id" => $slot->id,
-                    "tutor_id" => $slot->tutor_id,
-                    "class_date" => $slot->class_date,
-                    "date_key" => $classDateObj->format('d-m-Y'),
+            return [
 
-                    "start_time" => $slot->start_time,
-                    "end_time" => $slot->end_time,
+                "id" => $slot->id,
+                "tutor_id" => $slot->tutor_id,
+                "class_date" => $slot->class_date,
+                "date_key" => $classDateObj->format('d-m-Y'),
 
-                    "is_free_trial" => $slot->is_free_trial,
-                    "is_active" => $slot->is_active,
-                    "timezone" => $slot->timezone,
+                "start_time" => $slot->start_time,
+                "end_time" => $slot->end_time,
 
-                    "class_date_formatted" => $classDateObj->format('jS F Y'),
+                "is_free_trial" => $slot->is_free_trial,
+                "is_active" => $slot->is_active,
+                "timezone" => $slot->timezone,
 
-                    "start_time_formatted" => $startTime->format('h:i A'),
-                    "end_time_formatted" => $endTime->format('h:i A'),
+                "class_date_formatted" => $classDateObj->format('jS F Y'),
 
-                    "total_hours" => $totalHours,
+                "start_time_formatted" => $startTime->format('h:i A'),
+                "end_time_formatted" => $endTime->format('h:i A'),
 
-                    // "categories" => $categories
+                "total_hours" => $totalHours,
 
-                ];
-            })
-            ->groupBy('date_key');
+                // "categories" => $categories
 
-
+            ];
+        })
+        ->groupBy('date_key');
 
         return jsonResponse(true, 'Fetching slots', [
             'current_month'   => (new \DateTime("$year-$month-01"))->format('F Y'),
-            'available_dates' => $dates,
-            'slots'           => $slots
+            'available_dates' => $availableDates,
+            'slots'           => $slotsCollection
         ]);
     }
 

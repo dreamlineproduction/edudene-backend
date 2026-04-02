@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\School;
 use App\Models\Classes;
 use App\Models\ClassSessions;
+use App\Models\ClassBulkDiscount;
 use App\Models\Course;
 
 class SchoolController extends Controller
@@ -259,10 +260,28 @@ class SchoolController extends Controller
 
         $school->total_reviews = 0;
 
-        
+
+        // Select Schools Packages
+        $packages = ClassBulkDiscount::select('id','owner_id','title',
+            'owner_type','min_quantity','discount_percentage','text'
+            )->where([
+                'owner_id'=>$school->id,
+                'owner_type'=>'school',
+                'is_active' => 1
+            ])
+            ->where('min_quantity', '<=', $school->classes_count)
+            ->orderBy('min_quantity', 'desc')
+            ->get();
+
+
+
 
         $data['schools'] = $school;
-        return jsonResponse(true, 'Schools', $data);
+
+        return jsonResponse(true, 'School show',[
+            'schools' => $school,
+            'packages' => $packages
+        ]);
     }
 
 
@@ -359,12 +378,19 @@ class SchoolController extends Controller
             'sub_category:id,title,category_id',
             'sub_sub_category:id,title,sub_category_id',
             'category_level_four:id,title,sub_sub_category_id',
-            'tutor:id,full_name,email',
+            'tutor:id,full_name,email,user_name',
             'school:id,user_id,school_name,school_slug',
             'school.user:id,full_name',
-        ]);
+            'school.theme:school_id,logo_image,logo_image_url',   
+        ])->withCount(['enrollments as total_enrollments']);
 
         $query->where(['school_id'=>$school->id,'status' => 'Approved']);
+
+        if($request->get('current_id')) 
+        {
+            $query->where('id','!=',$request->get('current_id'));
+        }
+
 
         // if ($type === 'upcoming') {
         //     $query->whereDate('start_date', '>', $today);

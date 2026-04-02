@@ -73,6 +73,14 @@ class SchoolAuthController extends Controller
         // Clear login attempts on successful login
         LoginAttempt::where('email', $request->email)->delete();
 
+        // Check user school access
+        $userAccess = SchoolUser::where(['user_id'=>$user->id])->first();
+        if($userAccess)
+        {
+            return jsonResponse(false, 'Access denied', [], 403);
+        }
+
+
 
         // Generate token
         $token = $user->createToken('auth_token')->plainTextToken;

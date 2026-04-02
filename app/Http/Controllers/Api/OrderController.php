@@ -133,6 +133,18 @@ class OrderController extends Controller
                 }
 
 
+                if($item->item_type === 'SCHOOL_CLASS') {
+                    SchoolClassBooking::create([
+                        'class_id' => $item->item_id,
+                        'school_id' => $metadata['school_id'] ?? null,
+                        'user_id' => $user->id,
+                        'booked_at' => $request->booked_at,
+                        'timezone' => getDefaultTimezone($request->timezone),
+                    ]);
+
+                }
+
+                
                 // 
                 if($item->item_type === 'TUTOR_SLOT') {
                     OneOnOneClassBooking::create([

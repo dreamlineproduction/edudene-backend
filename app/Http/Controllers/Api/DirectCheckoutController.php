@@ -10,6 +10,7 @@ use App\Models\DirectCheckout;
 use App\Models\CourseAsset;
 use App\Models\CourseChapter;
 use App\Models\Tutor;
+use App\Models\Classes;
 use App\Models\CourseBulkDiscount;
 
 class DirectCheckoutController extends Controller
@@ -43,6 +44,14 @@ class DirectCheckoutController extends Controller
                 $images = collect($row->metadata)->map(function ($item) {
 
                     $img = null;
+
+                    // Class Image
+                    if ($item['item_type'] === 'SCHOOL_CLASS') {
+                        $classAsset = Classes::where('id', $item['item_id'])->first();
+                        if (!empty($classAsset?->cover_image_url)) {
+                            $img = $classAsset->cover_image_url;
+                        }
+                    }
 
                     // Course Image
                     if (in_array($item['item_type'], ['SCHOOL_COURSE', 'TUTOR_COURSE'])) {
@@ -234,7 +243,7 @@ class DirectCheckoutController extends Controller
             'item_id'   => 'required|integer',
             'title'     => 'required|string',
             'price'     => 'required|numeric|min:0',
-            'discount_price' => 'required|numeric|min:0',
+            'discount_price' => 'numeric|min:0',
             'metadata'  => 'nullable|array'
         ])->validate();
         
@@ -251,9 +260,9 @@ class DirectCheckoutController extends Controller
             'item_type' => $itemData['item_type'],
             'item_id' => $itemData['item_id'],
             'title' => $itemData['title'],
-            'slug' => $itemData['slug'],
+            'slug' => !empty($itemData['slug']) ? $itemData['slug'] : null,
             'price' => $itemData['price'],
-            'discount_price' => $itemData['discount_price'],
+            'discount_price' => !empty($itemData['discount_price']) ? $itemData['discount_price'] : null,
             'qty' => 1,
             'model_name' => $modelName,
             'metadata' => $itemData['metadata'] ?? null,

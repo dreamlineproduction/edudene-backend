@@ -37,6 +37,11 @@ class Classes extends Model
         return $this->belongsTo(User::class, 'tutor_id');
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(SchoolClassBooking::class, 'class_id');
+    }
+
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id');
