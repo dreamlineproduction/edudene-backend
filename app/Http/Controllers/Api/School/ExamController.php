@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\School;
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
 use App\Models\Classes;
+use App\Models\SchoolAggrement;
 use App\Models\SchoolUser;
 use Illuminate\Http\Request;
 
@@ -93,8 +94,119 @@ class ExamController extends Controller
 		return jsonResponse(true, 'Exam saved successfully', ['exam' => $exam]);
 	}
 
+	// public function show($exam_id) {
+		
+	// 	$tutorId = auth('sanctum')->user()->id;
+	// 	$roleId = auth('sanctum')->user()->role_id;
+		
+	// 	// Check if this exam belongs to a school
+	// 	// Check if this class belongs to a tutor
+
+	// 	// Checked if users belongs to a school
+		
+
+	// 	if ($roleId === 2 || $roleId === 4) { // It means it is a school tutor or tutor
+	// 		$schoolInfo = SchoolAggrement::where('user_id', $tutorId)->first();
+			
+	// 		if ($schoolInfo == null) {
+	// 			return jsonResponse(false, 'School not found', [], 404);
+	// 		}
+
+	// 		$exam = Exam::select('exams.*')
+	// 				->where('exams.id',$exam_id)
+	// 				->with('class','class.category_level_four:id,title','class.tutor:id,full_name','class.school:id,school_name')
+	// 				->leftJoin('classes', 'classes.id', '=', 'exams.class_id')
+	// 				->where('classes.school_id', $schoolInfo->school_id)
+	// 				->where('classes.tutor_id', $tutorId)
+	// 				->first();
+			
+	// 	} else {
+	// 		$schoolInfo = SchoolUser::where('user_id', $tutorId)->first();
+			
+	// 		if ($schoolInfo == null) {
+	// 			return jsonResponse(false, 'School not found', [], 404);
+	// 		}
+
+	// 		// It means it is a school and  this class belongs to this school
+	// 		$exam = Exam::select('exams.*')
+	// 				->where('exams.id',$exam_id)
+	// 				->with('class','class.category_level_four:id,title','class.tutor:id,full_name','class.school:id,school_name')
+	// 				->leftJoin('classes', 'classes.id', '=', 'exams.class_id')
+	// 				->where('classes.school_id', $schoolInfo->school_id)
+	// 				->first();
+	// 	}
+		
+	// 	if ($exam == null) {
+	// 		return jsonResponse(false, 'Exam not found', [],404);
+	// 	}
+
+	// 	return jsonResponse(true, 'Exam found', ['exam' => $exam]);
+	// }
+
 	public function show($exam_id) {
-		$exam = Exam::find($exam_id);
+
+		// Get authenticated user details
+		$tutorId = auth('sanctum')->user()->id;
+		$roleId = auth('sanctum')->user()->role_id;
+
+		// Determine access based on user role
+		// Roles 2 and 4 represent tutors (school tutor or individual tutor)
+		if ($roleId === 2 || $roleId === 4) {
+
+			// Fetch school association for the tutor
+			$schoolInfo = SchoolAggrement::where('user_id', $tutorId)->first();
+
+			// Return error if tutor is not associated with any school
+			if ($schoolInfo == null) {
+				return jsonResponse(false, 'School not found', [], 404);
+			}
+
+			// Retrieve exam ensuring:
+			// - Exam belongs to the tutor's school
+			// - Exam is assigned to the authenticated tutor
+			$exam = Exam::select('exams.*')
+				->where('exams.id', $exam_id)
+				->with(
+					'class',
+					'class.category_level_four:id,title',
+					'class.tutor:id,full_name',
+					'class.school:id,school_name'
+				)
+				->leftJoin('classes', 'classes.id', '=', 'exams.class_id')
+				->where('classes.school_id', $schoolInfo->school_id)
+				->where('classes.tutor_id', $tutorId)
+				->first();
+
+		} else {
+
+			// Fetch school association for non-tutor users (e.g., school admin/staff)
+			$schoolInfo = SchoolUser::where('user_id', $tutorId)->first();
+
+			// Return error if user is not associated with any school
+			if ($schoolInfo == null) {
+				return jsonResponse(false, 'School not found', [], 404);
+			}
+
+			// Retrieve exam ensuring it belongs to the user's school
+			$exam = Exam::select('exams.*')
+				->where('exams.id', $exam_id)
+				->with(
+					'class',
+					'class.category_level_four:id,title',
+					'class.tutor:id,full_name',
+					'class.school:id,school_name'
+				)
+				->leftJoin('classes', 'classes.id', '=', 'exams.class_id')
+				->where('classes.school_id', $schoolInfo->school_id)
+				->first();
+		}
+
+		// Return error if exam is not found or does not meet access conditions
+		if ($exam == null) {
+			return jsonResponse(false, 'Exam not found', [], 404);
+		}
+
+		// Return successful response with exam data
 		return jsonResponse(true, 'Exam found', ['exam' => $exam]);
 	}
 

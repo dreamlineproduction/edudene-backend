@@ -36,17 +36,19 @@ class ClassController extends Controller
                 'schools.full_name as school_author',
                 'schools.email as school_email',
                 'category_level_fours.title as subject',
-                'class_types.title as class_type'
+                'class_types.title as class_type',
+				'exams.id as exam_id'
             )
             ->where(function ($query) use ($loggedInUser) {
 
                 if(!empty($loggedInUser->school->id)){
-                    $query->where('school_id', $loggedInUser->school->id);
+                    $query->where('classes.school_id', $loggedInUser->school->id);
                 } else {
-                    $query->orWhere('tutor_id', $loggedInUser->id);
+                    $query->orWhere('classes.tutor_id', $loggedInUser->id);
                 }
                             
             })
+			->leftJoin('exams', 'exams.class_id', '=', 'classes.id')
             ->leftJoin('users as tutors', 'tutors.id', '=', 'classes.tutor_id')
             ->leftJoin('users as schools', 'schools.id', '=', 'classes.school_id')
             ->leftJoin('category_level_fours','category_level_fours.id','=','classes.category_level_four_id')

@@ -13,14 +13,23 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next,$role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        $user =  auth('sanctum')->user();
+        // $user =  auth('sanctum')->user();
 
-        if (!$user || $user->role_id != $role) {
-            return jsonResponse(false, 'Unauthorized: Access denied.', null, 403);           
-        }
+        // if (!$user || $user->role_id != $role) {
+        //     return jsonResponse(false, 'Unauthorized: Access denied.', null, 403);           
+        // }
 
-        return $next($request);
+        // return $next($request);
+
+		$user = auth('sanctum')->user();
+
+		if (!$user || !in_array($user->role_id, $roles)) {
+			return jsonResponse(false, 'Unauthorized: Access denied.', null, 403);
+		}
+
+		return $next($request);
+
     }
 }

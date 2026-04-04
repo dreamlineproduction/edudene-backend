@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 			$table->foreignId('exam_id')->constrained()->cascadeOnDelete();
 			$table->string('question');
-			$table->integer('marks');
+			$table->integer('marks')->nullable();
 			$table->enum('status',['Active','Block'])->default('Active');
             $table->timestamps();
         });

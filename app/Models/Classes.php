@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Classes extends Model
 {
-    
+    protected $appends = ['formatted_start_date', 'formatted_end_date'];
+
     protected $fillable = [
         'class_type_id',
         'category_id',
@@ -80,4 +82,19 @@ class Classes extends Model
     {
         return $this->hasOne(Exam::class,'class_id');
     }
+
+	public function getFormattedStartDateAttribute()
+	{
+		return $this->start_date 
+			? Carbon::parse($this->start_date)->format('d/m/Y') 
+			: null;
+	}
+
+	public function getFormattedEndDateAttribute()
+	{
+		return $this->end_date 
+			? Carbon::parse($this->end_date)->format('d/m/Y') 
+			: null;
+	}
+
 }
